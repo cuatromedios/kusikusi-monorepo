@@ -14,7 +14,8 @@
  */
 
 return [
-    "langs" => ["en_US", "fr_FR"], // The first lang will be the default each time the entity is loaded
+    "langs" => ["en", "es"], // The first lang will be the default each time the entity is loaded
+    "app_url" => env('APP_URL', 'http://127.0.0.1:8000'), // Very important to change this in your .env file or here. This will be used for canonical urls and social share assets
     "page_size" => 25, // Default page size if not defined in the call
     "token_expiration_in_seconds" => 0, // Seconds to the token to be expired or 0
     "short_id_length" => 10, // Change if you database is going to be veeeery big. Maximum 16.
@@ -28,9 +29,8 @@ return [
                     "label" => "contents.contents",
                     "components" => [
                         ["component" => "nq-input", "value" => "contents.title", "label" => "contents.title", "props" => ["size" => "xl"]],
-                        ["component" => "html-editor", "value" => "contents.welcome", "label" => "contents.summary", "props" => ["type" => "textarea"]],
-                        ["component" => "slug", "value" => "contents.slug", "label" => "contents.slug"],
-                        ["component" => "nq-input", "value" => "view", "label" => "Vista"]
+                        ["component" => "html-editor", "value" => "contents.welcome", "label" => "contents.description", "props" => []],
+                        ["component" => "slug", "value" => "contents.slug", "label" => "contents.slug"]
                     ],
                 ],
                 [
@@ -42,7 +42,7 @@ return [
                 [
                     "label" => "contents.media",
                     "components" => [
-                        ["component" => "media", "props" => ["allowed" => [ "*" ], "tags" => ["hero", "og"]]]
+                        ["component" => "media", "props" => ["allowed" => [ "webImages" ], "tags" => ["hero", "social"]]]
                     ],
                 ]
             ]
@@ -55,14 +55,14 @@ return [
                     "label" => "contents.contents",
                     "components" => [
                         ["component" => "nq-input", "value" => "contents.title", "label" => "contents.title"],
-                        ["component" => "nq-input", "value" => "contents.welcome", "label" => "content.summary"],
+                        ["component" => "nq-input", "value" => "contents.welcome", "label" => "content.description"],
                         ["component" => "slug", "value" => "contents.slug", "label" => "contents.slug"]
                     ],
                 ],
                 [
                     "label" => "contents.media",
                     "components" => [
-                        ["component" => "media", "props" => ["allowed" => [ "webImages", "webVideos", 'xhr' ], "tags" => ["icon", "gallery"]]]
+                        ["component" => "media", "props" => ["allowed" => [ "webImages", "webVideos", 'xhr' ], "tags" => ["icon", "social", "gallery"]]]
                     ],
                 ]
             ]
@@ -75,7 +75,7 @@ return [
                     "label" => "contents.contents",
                     "components" => [
                         ["component" => "nq-input", "value" => "contents.title", "label" => "contents.title"],
-                        ["component" => "nq-input", "value" => "contents.summary", "label" => "contents.summary"],
+                        ["component" => "nq-input", "value" => "contents.description", "label" => "contents.description"],
                         ["component" => "nq-input", "value" => "contents.slug", "label" => "contents.slug"]
                     ],
                 ],
@@ -95,6 +95,25 @@ return [
                     "label" => "contents.contents",
                     "components" => [
                         ["component" => "nq-input", "value" => "contents.title", "label" => "contents.title"]
+                    ],
+                ]
+            ]
+        ],
+        "website" => [
+            "icon" => "language",
+            "name" => "models.website",
+            "views" => ["website"],
+            "form" => [
+                [
+                    "label" => "contents.contents",
+                    "components" => [
+                        ["component" => "nq-input", "value" => "contents.title", "label" => "contents.title", "props" => ["size" => "xl"]]
+                    ],
+                ],
+                [
+                    "label" => "contents.media",
+                    "components" => [
+                        ["component" => "media", "props" => ["allowed" => [ "images" ], "tags" => ["social", "favicon"]]]
                     ],
                 ]
             ]

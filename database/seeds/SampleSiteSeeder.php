@@ -39,11 +39,11 @@ class SampleSiteSeeder extends Seeder
                     $medium->properties = array_merge($medium->properties, \App\Models\Medium::getProperties($medium->properties['path']));
                     $medium->save();
                     mkdir("storage/media/".$medium->id);
-                    copy($medium->properties['path'], "storage/media/".$medium->id."/file.jpg");
+                    copy($medium->properties['path'], "storage/media/".$medium->id."/file.png");
                     $page->addRelation([
                         "called_entity_id" => $medium->id,
                         "kind" => \Kusikusi\Models\EntityRelation::RELATION_MEDIA,
-                        "tags" => $m == 0 ? ['icon'] : ['gallery'],
+                        "tags" => $m == 0 ? ['icon', 'social'] : ['gallery'],
                         "position" => $m
                     ]);
                 }

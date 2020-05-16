@@ -6,7 +6,7 @@ use Kusikusi\Models\EntityModel;
 
 class Section extends EntityModel
 {
-    protected $contentFields = [ "title", "summary", "body" ];
+    protected $contentFields = [ "title", "description", "body" ];
     protected $propertiesFields = [];
 
 }

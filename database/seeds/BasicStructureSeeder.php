@@ -12,21 +12,29 @@ class BasicStructureSeeder extends Seeder
      */
     public function run()
     {
-
-        $langs = config('cms.langs', ['en_US']);
+        // Define some standard contents for each configured language
+        $langs = config('cms.langs', ['']);
         $titles = [];
         $welcomes = [];
         $slugs = [];
         foreach ($langs as $lang) {
-            $titles[$lang] = "Kusikusi Website in " . $lang;
-            $welcomes[$lang] = "Welcome in " . $lang;
+            $names[$lang] = "The Website Name";
+            $titles[$lang] = "A Kusikusi website";
+            $welcomes[$lang] = "A welcome message";
+            $descriptions[$lang] = "The site description";
             $slugs[$lang] = $lang === $langs[0] ? "" : str_replace('_', '-', strtolower($lang));
         }
+        //The website (root) entity
         $website = new Entity([
             "id" => "website",
-            "model" => "website"
+            "model" => "website",
+            "contents"=> [
+                "title" => $names
+            ]
         ]);
         $website->save();
+
+        //Home entity
         $home = new Entity([
             "id" => "home",
             "model" => "home",
@@ -35,17 +43,21 @@ class BasicStructureSeeder extends Seeder
             "contents"=> [
                 "title" => $titles,
                 "welcome" => $welcomes,
-                "slug" => $slugs,
+                "description" => $descriptions,
+                "slug" => $slugs
             ]
         ]);
         $home->save();
 
+        // A container for collections, like categories
         $collections = new Entity([
             "id" => "collections",
             "parent_entity_id" => $website->id,
             "model" => "collections",
         ]);
         $collections->save();
+
+        // A container for media entities
         $media = new Entity([
             "id" => "media",
             "parent_entity_id" => $website->id,
@@ -53,6 +65,7 @@ class BasicStructureSeeder extends Seeder
         ]);
         $media->save();
 
+        //The default admin user
         $user_name = "Administrator";
         $user_email = "admin@example.com";
         $user_profile = "admin";

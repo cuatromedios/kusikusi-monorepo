@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Entity;
+use App\Models\Medium;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Config;
 
 /**
  * Class HtmlController
@@ -55,7 +57,13 @@ class HtmlController extends Controller
         $result = [
             "lang" => $request->lang,
             "entity" => $currentEntity,
-            "media" => Entity::mediaOf($currentEntity->id)->get(),
+            "website" => Entity::appendContents(['title', 'description'])
+                ->appendMedium('social')
+                ->find('website'),
+            "media" => Medium::select('id')
+                ->appendContents(['title'], $request->lang)
+                ->mediaOf($currentEntity->id)
+                ->get(),
             "ancestors" => Entity::select('id', 'model')
                 ->ancestorOf($currentEntity->id)
                 ->descendantOf('website')

@@ -1,17 +1,12 @@
 @extends('html_layout')
+@section('title', __("texts.error") . ' ' . ( isset($status) ? $status : '' ))
+@section('description', __("texts.errors.$status"))
 @section('main')
-    <h1>Error {{ isset($status) ? $status : '' }}</h1>
+    <h1>@lang("texts.error") {{ isset($status) ? $status : '' }}</h1>
     @if(isset($status))
-        <p>
-            @if($status === 404)
-                Not found
-            @elseif($status === 500)
-                Internal server error
-            @else
-            @endif
-        </p>
+        <p>@lang("texts.errors.$status")</p>
     @endif
-    <p><a href="/">¿Regresar?</a></p>
+    <p><a href="/">@lang("texts.back")</a></p>
     @if(env('APP_DEBUG'))
         <h2>{{ isset($message) ? $message : '' }}</h2>
         <p>{{ isset($file) ? $file : '' }}: {{ isset($line) ? $line : '' }}</p>

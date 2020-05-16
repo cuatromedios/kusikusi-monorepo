@@ -6,7 +6,7 @@ use Kusikusi\Models\EntityModel;
 
 class Home extends EntityModel
 {
-    protected $contentFields = [ "title", "welcome" ];
+    protected $contentFields = [ "title", "welcome", "description" ];
     protected $propertiesFields = [];
 
 }

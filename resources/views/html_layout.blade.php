@@ -3,9 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>@yield(('title'))</title>
+    <meta name="description" content="@yield(('description'))">
     <link rel="stylesheet" type="text/css" href="/styles/main.css">
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    @include('html.partials.headlinks')
+    @include('html.partials.favicons')
+    @include('html.partials.socialshare')
 </head>
-<body class="{{isset($entity) ? 'model-'.$entity->model.' view-'.$entity->view.' id-'.$entity->id : ''}}">
+<body class="{{isset($entity) ? 'model-'.$entity->model.' view-'.$entity->view : '' }}">
 <header>
 
 </header>
@@ -13,7 +18,8 @@
     @yield('main')
 </main>
 <footer>
-A kusikusi website
+    <p>A kusikusi website.</p>
+    @include('html.partials.langlist')
 </footer>
 @include('html.partials.debug')
 </body>

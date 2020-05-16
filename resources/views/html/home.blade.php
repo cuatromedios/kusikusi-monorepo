@@ -1,4 +1,6 @@
 @extends('html_layout')
+@section('title', $entity->title)
+@section('description', $entity->description)
 @section('main')
     <h1>{{ $entity->title }}</h1>
     <p>{{ $entity->welcome }}</p>

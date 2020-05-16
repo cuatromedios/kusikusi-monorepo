@@ -7,22 +7,25 @@ Kusikusi is not reinventing the wheel, it is built on top of Lumen Framework by 
 ### Installation
 Kusikusi boilerplate is based in [Lumen Framework](https://lumen.laravel.com/), you should be familiarized with Lumen or Laravel framework first.
 
-0. You can use Composer Create project
+1. You can use Composer Create project
     > TODO: Using https://getcomposer.org/doc/03-cli.md#create-project
-1. First install the dependencies
+2. First install the dependencies
    ```shell script
    composer install
    ```
-2. Rename the `.env.example` file to `.env   
-3. Generate an application key. Kusikusi includes [Lumen Generator](https://github.com/flipboxstudio/lumen-generator) so you can run this command to generate a applicatio key
+3. Rename the `.env.example` file to `.env   
+4. Generate an application key. Kusikusi includes [Lumen Generator](https://github.com/flipboxstudio/lumen-generator) so you can run this command to generate a application key
    ```shell script
    php artisan key:generate
    ```
-4. Configure the database connection. In your .env file, filling the `DB_*` configuration options, dont forget to set the desired APP_TIMEZONE
-5. Run the migrations 
+5. Configure the APP_URL env variable. In your .env file to point to your website or application url. This will be used for canonical and alternate urls and social share assets
+6. Configure the database connection. In your .env file, filling the `DB_*` configuration options, dont forget to set the desired APP_TIMEZONE
+7. Open the `config/cms.php` configuration file, and change the `langs` property to match your needs. Even if your website is just one language, set it there, use two letters standard like `en` or a two letter plus the country like `en_US`. Even if it is just only one language, this setting is an array. So use values like `["en"]`, `["en_US"]`, `["en_US", "es_MX"]`, `["en", "fr", "es", "pr"]`, 
+8. Run the migrations, include --seed to also generate the basic website structure. You can also uncomment the sample site seeder in `database/seed/DatabaseSeeder.php` if you want to create a website with fake content for testing purposes. 
    ```shell script
-   php artisan migrate
+   php artisan migrate --seed
    ```
+9. The website should be ready to run   
 
 ### Running
 

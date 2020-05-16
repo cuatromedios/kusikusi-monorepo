@@ -1,8 +1,10 @@
 @extends('html_layout')
+@section('title', $entity->title)
+@section('description', $entity->description)
 @section('main')
     @include('html.partials.breadcrumbs')
     <h1>{{ $entity->model }}: {{ $entity->title }}</h1>
-    <em>{{ $entity->summary }}</em>
+    <em>{{ $entity->description }}</em>
 <div>
     <ul>
         @forelse ($children as $child)

@@ -4,25 +4,20 @@
 
 use App\Model;
 use Faker\Generator as Faker;
+use Faker\Provider\Lorem;
 use Illuminate\Support\Str;
 use App\Models\Entity;
 
 $factory->define(Entity::class, function (Faker $faker) {
-    $langs = config('cms.langs', ['en_US']);
+    $langs = config('cms.langs', ['']);
     $titles = [];
-    $summaries = [];
+    $descriptions = [];
     $bodies = [];
     $slugs = [];
     foreach ($langs as $lang) {
-        $personProviderClass = "\\Faker\\Provider\\{$lang}\\Person";
-        $companyProviderClass = "\\Faker\\Provider\\{$lang}\\Company";
-        $textProviderClass = "\\Faker\\Provider\\{$lang}\\Text";
-        $faker->addProvider(new $personProviderClass($faker));
-        $faker->addProvider(new $companyProviderClass($faker));
-        $faker->addProvider(new $textProviderClass($faker));
-        $titles[$lang] = $faker->name;
-        $summaries[$lang] = $faker->jobTitle;
-        $bodies[$lang] = $faker->text(100);
+        $titles[$lang] = $faker->sentence;
+        $descriptions[$lang] = $faker->paragraph;
+        $bodies[$lang] = $faker->text(250);
         $slugs[$lang] = Str::slug($titles[$lang]);
     }
     return [
@@ -31,7 +26,7 @@ $factory->define(Entity::class, function (Faker $faker) {
         "properties" => [],
         "contents" => [
             "title" => $titles,
-            "summary" => $summaries,
+            "description" => $descriptions,
             "body" => $bodies,
             "slug" => $slugs,
         ]
@@ -40,7 +35,7 @@ $factory->define(Entity::class, function (Faker $faker) {
 $factory->state(Entity::class, 'medium', function (Faker $faker) {
     $title = $faker->lastName;
     echo "Downloading image...";
-    $image = resource_path('sampleImages/colibri.jpg');
+    $image = resource_path('sampleImages/turtle.png');
     echo " done.\n";
     return [
         "model" => "entity",

@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Kusikusi\Models\EntityModel;
 
-class Page extends EntityModel
+class Website extends EntityModel
 {
-    protected $contentFields = [ "title", "description", "body" ];
+    protected $contentFields = [ "title" ];
     protected $propertiesFields = [];
 
 }
