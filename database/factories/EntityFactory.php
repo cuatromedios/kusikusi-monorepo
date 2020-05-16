@@ -35,11 +35,10 @@ $factory->define(Entity::class, function (Faker $faker) {
 $factory->state(Entity::class, 'medium', function (Faker $faker) {
     $title = $faker->lastName;
     echo "Downloading image...";
-    $image = resource_path('sampleImages/turtle.png');
+    $image = resource_path('images/turtle.png');
     echo " done.\n";
     return [
-        "model" => "entity",
-        "parent_entity_id" => null,
+        "model" => "medium",
         "properties" => [
             "path" =>  $image
         ]

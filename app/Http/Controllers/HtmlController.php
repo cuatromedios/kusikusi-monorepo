@@ -57,7 +57,8 @@ class HtmlController extends Controller
         $result = [
             "lang" => $request->lang,
             "entity" => $currentEntity,
-            "website" => Entity::appendContents(['title', 'description'])
+            "website" => Entity::select('id')
+                ->appendContents(['title'])
                 ->appendMedium('social')
                 ->find('website'),
             "media" => Medium::select('id')
