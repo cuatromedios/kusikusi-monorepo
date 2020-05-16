@@ -49,7 +49,7 @@ class BasicStructureSeeder extends Seeder
         $website->addRelation([
             "called_entity_id" => $favicon->id,
             "kind" => \Kusikusi\Models\EntityRelation::RELATION_MEDIA,
-            "tags" => ['favicon'],
+            "tags" => ['favicon', 'social'],
             "position" => 0
         ]);
         $favicon->properties = array_merge($favicon->properties, Medium::getProperties(resource_path('images/icon.png')));

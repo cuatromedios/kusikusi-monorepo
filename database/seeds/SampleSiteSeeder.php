@@ -13,9 +13,11 @@ class SampleSiteSeeder extends Seeder
      */
     public function run()
     {
+        $media_per_home = 1;
         $sections_count = 2;
+        $media_per_section = 1;
         $pages_count = 2;
-        $media_count = 2;
+        $media_per_page = 2;
 
         $home = Entity::where('id', 'home')->first();
         for ($s = 0; $s < $sections_count; $s++) {
@@ -24,6 +26,16 @@ class SampleSiteSeeder extends Seeder
                 "parent_entity_id" => $home->id
             ]);
             $section->save();
+            for ($m = 0; $m < $media_per_section; $m++) {
+                $medium = factory(App\Models\Entity::class)->states('medium')->make();
+                $medium->save();
+                $section->addRelation([
+                    "called_entity_id" => $medium->id,
+                    "kind" => \Kusikusi\Models\EntityRelation::RELATION_MEDIA,
+                    "tags" => $m == 0 ? ['icon', 'social'] : ['gallery'],
+                    "position" => $m
+                ]);
+            }
             for ($p = 0; $p < $pages_count; $p++) {
                 $page = factory(App\Models\Entity::class)->make([
                     "model" => "page",
@@ -31,23 +43,27 @@ class SampleSiteSeeder extends Seeder
                     "properties" => []
                 ]);
                 $page->save();
-                $media = Entity::where('id', 'media')->first();
-                for ($m = 0; $m < $media_count; $m++) {
-                    $medium = factory(App\Models\Entity::class)->states('medium')->make([
-                        "model" => "medium"
-                    ]);
-                    $medium->properties = array_merge($medium->properties, \App\Models\Medium::getProperties($medium->properties['path']));
+                for ($m = 0; $m < $media_per_page; $m++) {
+                    $medium = factory(App\Models\Entity::class)->states('medium')->make();
                     $medium->save();
-                    mkdir("storage/media/".$medium->id);
-                    copy($medium->properties['path'], "storage/media/".$medium->id."/file.png");
                     $page->addRelation([
                         "called_entity_id" => $medium->id,
                         "kind" => \Kusikusi\Models\EntityRelation::RELATION_MEDIA,
-                        "tags" => $m == 0 ? ['icon', 'social'] : ['gallery'],
+                        "tags" => $m == 0 ? ['icon', 'social'] : ['slider'],
                         "position" => $m
                     ]);
                 }
             }
+        }
+        for ($m = 0; $m < $media_per_home; $m++) {
+            $medium = factory(App\Models\Entity::class)->states('medium')->make();
+            $medium->save();
+            $home->addRelation([
+                "called_entity_id" => $medium->id,
+                "kind" => \Kusikusi\Models\EntityRelation::RELATION_MEDIA,
+                "tags" => $m == 0 ? ['hero', 'social'] : ['gallery'],
+                "position" => $m
+            ]);
         }
     }
 }

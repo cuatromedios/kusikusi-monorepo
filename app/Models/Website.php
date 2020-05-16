@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use Kusikusi\Models\EntityModel;
+use Kusikusi\Models\WebsiteModel;
 
-class Website extends EntityModel
+class Website extends WebsiteModel
 {
     protected $contentFields = [ "title" ];
     protected $propertiesFields = [];

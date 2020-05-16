@@ -7,6 +7,9 @@ use Faker\Generator as Faker;
 use Faker\Provider\Lorem;
 use Illuminate\Support\Str;
 use App\Models\Entity;
+use App\Models\Medium;
+use Intervention\Image\ImageManagerStatic as Image;
+use PUGX\Shortid\Shortid;
 
 $factory->define(Entity::class, function (Faker $faker) {
     $langs = config('cms.langs', ['']);
@@ -33,14 +36,35 @@ $factory->define(Entity::class, function (Faker $faker) {
     ];
 });
 $factory->state(Entity::class, 'medium', function (Faker $faker) {
-    $title = $faker->lastName;
-    echo "Downloading image...";
-    $image = resource_path('images/turtle.png');
+    $titles = [];
+    $langs = config('cms.langs', ['']);
+    foreach ($langs as $lang) {
+        $titles[$lang] = $faker->sentence(3);
+    }
+    echo "Creating image...";
+    $id = Shortid::generate(config('cms.short_id_length', 10));
+    $width = rand(540, 960);
+    $height = rand(540, 960);
+    $image = Image::canvas($width, $height, getRandomGrey());
+    for ($c = 0; $c < 5; $c++) {
+        $image->circle(min($width, $height), rand(0, $width), rand(0, $height), function ($draw) {
+            $draw->background(getRandomGrey());
+        });
+    }
+    if (!is_dir ( storage_path("media/".$id) )) mkdir(storage_path("media/".$id));
+    $image->save(storage_path("media/$id/file.png"));
+    $properties = Medium::getProperties(storage_path("media/$id/file.png"));
     echo " done.\n";
     return [
+        "id" => $id,
         "model" => "medium",
-        "properties" => [
-            "path" =>  $image
+        "properties" => $properties,
+        "contents" => [
+            "title" => $titles
         ]
     ];
 });
+
+function getRandomGrey() {
+    return "#".str_repeat(dechex(rand(64,204)),3);
+}
