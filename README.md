@@ -8,6 +8,14 @@ Kusikusi is not reinventing the wheel, it is built on top of Lumen Framework by 
 
 TBD
 
+### Running
+
+You can run Kusikusi as any other PHP application, for example you can run it using the PHP internal web server, and use a provided router:
+
+```shell script
+php -S localhost:8000 -t public public/phprouter.php
+```
+
 ## Official Documentation
 
 Documentation for the framework can be found on TBD.
