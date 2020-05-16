@@ -42,7 +42,7 @@ class SampleSiteSeeder extends Seeder
                     copy($medium->properties['path'], "storage/media/".$medium->id."/file.jpg");
                     $page->addRelation([
                         "called_entity_id" => $medium->id,
-                        "kind" => \App\models\EntityRelation::RELATION_MEDIA,
+                        "kind" => \Kusikusi\Models\EntityRelation::RELATION_MEDIA,
                         "tags" => $m == 0 ? ['icon'] : ['gallery'],
                         "position" => $m
                     ]);

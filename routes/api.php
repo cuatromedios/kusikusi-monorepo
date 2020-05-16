@@ -12,7 +12,7 @@ $router->group(["prefix" => "api"], function () use ($router) {
      *
      * All these routes point to Kusikusi controllers. Feel free to disable the ones you don't need
      */
-    $router->group(['namespace' => 'App\Http\Controllers' ], function () use ($router) {
+    $router->group(['namespace' => 'Kusikusi\Http\Controllers' ], function () use ($router) {
         // Unauthenticated routes
         $router->get('/', function () use ($router) {return ["version" => '4.0'];});
         $router->get('/cms/config', ['uses' => 'CmsController@showConfig']);
