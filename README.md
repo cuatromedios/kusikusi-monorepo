@@ -36,6 +36,11 @@ php -S localhost:8000 -t public public/phprouter.php
 
 Documentation for the framework can be found on TBD.
 
+## Testings
+``` shell script
+./vendor/bin/phpunit
+```
+
 ## License
 
 Kusikusi is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).

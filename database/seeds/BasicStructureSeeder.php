@@ -22,15 +22,15 @@ class BasicStructureSeeder extends Seeder
             $welcomes[$lang] = "Welcome in " . $lang;
             $slugs[$lang] = $lang === $langs[0] ? "" : str_replace('_', '-', strtolower($lang));
         }
-        $root = new Entity([
-            "id" => "root",
-            "model" => "root"
+        $website = new Entity([
+            "id" => "website",
+            "model" => "website"
         ]);
-        $root->save();
+        $website->save();
         $home = new Entity([
             "id" => "home",
             "model" => "home",
-            "parent_entity_id" => $root->id,
+            "parent_entity_id" => $website->id,
             "properties" => [],
             "contents"=> [
                 "title" => $titles,
@@ -42,13 +42,13 @@ class BasicStructureSeeder extends Seeder
 
         $collections = new Entity([
             "id" => "collections",
-            "parent_entity_id" => $root->id,
+            "parent_entity_id" => $website->id,
             "model" => "collections",
         ]);
         $collections->save();
         $media = new Entity([
             "id" => "media",
-            "parent_entity_id" => $root->id,
+            "parent_entity_id" => $website->id,
             "model" => "media",
         ]);
         $media->save();

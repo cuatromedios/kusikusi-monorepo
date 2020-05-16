@@ -58,7 +58,7 @@ class HtmlController extends Controller
             "media" => Entity::mediaOf($currentEntity->id)->get(),
             "ancestors" => Entity::select('id', 'model')
                 ->ancestorOf($currentEntity->id)
-                ->descendantOf('root')
+                ->descendantOf('website')
                 ->orderBy('ancestor_relation_depth', 'desc')
                 ->appendContents(['title'], $request->lang)
                 ->appendRoute($request->lang)

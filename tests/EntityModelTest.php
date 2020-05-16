@@ -11,9 +11,9 @@ class EntityModelTest extends TestCase
     use DatabaseMigrations;
 
     private $data = [
-        'root' => ['id'=>'root', 'model'=>'root', 'view' =>'root'],
-        'home' =>['id'=>'home', 'model'=>'home', 'view'=>'home', 'parent_entity_id'=>'root'],
-        'root_without_model'=>['id'=>'root', 'view'=>'root'],
+        'website' => ['id'=>'website', 'model'=>'website', 'view' =>'website'],
+        'home' =>['id'=>'home', 'model'=>'home', 'view'=>'home', 'parent_entity_id'=>'website'],
+        'website_without_model'=>['id'=>'website', 'view'=>'website'],
         'page' => ['id'=>'page', 'model'=>'page', 'view'=>'page', 'parent_entity_id'=>'home'],
         'page_with_content' => [
             'id'=>'page',
@@ -56,23 +56,23 @@ class EntityModelTest extends TestCase
      */
     public function testCreateEntity()
     {
-        $root = new Entity($this->data['root']);
-        $root->save();
-        $this->seeInDatabase('entities',$this->data['root']);
+        $website = new Entity($this->data['website']);
+        $website->save();
+        $this->seeInDatabase('entities',$this->data['website']);
     }
 
     public function testEditEntity()
     {
-        $root = new Entity($this->data['root']);
-        $root->save();
-        $root = Entity::where('id',"root")->update($this->data['home']);
+        $website = new Entity($this->data['website']);
+        $website->save();
+        $website = Entity::where('id',"website")->update($this->data['home']);
         $this->seeInDatabase('entities',$this->data['home']);
     }
 
      public function testDeleteEntity()
     {
-        $root = new Entity($this->data['root']);
-        $root->save();
+        $website = new Entity($this->data['website']);
+        $website->save();
         $delete = Entity::where('id', 'home')->delete();
         $this->notSeeInDatabase('entities',['id' => 'home']);
     }
@@ -80,25 +80,25 @@ class EntityModelTest extends TestCase
     public function testCreateEntityWithoutModel()
     {
         $this->expectExceptionMessage('A model name is requiered to create a new entity');
-        $root = new Entity($this->data['root_without_model']);
-        $root->save();
+        $website = new Entity($this->data['website_without_model']);
+        $website->save();
     }
 
     public function testAncestorsParentEntityId()
     {
-        $root = new Entity($this->data['root']);
+        $website = new Entity($this->data['website']);
         $home = new Entity($this->data['home']);
         $page = new Entity($this->data['page']);
-        $root->save();
+        $website->save();
         $home->save();
         $page->save();
         $this->seeInDatabase('entities', $this->data['page']);
         $this->seeInDatabase('relations', ['caller_entity_id'=>'page', 'kind'=>'ancestor', 'called_entity_id'=>'home', 'depth'=>1]);
-        $this->seeInDatabase('relations', ['caller_entity_id'=>'page', 'kind'=>'ancestor', 'called_entity_id'=>'root', 'depth'=>2]);
+        $this->seeInDatabase('relations', ['caller_entity_id'=>'page', 'kind'=>'ancestor', 'called_entity_id'=>'website', 'depth'=>2]);
         $ancestors = Entity::select('id')->ancestorOf('page')->orderBy('ancestor_relation_depth')->get()->toArray();
         $this->assertEquals(count($ancestors), 2);
         $this->assertEquals($ancestors[0]['id'], 'home');
-        $this->assertEquals($ancestors[1]['id'], 'root');
+        $this->assertEquals($ancestors[1]['id'], 'website');
     }
 
     public function testCreateEntityContent()
@@ -154,7 +154,7 @@ class EntityModelTest extends TestCase
   /*   public function testEntityContentRoutes()
     {
         factory(Entity::class)->create($this->data['page']);
-        $this->seeInDatabase('entities',['id'=>'root']);
+        $this->seeInDatabase('entities',['id'=>'website']);
         $this->seeInDatabase('contents',$this->data['content_data']);
 
         $this->assertTrue($modelOne->is($modelTwo));

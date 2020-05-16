@@ -11,7 +11,7 @@ use App\Models\Entity;
 class ApiTest extends TestCase
 {
     private $data = [
-        'root' => ['id'=>'root', 'model'=>'root', 'view'=>'root'],
+        'website' => ['id'=>'website', 'model'=>'website', 'view'=>'website'],
         'home' => ['id'=>'home', 'model'=>'home', 'view' =>'home', 'parent_entity_id'=>'home', 'properties'=>'"price":50.4'],
         'page_with_content' => ['id'=>'page', 'model'=>'page', 'view'=>'page', 'parent_entity_id'=>'home', 'contents'=>['title'=>['en_US'=>'The page', 'es_ES'=>'La pagina']]],
         'page_with_raw_content' => ['id'=>'pageraw', 'model'=>'page', 'view'=>'page', 'parent_entity_id'=>'home', 'contents'=>[["lang"=>"en_US", "field"=>"title", "text"=>"The raw page"], ["lang"=>"es_ES", "field"=>"title", "text"=>"La página raw"]]],
@@ -75,7 +75,7 @@ class ApiTest extends TestCase
 
     public function testCreateEntityWithInvalidToken()
     {
-        $json = ['model'=>'root'];
+        $json = ['model'=>'website'];
         $response = $this->json('POST', '/api/entity', $json, ['HTTP_Authorization' => 'Bearer '])
         ->seeStatusCode(401);
     }
@@ -99,7 +99,7 @@ class ApiTest extends TestCase
      */
     public function testCreateEntityWithoutModel($authorizationToken)
     {
-        $json = ['id'=>'root'];
+        $json = ['id'=>'website'];
         $response = $this->json('POST', '/api/entity', $json, ['HTTP_Authorization' => 'Bearer '.$authorizationToken])
         ->seeStatusCode(422);
     }
@@ -109,9 +109,9 @@ class ApiTest extends TestCase
      */
     public function testCreateEntityWithOwnId($authorizationToken)
     {
-        $json = $this->data['root'];
+        $json = $this->data['website'];
         $response = $this->json('POST', '/api/entity', $json, ['HTTP_Authorization' => 'Bearer '.$authorizationToken])
-        ->seeJsonContains($this->data['root'])
+        ->seeJsonContains($this->data['website'])
         ->seeStatusCode(200);
         $auth = json_decode($response->response->getContent(), true);
         $entity_id = $auth['id'];
@@ -204,16 +204,16 @@ class ApiTest extends TestCase
 
     public function testSetCollectionEntities()
     {
-        $root = new Entity($this->data['section_entities_collection']);
-        $root->save();
-        $root = new Entity($this->data['page_of_section_one']);
-        $root->save();
-        $root = new Entity($this->data['page_of_section_two']);
-        $root->save();
-        $root = new Entity($this->data['page_of_section_ec_one']);
-        $root->save();
-        $root = new Entity($this->data['page_of_section_ec_two']);
-        $root->save();
+        $website = new Entity($this->data['section_entities_collection']);
+        $website->save();
+        $website = new Entity($this->data['page_of_section_one']);
+        $website->save();
+        $website = new Entity($this->data['page_of_section_two']);
+        $website->save();
+        $website = new Entity($this->data['page_of_section_ec_one']);
+        $website->save();
+        $website = new Entity($this->data['page_of_section_ec_two']);
+        $website->save();
         $this->assertTrue(true);
     }
 
