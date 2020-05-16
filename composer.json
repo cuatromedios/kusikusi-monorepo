@@ -1,15 +1,21 @@
 {
     "name": "cuatromedios/kusikusi",
+    "version": "4.0.0-alpha7",
     "description": "Lumen based headless CMS with a head.",
     "keywords": ["php", "laravel", "lumen", "cms", "headless"],
     "license": "MIT",
     "type": "project",
     "require": {
         "php": "^7.2.5",
-        "laravel/lumen-framework": "^7.0"
+        "ext-json": "^1.7",
+        "cuatromedios/kusikusi-lib": "4.0.0-alpha6",
+        "flipbox/lumen-generator": "^6.0",
+        "intervention/image": "^2.5",
+        "laravel/lumen-framework": "^7.0",
+        "nordsoftware/lumen-cors": "^3.3"
     },
     "require-dev": {
-        "fzaninotto/faker": "^1.9.1",
+        "fzaninotto/faker": "^1.9",
         "mockery/mockery": "^1.3.1",
         "phpunit/phpunit": "^8.5"
     },

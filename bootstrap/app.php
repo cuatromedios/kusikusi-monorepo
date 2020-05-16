@@ -23,9 +23,14 @@ $app = new Laravel\Lumen\Application(
     dirname(__DIR__)
 );
 
-// $app->withFacades();
-
-// $app->withEloquent();
+$app->withFacades();
+$app->withEloquent();
+if(!class_exists('Storage')) {
+    class_alias('Illuminate\Support\Facades\Storage', 'Storage');
+}
+if(!class_exists('Image')) {
+    class_alias('Intervention\Image\ImageServiceProvider', 'Image');
+}
 
 /*
 |--------------------------------------------------------------------------
@@ -48,6 +53,14 @@ $app->singleton(
     App\Console\Kernel::class
 );
 
+$app->singleton('filesystem', function ($app) {
+    return $app->loadComponent(
+        'filesystems',
+        Illuminate\Filesystem\FilesystemServiceProvider::class,
+        'filesystem'
+    );
+});
+
 /*
 |--------------------------------------------------------------------------
 | Register Config Files
@@ -60,6 +73,10 @@ $app->singleton(
 */
 
 $app->configure('app');
+$app->configure('cms');
+$app->configure('media');
+$app->configure('filesystems');
+$app->configure('validation');
 
 /*
 |--------------------------------------------------------------------------
@@ -76,9 +93,13 @@ $app->configure('app');
 //     App\Http\Middleware\ExampleMiddleware::class
 // ]);
 
-// $app->routeMiddleware([
-//     'auth' => App\Http\Middleware\Authenticate::class,
-// ]);
+$app->routeMiddleware([
+    'auth' => App\Http\Middleware\Authenticate::class,
+]);
+$app->middleware([
+    'Nord\Lumen\Cors\CorsMiddleware'
+]);
+
 
 /*
 |--------------------------------------------------------------------------
@@ -92,8 +113,11 @@ $app->configure('app');
 */
 
 // $app->register(App\Providers\AppServiceProvider::class);
-// $app->register(App\Providers\AuthServiceProvider::class);
+$app->register(Kusikusi\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
+$app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
+$app->register(Intervention\Image\ImageServiceProvider::class);
+$app->register('Nord\Lumen\Cors\CorsServiceProvider');
 
 /*
 |--------------------------------------------------------------------------
@@ -106,9 +130,9 @@ $app->configure('app');
 |
 */
 
-$app->router->group([
-    'namespace' => 'App\Http\Controllers',
-], function ($router) {
+$app->router->group([], function ($router) {
+    require __DIR__.'/../routes/api.php';
+    require __DIR__.'/../routes/media.php';
     require __DIR__.'/../routes/web.php';
 });
 

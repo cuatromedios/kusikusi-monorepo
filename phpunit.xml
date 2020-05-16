@@ -15,6 +15,7 @@
     </filter>
     <php>
         <env name="APP_ENV" value="testing"/>
+        <env name="DB_DATABASE" value="kusikusi4testing"/>
         <env name="CACHE_DRIVER" value="array"/>
         <env name="QUEUE_CONNECTION" value="sync"/>
     </php>

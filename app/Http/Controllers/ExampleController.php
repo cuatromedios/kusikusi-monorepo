@@ -14,5 +14,8 @@ class ExampleController extends Controller
         //
     }
 
+    public function myMethod() {
+        return [ "my-method" => true ];
+    }
     //
 }

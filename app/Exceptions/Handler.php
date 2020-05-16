@@ -8,6 +8,7 @@ use Illuminate\Validation\ValidationException;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
+use Illuminate\Support\Str;
 
 class Handler extends ExceptionHandler
 {
@@ -49,6 +50,22 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
-        return parent::render($request, $exception);
+        $rendered = parent::render($request, $exception);
+        $response = [
+            'status' => $rendered->getStatusCode(),
+            'message' => $exception->getMessage(),
+            'data' => method_exists($rendered, 'getData') ? $rendered->getData() : null
+        ];
+        if (env('APP_DEBUG', false)) {
+            $response['file'] = $exception->getFile();
+            $response['line'] = $exception->getLine();
+            $response['trace'] = $exception->getTraceAsString();
+        }
+        if (Str::of($request->getPathInfo())->startsWith('/api')) {
+            return response()->json($response, $rendered->getStatusCode());
+        } else {
+            $response['trace'] = $exception->getTrace();
+            return response()->make(view('html.error', $response));
+        }
     }
 }

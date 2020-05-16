@@ -4,9 +4,25 @@ Kusikusi is a Lumen based headless CMS with a head. A boilerplate for creating A
 
 Kusikusi is not reinventing the wheel, it is built on top of Lumen Framework by Laravel, so, it can be deployed on almost any hosting provider using PHP and MySQL. KusiKusi has its own way to organize models and its relations, mainly tree based relations.
 
-## Installation
+### Installation
+Kusikusi boilerplate is based in [Lumen Framework](https://lumen.laravel.com/), you should be familiarized with Lumen or Laravel framework first.
 
-TBD
+0. You can use Composer Create project
+    > TODO: Using https://getcomposer.org/doc/03-cli.md#create-project
+1. First install the dependencies
+   ```shell script
+   composer install
+   ```
+2. Rename the `.env.example` file to `.env   
+3. Generate an application key. Kusikusi includes [Lumen Generator](https://github.com/flipboxstudio/lumen-generator) so you can run this command to generate a applicatio key
+   ```shell script
+   php artisan key:generate
+   ```
+4. Configure the database connection. In your .env file, filling the `DB_*` configuration options, dont forget to set the desired APP_TIMEZONE
+5. Run the migrations 
+   ```shell script
+   php artisan migrate
+   ```
 
 ### Running
 

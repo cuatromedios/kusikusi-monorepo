@@ -2,7 +2,7 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\User;
+use Kusikusi\Models\User;
 use Faker\Generator as Faker;
 
 /*
@@ -17,8 +17,12 @@ use Faker\Generator as Faker;
 */
 
 $factory->define(User::class, function (Faker $faker) {
+    $password = $faker->password(12,14);
+    print("  \"password\": \"{$password}\"\n");
     return [
         'name' => $faker->name,
         'email' => $faker->email,
+        'password' => $password,
+        'profile' => "guest"
     ];
 });

@@ -11,6 +11,4 @@
 |
 */
 
-$router->get('/', function () use ($router) {
-    return $router->app->version();
-});
+$router->get('/{path:.*}', 'Kusikusi\Http\Controllers\WebController@any');
