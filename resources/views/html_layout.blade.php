@@ -14,12 +14,12 @@
 <body class="{{isset($entity) ? 'model-'.$entity->model.' view-'.$entity->view : '' }}">
 <header>
     @if(isset($website))
-    <h1>
+    {!! $entity->model === 'home' ? '<h1>' : '<p>' !!}
         @if(isset($logo))
-            <img src="{{ $logo->logo }}" />
+            <img src="{{ $logo->logo }}" alt="{{ $website->title }}" />
         @endif
         {{ $website->title }}
-    </h1>
+    {!! $entity->model === 'home' ? '</h1>' : '</p>' !!}
     @endif
 </header>
 <main>

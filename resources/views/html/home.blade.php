@@ -2,9 +2,8 @@
 @section('title', $entity->title)
 @section('description', $entity->description)
 @section('main')
-    <h1>{{ $entity->title }}</h1>
+    <h2>{{ $entity->title }}</h2>
     <p>{{ $entity->welcome }}</p>
-<div>
     <ul>
         @forelse ($children as $child)
            <li><a href="{{ $child->route }}">{{ $child->title }}</a></li>
@@ -12,5 +11,4 @@
            <li>No children</li>
         @endforelse
     </ul>
-</div>
 @endsection
