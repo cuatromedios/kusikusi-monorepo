@@ -8,5 +8,6 @@ class Page extends EntityModel
 {
     protected $contentFields = [ "title", "description", "body" ];
     protected $propertiesFields = [];
+    protected $cacheViewsAs = 'file';
 
 }

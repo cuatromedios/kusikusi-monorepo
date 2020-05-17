@@ -8,5 +8,6 @@ class Section extends EntityModel
 {
     protected $contentFields = [ "title", "description", "body" ];
     protected $propertiesFields = [];
+    protected $cacheViewsAs = 'directory';
 
 }

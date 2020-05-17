@@ -6,6 +6,8 @@ use Kusikusi\Models\MediumModel;
 
 class Medium extends MediumModel
 {
+    protected $cacheViewsAs = 'file';
+
     /**
      * Define the presets the images can use for server side optimization
      */

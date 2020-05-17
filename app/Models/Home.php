@@ -8,5 +8,6 @@ class Home extends EntityModel
 {
     protected $contentFields = [ "title", "welcome", "description" ];
     protected $propertiesFields = [];
+    protected $cacheViewsAs = 'directory';
 
 }
