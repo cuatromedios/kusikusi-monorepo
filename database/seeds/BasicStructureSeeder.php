@@ -23,6 +23,7 @@ class BasicStructureSeeder extends Seeder
         $slugs = [];
         foreach ($langs as $lang) {
             $names[$lang] = "The Website Name";
+            $logoNames[$lang] = "The Website Name Logo";
             $titles[$lang] = "A Kusikusi website";
             $welcomes[$lang] = "A welcome message";
             $descriptions[$lang] = "The site description";
@@ -47,7 +48,7 @@ class BasicStructureSeeder extends Seeder
             "id" => "logo",
             "model" => "medium",
             "contents"=> [
-                "title" => 'Logo'
+                "title" => $logoNames
             ]
         ]);
         $logo->save();

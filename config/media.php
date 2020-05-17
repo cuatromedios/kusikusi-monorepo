@@ -1,38 +1,6 @@
 <?php
 
 return [
-    'presets' => [
-        'preview' => [
-            'quality' => 95,
-            'width' => 1200,
-            'height' =>  1200,
-            'background' => 'crop',
-            'alignment' => 'center',
-            'scale' => 'cover',
-            'format' => 'jpg',
-            'effects' => []
-        ],
-        'thumb' => [
-            'quality' => 80,
-            'width' => 320,
-            'height' =>  320,
-            'background' => 'crop',
-            'alignment' => 'center',
-            'scale' => 'cover',
-            'format' => 'jpg',
-            'effects' => []
-        ],
-        'logo' => [
-            'quality' => 100,
-            'width' => 128,
-            'height' =>  128,
-            'background' => 'crop',
-            'alignment' => 'center',
-            'scale' => 'contain',
-            'format' => 'png',
-            'effects' => []
-        ]
-    ],
     'formats' => [
         'webImages' => ['jpeg', 'jpg', 'png', 'gif'],
         'images' => ['jpeg', 'jpg', 'png', 'gif', 'tif', 'tiff', 'iff', 'bmp', 'psd'],
