@@ -59,7 +59,7 @@ class HtmlController extends Controller
             "lang" => $request->lang,
             "entity" => $currentEntity,
             "website" => Website::select('id', 'properties')
-                ->appendContents(['title'])
+                ->appendContents(['title'], $request->lang)
                 ->appendMedium('social')
                 ->find('website'),
             "logo" => Medium::select('id', 'properties')
