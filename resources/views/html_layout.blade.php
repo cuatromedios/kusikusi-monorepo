@@ -6,6 +6,7 @@
     <meta name="description" content="@yield(('description'))">
     <link rel="stylesheet" type="text/css" href="/styles/main.css">
     <meta name=viewport content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Kusikusi CMS" />
     @include('html.partials.headlinks')
     @include('html.partials.favicons')
     @include('html.partials.socialshare')

@@ -31,6 +31,12 @@ if(!class_exists('Storage')) {
 if(!class_exists('Image')) {
     class_alias('Intervention\Image\ImageServiceProvider', 'Image');
 }
+// If your webserver public directory is different change it here
+if ( !function_exists('public_path')) {
+    function public_path($path = null) {
+        return rtrim(app()->basePath('public/' . $path), '/');
+    }
+}
 
 /*
 |--------------------------------------------------------------------------

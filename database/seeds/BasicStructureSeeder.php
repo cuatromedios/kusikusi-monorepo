@@ -2,7 +2,10 @@
 
 use Illuminate\Database\Seeder;
 use App\Models\Entity;
+use App\Models\Website;
+use App\Models\Home;
 use App\Models\Medium;
+use Kusikusi\Models\User;
 
 class BasicStructureSeeder extends Seeder
 {
@@ -26,37 +29,42 @@ class BasicStructureSeeder extends Seeder
             $slugs[$lang] = $lang === $langs[0] ? "" : str_replace('_', '-', strtolower($lang));
         }
         //The website (root) entity
-        $website = new Entity([
+        $website = new Website([
             "id" => "website",
             "model" => "website",
-            "contents"=> [
+            "contents" => [
                 "title" => $names
+            ],
+            "properties" => [
+                "theme_color" => "#006BB8",
+                "background_color" => "#ffffff"
             ]
         ]);
         $website->save();
 
         //The favicon entity
-        $favicon = new \App\Models\Medium([
-            "id" => "favicon",
+        $logo = new \App\Models\Medium([
+            "id" => "logo",
             "model" => "medium",
             "contents"=> [
-                "title" => 'Favicon'
+                "title" => 'Logo'
             ]
         ]);
-        $favicon->save();
-        if (!is_dir ( storage_path("media/".$favicon->id) )) mkdir(storage_path("media/".$favicon->id));
-        copy(resource_path('images/icon.png'), storage_path("media/".$favicon->id."/file.png"));
+        $logo->save();
+        if (!is_dir ( storage_path("media/".$logo->id) )) mkdir(storage_path("media/".$logo->id));
+        copy(resource_path('images/icon.png'), storage_path("media/".$logo->id."/file.png"));
         $website->addRelation([
-            "called_entity_id" => $favicon->id,
+            "called_entity_id" => $logo->id,
             "kind" => \Kusikusi\Models\EntityRelation::RELATION_MEDIA,
-            "tags" => ['favicon', 'social'],
+            "tags" => ['favicon', 'social', 'logo'],
             "position" => 0
         ]);
-        $favicon->properties = array_merge($favicon->properties, Medium::getProperties(resource_path('images/icon.png')));
-        $favicon->save();
+        $logo->properties = array_merge($logo->properties, Medium::getProperties(resource_path('images/icon.png')));
+        $logo->save();
+        $website->save();
 
         //Home entity
-        $home = new Entity([
+        $home = new Home([
             "id" => "home",
             "model" => "home",
             "parent_entity_id" => $website->id,
@@ -79,7 +87,7 @@ class BasicStructureSeeder extends Seeder
         $collections->save();
 
         // A container for media entities
-        $media = new Entity([
+        $media = new Medium([
             "id" => "media",
             "parent_entity_id" => $website->id,
             "model" => "media",
@@ -93,7 +101,7 @@ class BasicStructureSeeder extends Seeder
         print("*** Generated user:\n");
         print("{\n");
         print("  \"email\": \"{$user_email}\",\n");
-        $user = factory(Kusikusi\Models\User::class)->make([
+        $user = factory(User::class)->make([
             "name" => $user_name,
             "email" => $user_email,
             "profile" => $user_profile

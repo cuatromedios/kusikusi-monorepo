@@ -8,6 +8,7 @@
     "require": {
         "php": "^7.2.5",
         "ext-json": "^1.7",
+        "chrisjean/php-ico": "^1.0",
         "cuatromedios/kusikusi-lib": "4.0.0-alpha7",
         "flipbox/lumen-generator": "^6.0",
         "intervention/image": "^2.5",

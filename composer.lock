@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "933c9ba716b6e023e11f664085a1d6fa",
+    "content-hash": "de04db5f6d143e274b22c4097a62c347",
     "packages": [
         {
             "name": "ankurk91/laravel-eloquent-relationships",
@@ -99,6 +99,49 @@
                 "math"
             ],
             "time": "2020-04-15T15:59:35+00:00"
+        },
+        {
+            "name": "chrisjean/php-ico",
+            "version": "1.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/chrisbliss18/php-ico.git",
+                "reference": "ccd5c0d56554f3ddcd7a823e695be83e0d1e43b6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/chrisbliss18/php-ico/zipball/ccd5c0d56554f3ddcd7a823e695be83e0d1e43b6",
+                "reference": "ccd5c0d56554f3ddcd7a823e695be83e0d1e43b6",
+                "shasum": ""
+            },
+            "require": {
+                "ext-gd": "*",
+                "php": ">=5.2.4"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "class-php-ico.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Chris Jean",
+                    "homepage": "https://chrisjean.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "An easy-to-use library to generate valid ICO files.",
+            "homepage": "https://github.com/chrisbliss18/php-ico",
+            "keywords": [
+                "favicon",
+                "ico"
+            ],
+            "time": "2016-09-27T22:00:56+00:00"
         },
         {
             "name": "classpreloader/classpreloader",

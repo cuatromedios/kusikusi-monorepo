@@ -14,4 +14,11 @@ $social_image = config('cms.app_url', '') . Illuminate\Support\Arr::get($entity,
 <meta property="og:site_name" content="{{ isset($website) ? $website->title : '' }}">
 <meta property="og:locale" content="{{ $lang ?? 'en' }}">
 <meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+@if (isset($website) && isset($website->properties['twitter']) && $website->properties['twitter'] !== '')
+<meta name="twitter:site" content="@{{ $website->properties['twitter'] }}">
+@endif
+<meta name="twitter:title" content="@yield('title')">
+<meta name="twitter:description" content="@yield('description')">
+<meta name="twitter:image" content="{{ $social_image }}">
 @endif

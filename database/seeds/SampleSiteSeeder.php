@@ -61,7 +61,7 @@ class SampleSiteSeeder extends Seeder
             $home->addRelation([
                 "called_entity_id" => $medium->id,
                 "kind" => \Kusikusi\Models\EntityRelation::RELATION_MEDIA,
-                "tags" => $m == 0 ? ['hero', 'social'] : ['gallery'],
+                "tags" => ['hero'],
                 "position" => $m
             ]);
         }
