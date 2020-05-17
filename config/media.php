@@ -21,6 +21,16 @@ return [
             'scale' => 'cover',
             'format' => 'jpg',
             'effects' => []
+        ],
+        'logo' => [
+            'quality' => 100,
+            'width' => 128,
+            'height' =>  128,
+            'background' => 'crop',
+            'alignment' => 'center',
+            'scale' => 'contain',
+            'format' => 'png',
+            'effects' => []
         ]
     ],
     'formats' => [

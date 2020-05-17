@@ -63,8 +63,8 @@ class HtmlController extends Controller
                 ->find('website'),
             "logo" => Medium::select('id', 'properties')
                 ->appendContents(['title'], $request->lang)
-                ->mediaOf('home', 'hero')
-                ->get(),
+                ->mediaOf('website', 'logo')
+                ->first(),
             "media" => Medium::select('id')
                 ->appendContents(['title'], $request->lang)
                 ->mediaOf($currentEntity->id)

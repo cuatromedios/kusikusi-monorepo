@@ -23,4 +23,8 @@ class Medium extends MediumModel
     {
         return "/media/$this->id/preview/{$this->getTitleAsSlug('preview')}";
     }
+    public function getLogoAttribute()
+    {
+        return "/media/$this->id/logo/{$this->getTitleAsSlug('logo')}";
+    }
 }

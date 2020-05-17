@@ -13,7 +13,14 @@
 </head>
 <body class="{{isset($entity) ? 'model-'.$entity->model.' view-'.$entity->view : '' }}">
 <header>
-
+    @if(isset($website))
+    <h1>
+        @if(isset($logo))
+            <img src="{{ $logo->logo }}" />
+        @endif
+        {{ $website->title }}
+    </h1>
+    @endif
 </header>
 <main>
     @yield('main')
