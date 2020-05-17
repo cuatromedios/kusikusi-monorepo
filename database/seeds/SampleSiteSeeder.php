@@ -13,7 +13,7 @@ class SampleSiteSeeder extends Seeder
      */
     public function run()
     {
-        $media_per_home = 1;
+        $media_per_home = 3;
         $sections_count = 2;
         $media_per_section = 1;
         $pages_count = 2;
@@ -61,7 +61,7 @@ class SampleSiteSeeder extends Seeder
             $home->addRelation([
                 "called_entity_id" => $medium->id,
                 "kind" => \Kusikusi\Models\EntityRelation::RELATION_MEDIA,
-                "tags" => ['hero'],
+                "tags" => $m == 0 ? ['hero', 'social'] : ['hero'],
                 "position" => $m
             ]);
         }
