@@ -6,12 +6,12 @@ use App\Model;
 use Faker\Generator as Faker;
 use Faker\Provider\Lorem;
 use Illuminate\Support\Str;
-use App\Models\Entity;
+use Kusikusi\Models\EntityModel;
 use App\Models\Medium;
 use Intervention\Image\ImageManagerStatic as Image;
 use PUGX\Shortid\Shortid;
 
-$factory->define(Entity::class, function (Faker $faker) {
+$factory->define(EntityModel::class, function (Faker $faker) {
     $langs = config('cms.langs', ['']);
     $titles = [];
     $descriptions = [];
@@ -35,7 +35,7 @@ $factory->define(Entity::class, function (Faker $faker) {
         ]
     ];
 });
-$factory->state(Entity::class, 'medium', function (Faker $faker) {
+$factory->state(EntityModel::class, 'medium', function (Faker $faker) {
     $titles = [];
     $langs = config('cms.langs', ['']);
     foreach ($langs as $lang) {

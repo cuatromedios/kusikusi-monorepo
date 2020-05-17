@@ -2,7 +2,7 @@
 
 use Laravel\Lumen\Testing\DatabaseMigrations;
 use Laravel\Lumen\Testing\DatabaseTransactions;
-use App\Models\Entity;
+use Kusikusi\Models\EntityModel;
 use Kusikusi\Models\EntityContent;
 
 
@@ -56,46 +56,46 @@ class EntityModelTest extends TestCase
      */
     public function testCreateEntity()
     {
-        $website = new Entity($this->data['website']);
+        $website = new EntityModel($this->data['website']);
         $website->save();
         $this->seeInDatabase('entities',$this->data['website']);
     }
 
     public function testEditEntity()
     {
-        $website = new Entity($this->data['website']);
+        $website = new EntityModel($this->data['website']);
         $website->save();
-        $website = Entity::where('id',"website")->update($this->data['home']);
+        $website = EntityModel::where('id',"website")->update($this->data['home']);
         $this->seeInDatabase('entities',$this->data['home']);
     }
 
      public function testDeleteEntity()
     {
-        $website = new Entity($this->data['website']);
+        $website = new EntityModel($this->data['website']);
         $website->save();
-        $delete = Entity::where('id', 'home')->delete();
+        $delete = EntityModel::where('id', 'home')->delete();
         $this->notSeeInDatabase('entities',['id' => 'home']);
     }
 
     public function testCreateEntityWithoutModel()
     {
         $this->expectExceptionMessage('A model name is requiered to create a new entity');
-        $website = new Entity($this->data['website_without_model']);
+        $website = new EntityModel($this->data['website_without_model']);
         $website->save();
     }
 
     public function testAncestorsParentEntityId()
     {
-        $website = new Entity($this->data['website']);
-        $home = new Entity($this->data['home']);
-        $page = new Entity($this->data['page']);
+        $website = new EntityModel($this->data['website']);
+        $home = new EntityModel($this->data['home']);
+        $page = new EntityModel($this->data['page']);
         $website->save();
         $home->save();
         $page->save();
         $this->seeInDatabase('entities', $this->data['page']);
         $this->seeInDatabase('relations', ['caller_entity_id'=>'page', 'kind'=>'ancestor', 'called_entity_id'=>'home', 'depth'=>1]);
         $this->seeInDatabase('relations', ['caller_entity_id'=>'page', 'kind'=>'ancestor', 'called_entity_id'=>'website', 'depth'=>2]);
-        $ancestors = Entity::select('id')->ancestorOf('page')->orderBy('ancestor_relation_depth')->get()->toArray();
+        $ancestors = EntityModel::select('id')->ancestorOf('page')->orderBy('ancestor_relation_depth')->get()->toArray();
         $this->assertEquals(count($ancestors), 2);
         $this->assertEquals($ancestors[0]['id'], 'home');
         $this->assertEquals($ancestors[1]['id'], 'website');
@@ -107,7 +107,7 @@ class EntityModelTest extends TestCase
         $totalCount = 0;
         foreach ($data as $entity_data) {
             $rowCount = 0;
-            $entity = new Entity($entity_data);
+            $entity = new EntityModel($entity_data);
             $entity->save();
             $this->seeInDatabase('entities', ['id'=>$entity_data['id']]);
             foreach ($entity_data['contents'] as $field=>$values) {
@@ -133,7 +133,7 @@ class EntityModelTest extends TestCase
         $totalCount = 0;
         foreach ($data as $entity_data) {
             $rowCount = 0;
-            $entity = new Entity($entity_data);
+            $entity = new EntityModel($entity_data);
             $entity->save();
             $this->seeInDatabase('entities', ['id'=>$entity_data['id']]);
             foreach ($entity_data['contents'] as $rawContent) {
@@ -153,7 +153,7 @@ class EntityModelTest extends TestCase
 
   /*   public function testEntityContentRoutes()
     {
-        factory(Entity::class)->create($this->data['page']);
+        factory(EntityModel::class)->create($this->data['page']);
         $this->seeInDatabase('entities',['id'=>'website']);
         $this->seeInDatabase('contents',$this->data['content_data']);
 

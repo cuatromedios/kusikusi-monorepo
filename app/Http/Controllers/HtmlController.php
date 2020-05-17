@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Entity;
+use App\Models\Website;
+use Kusikusi\Models\EntityModel;
 use App\Models\Medium;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -16,25 +17,25 @@ use Illuminate\Support\Facades\Config;
  */
 class HtmlController extends Controller
 {
-    public function home(Request $request, Entity $entity)
+    public function home(Request $request, EntityModel $entity)
     {
         $result = $this->common($request, $entity);
         $result['children'] = $this->children($request, $entity);
         return view('html.'.$entity->view, $result);
     }
-    public function section(Request $request, Entity $entity)
+    public function section(Request $request, EntityModel $entity)
     {
         $result = $this->common($request, $entity);
         $result['children'] = $this->children($request, $entity);
         return view('html.'.$entity->view, $result);
     }
 
-    public function page(Request $request, Entity $entity, $lang)
+    public function page(Request $request, EntityModel $entity, $lang)
     {
         $result = $this->common($request, $entity);
         return view('html.'.$entity->view, $result);
     }
-    public function product(Request $request, Entity $entity, $lang)
+    public function product(Request $request, EntityModel $entity, $lang)
     {
         $result = $this->common($request, $entity);
         return view('html.'.$entity->view, $result);
@@ -50,14 +51,14 @@ class HtmlController extends Controller
      * The common method can be called by any other method to receive the commonly required properties to be send
      * to the view, for example, the current language, all the fields of the entity, the media and ancestors.
      * @param Request $request
-     * @param Entity $currentEntity
+     * @param EntityModel $currentEntity
      * @return array
      */
-    private function common(Request $request, Entity $currentEntity) {
+    private function common(Request $request, EntityModel $currentEntity) {
         $result = [
             "lang" => $request->lang,
             "entity" => $currentEntity,
-            "website" => Entity::select('id', 'properties')
+            "website" => Website::select('id', 'properties')
                 ->appendContents(['title'])
                 ->appendMedium('social')
                 ->find('website'),
@@ -69,7 +70,7 @@ class HtmlController extends Controller
                 ->appendContents(['title'], $request->lang)
                 ->mediaOf($currentEntity->id)
                 ->get(),
-            "ancestors" => Entity::select('id', 'model')
+            "ancestors" => EntityModel::select('id', 'model')
                 ->ancestorOf($currentEntity->id)
                 ->descendantOf('website')
                 ->orderBy('ancestor_relation_depth', 'desc')
@@ -84,11 +85,11 @@ class HtmlController extends Controller
      * The children private method returns the children of an entity, with thte title content, its route and a medium
      * path if it has one.
      * @param Request $request
-     * @param Entity $entity
+     * @param EntityModel $entity
      * @return mixed
      */
-    private function children(Request $request, Entity $entity) {
-        $children = Entity::select('id', 'model')
+    private function children(Request $request, EntityModel $entity) {
+        $children = EntityModel::select('id', 'model')
             ->childOf($entity->id)
             ->appendContents(['title'], $request->lang)
             ->appendRoute($request->lang)

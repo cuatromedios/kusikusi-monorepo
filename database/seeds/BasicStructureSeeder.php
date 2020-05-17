@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Models\Entity;
+use Kusikusi\Models\EntityModel;
 use App\Models\Website;
 use App\Models\Home;
 use App\Models\Medium;
@@ -79,7 +79,7 @@ class BasicStructureSeeder extends Seeder
         $home->save();
 
         // A container for collections, like categories
-        $collections = new Entity([
+        $collections = new EntityModel([
             "id" => "collections",
             "parent_entity_id" => $website->id,
             "model" => "collections",

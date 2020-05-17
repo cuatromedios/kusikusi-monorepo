@@ -6,7 +6,7 @@ use Laravel\Lumen\Testing\DatabaseTransactions;
 use Illuminate\Database\Seeder;
 use Illuminate\Eloquent\Model;
 use Illuminate\Support\Str;
-use App\Models\Entity;
+use Kusikusi\Models\EntityModel;
 
 class ApiTest extends TestCase
 {
@@ -204,15 +204,15 @@ class ApiTest extends TestCase
 
     public function testSetCollectionEntities()
     {
-        $website = new Entity($this->data['section_entities_collection']);
+        $website = new EntityModel($this->data['section_entities_collection']);
         $website->save();
-        $website = new Entity($this->data['page_of_section_one']);
+        $website = new EntityModel($this->data['page_of_section_one']);
         $website->save();
-        $website = new Entity($this->data['page_of_section_two']);
+        $website = new EntityModel($this->data['page_of_section_two']);
         $website->save();
-        $website = new Entity($this->data['page_of_section_ec_one']);
+        $website = new EntityModel($this->data['page_of_section_ec_one']);
         $website->save();
-        $website = new Entity($this->data['page_of_section_ec_two']);
+        $website = new EntityModel($this->data['page_of_section_ec_two']);
         $website->save();
         $this->assertTrue(true);
     }

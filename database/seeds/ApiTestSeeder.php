@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Models\Entity;
 use Kusikusi\Models\User;
 
 class ApiTestSeeder extends Seeder
