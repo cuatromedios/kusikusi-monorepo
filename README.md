@@ -34,6 +34,28 @@ You can run Kusikusi as any other PHP application, for example you can run it us
 ```shell script
 php -S localhost:8000 -t public public/phprouter.php
 ```
+### Run Laravel Mix for CSS pre-processing, auto-refresh and browser-sync
+
+If you want to take advante of LaravelMix to compile your assets, like css preprocessors, and use Browser Sync to quickly test changes on both css and views, Kusikusi comes with preconfigured Larevl Mix. You need to have installed node and npm in your computer:
+
+Run once
+```shell script
+npm install
+```
+
+Run Laravel Mix, watching for changes:
+
+```shell script
+npm run watch
+```
+
+By default, this  will transpile SCSS file `resources/views/styles/main.scss` to `public/styles` and read from the PHP server already running in `http://127.0.0.1:8000/` But you can modify this and other Mix configurations in `webpack.mix.js` file
+
+To crete production ready assets:
+
+```shell script
+npm run prod
+```
 
 ## Official Documentation
 
