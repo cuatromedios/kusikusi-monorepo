@@ -11,24 +11,21 @@ Kusikusi boilerplate is based in [Lumen Framework](https://lumen.laravel.com/), 
     ```shell script
     composer create-project cuatromedios/kusikusi name-of-your-project
     ```
-2. Or if you prefer, you can download or clone the project and do a step by step installation
-    1. First install the dependencies
-       ```shell script
-       composer install
-       ```
-    2. Rename the `.env.example` file to `.env   
-    3. Generate an application key. Kusikusi includes [Lumen Generator](https://github.com/flipboxstudio/lumen-generator) so you can run this command to generate a application key
-       ```shell script
-       php artisan key:generate
-       ```
-3. Configure the APP_URL env variable. In your .env file to point to your website or application url. This will be used for canonical and alternate urls and social share assets
-4. Configure the database connection. In your .env file, filling the `DB_*` configuration options, dont forget to set the desired APP_TIMEZONE
-5. Open the `config/cms.php` configuration file, and change the `langs` property to match your needs. Even if your website is just one language, set it there, use two letters standard like `en` or a two letter plus the country like `en_US`. Even if it is just only one language, this setting is an array. So use values like `["en"]`, `["en_US"]`, `["en_US", "es_MX"]`, `["en", "fr", "es", "pr"]`, 
-6. Run the migrations, include --seed to also generate the basic website structure. You can also uncomment the sample site seeder in `database/seed/DatabaseSeeder.php` if you want to create a website with fake content for testing purposes. 
+2. Or if you prefer, you can download or clone the project and install the dependencies with `composer install` and then rename the `.env.example` file to `.env   
+3. Generate an application key. Kusikusi includes [Lumen Generator](https://github.com/flipboxstudio/lumen-generator) so you can run this command to generate a application key
+   ```shell script
+   php artisan key:generate
+   ```
+4. Configure the APP_URL env variable. In your .env file to point to your website or application url. This will be used for canonical and alternate urls and social share assets
+5. Configure the database connection.
+    1. In your .env file, filling the `DB_*` configuration options
+    2. Don't forget to set the desired APP_TIMEZONE
+6. Open the `config/cms.php` configuration file, and change the `langs` property to match your needs. Even if your website is just one language, set it there, use two letters standard like `en` or a two letter plus the country like `en_US`. Even if it is just only one language, this setting is an array. So use values like `["en"]`, `["en_US"]`, `["en_US", "es_MX"]`, `["en", "fr", "es", "pr"]`, 
+7. Run the migrations, include --seed to also generate the basic website structure. You can also uncomment the sample site seeder in `database/seed/DatabaseSeeder.php` if you want to create a website with fake content for testing purposes. 
    ```shell script
    php artisan migrate --seed
    ``` 
-7. **Running.** You can run Kusikusi as any other PHP application, for example you can run it using the PHP internal web server, and use a provided router:
+8. **Running.** You can run Kusikusi as any other PHP application, for example you can run it using the PHP internal web server, and use a provided router:
     ```shell script
     php -S 127.0.0.1:8000 -t public public/phprouter.php
     ```
