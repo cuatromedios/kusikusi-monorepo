@@ -24,11 +24,13 @@ Kusikusi boilerplate is based in [Lumen Framework](https://lumen.laravel.com/), 
 7. Run the migrations, include --seed to also generate the basic website structure. You can also uncomment the sample site seeder in `database/seed/DatabaseSeeder.php` if you want to create a website with fake content for testing purposes. 
    ```shell script
    php artisan migrate --seed
-   ``` 
+   ```
+   Note this will create, and display in the console, an admin username and password.
 8. **Running.** You can run Kusikusi as any other PHP application, for example you can run it using the PHP internal web server, and use a provided router:
     ```shell script
     php -S 127.0.0.1:8000 -t public public/phprouter.php
     ```
+9. Admin interface: Point your browser to `127.0.0.1:8000/cms` to go the admin interface and use the credentials created in the migration / seeding to login
 ### Run Laravel Mix for CSS pre-processing, auto-refresh and browser-sync
 
 If you want to take advantage of LaravelMix to compile your assets, like css preprocessors, and use Browser Sync to quickly test changes on both css and views, Kusikusi comes with preconfigured Larevl Mix. You need to have installed node and npm in your computer:
