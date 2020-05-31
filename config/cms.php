@@ -29,7 +29,7 @@ return [
                 [
                     "label" => "contents.contents",
                     "components" => [
-                        ["component" => "nq-input", "value" => "contents.title", "label" => "contents.title", "props" => ["size" => "xl"]],
+                        ["component" => "nq-input", "value" => "contents.title", "label" => "contents.title", "props" => ["size" => "xl"], "rules" => [["required"]]],
                         ["component" => "html-editor", "value" => "contents.welcome", "label" => "contents.description", "props" => []],
                         ["component" => "slug", "value" => "contents.slug", "label" => "contents.slug"]
                     ],
@@ -55,8 +55,8 @@ return [
                 [
                     "label" => "contents.contents",
                     "components" => [
-                        ["component" => "nq-input", "value" => "contents.title", "label" => "contents.title", "rules" => [["required", "contents.title"]]],
-                        ["component" => "nq-input", "value" => "contents.description", "label" => "contents.description", "rules" => [["required"], ["between", 5, 6, "Entre 5 y 6"]]],
+                        ["component" => "nq-input", "value" => "contents.title", "label" => "contents.title", "rules" => [["required"]]],
+                        ["component" => "nq-input", "value" => "contents.description", "label" => "contents.description"],
                         ["component" => "html-editor", "value" => "contents.body", "label" => "contents.body"],
                         ["component" => "slug", "value" => "contents.slug", "label" => "contents.slug"]
                     ],
@@ -76,7 +76,7 @@ return [
                 [
                     "label" => "contents.contents",
                     "components" => [
-                        ["component" => "nq-input", "value" => "contents.title", "label" => "contents.title"],
+                        ["component" => "nq-input", "value" => "contents.title", "label" => "contents.title", "rules" => [["required"]]],
                         ["component" => "nq-input", "value" => "contents.description", "label" => "contents.description"],
                         ["component" => "slug", "value" => "contents.slug", "label" => "contents.slug"]
                     ],
@@ -96,7 +96,7 @@ return [
                 [
                     "label" => "contents.contents",
                     "components" => [
-                        ["component" => "nq-input", "value" => "contents.title", "label" => "contents.title"]
+                        ["component" => "nq-input", "value" => "contents.title", "label" => "contents.title", "rules" => [["required"]]]
                     ],
                 ]
             ]
@@ -109,7 +109,7 @@ return [
                 [
                     "label" => "contents.contents",
                     "components" => [
-                        ["component" => "nq-input", "value" => "contents.title", "label" => "contents.title", "props" => ["size" => "xl"]]
+                        ["component" => "nq-input", "value" => "contents.title", "label" => "contents.title", "props" => ["size" => "xl"], "rules" => [["required"]]]
                     ],
                 ],
                 [
