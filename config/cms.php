@@ -77,7 +77,7 @@ return [
                     "components" => [
                         ["component" => "nq-input", "value" => "contents.title", "label" => "contents.title"],
                         ["component" => "nq-input", "value" => "contents.description", "label" => "contents.description"],
-                        ["component" => "nq-input", "value" => "contents.slug", "label" => "contents.slug"]
+                        ["component" => "slug", "value" => "contents.slug", "label" => "contents.slug"]
                     ],
                 ],
                 [
