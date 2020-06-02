@@ -43,7 +43,7 @@ return [
                 [
                     "label" => "contents.media",
                     "components" => [
-                        ["component" => "media", "props" => ["allowed" => [ "png" ], "tags" => ["hero", "social", "favicon", "logo"]]]
+                        ["component" => "media", "props" => ["allowed" => [ "images" ], "tags" => ["hero", "social", "favicon", "logo"]]]
                     ],
                 ]
             ]
