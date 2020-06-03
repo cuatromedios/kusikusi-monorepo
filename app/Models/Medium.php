@@ -19,12 +19,13 @@ class Medium extends MediumModel
     /**
      * Create accessors for every preset
      */
-    public function getThumbAttribute()   { return $this->getUrl('thumb'); }
-    public function getPreviewAttribute() { return $this->getUrl('preview'); }
-    public function getLogoAttribute()    { return $this->getUrl('logo'); }
+    public function getThumbAttribute()    { return $this->getUrl('thumb'); }
+    public function getPreviewAttribute()  { return $this->getUrl('preview'); }
+    public function getLogoAttribute()     { return $this->getUrl('logo'); }
+    public function getOriginalAttribute() { return $this->getUrl('original'); }
 
     /**
      * Optionally append the accessors so the queries result includes the url
      */
-    protected $appends = ['thumb', 'preview', 'logo'];
+    protected $appends = ['thumb', 'preview', 'logo', 'original'];
 }

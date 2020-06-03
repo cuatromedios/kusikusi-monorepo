@@ -2,8 +2,9 @@
 
 return [
     'formats' => [
-        'webImages' => ['jpeg', 'jpg', 'png', 'gif'],
-        'images' => ['jpeg', 'jpg', 'png', 'gif', 'tif', 'tiff', 'iff', 'bmp', 'psd'],
+        'webImages' => ['jpeg', 'jpg', 'png', 'gif', 'svg'],
+        'webBitmapImages' => ['jpeg', 'jpg', 'png', 'gif'],
+        'images' => ['jpeg', 'jpg', 'png', 'gif', 'tif', 'tiff', 'iff', 'bmp', 'psd', 'svg'],
         'audios' => ['mp3', 'wav', 'aiff', 'aac', 'oga', 'pcm', 'flac'],
         'webAudios' => ['mp3', 'oga'],
         'videos' => ['mov', 'mp4', 'qt', 'avi', 'mpe', 'mpeg', 'ogg', 'm4p', 'm4v', 'flv', 'wmv'],
