@@ -7,7 +7,6 @@ use Kusikusi\Models\EntityModel;
 use App\Models\Medium;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Config;
 
 /**
  * Class HtmlController
@@ -21,6 +20,9 @@ class HtmlController extends Controller
     {
         $result = $this->common($request, $entity);
         $result['children'] = $this->children($request, $entity);
+        $result['heros'] = $result['media']
+            ->where('properties.isWebImage')
+            ->filter(function ($entity) { return in_array('hero', $entity->media_tags); });
         return view('html.'.$entity->view, $result);
     }
     public function section(Request $request, EntityModel $entity)
@@ -33,6 +35,8 @@ class HtmlController extends Controller
     public function page(Request $request, EntityModel $entity, $lang)
     {
         $result = $this->common($request, $entity);
+        $result['docs'] = $result['media']->where('properties.isDocument');
+        $result['images'] = $result['media']->where('properties.isWebImage');
         return view('html.'.$entity->view, $result);
     }
     public function product(Request $request, EntityModel $entity, $lang)
@@ -66,7 +70,7 @@ class HtmlController extends Controller
                 ->appendContents(['title'], $request->lang)
                 ->mediaOf('website', 'logo')
                 ->first(),
-            "media" => Medium::select('id')
+            "media" => Medium::select('id', 'properties')
                 ->appendContents(['title'], $request->lang)
                 ->mediaOf($currentEntity->id)
                 ->get(),

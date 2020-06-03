@@ -13,19 +13,20 @@
 </head>
 <body class="{{isset($entity) ? 'model-'.$entity->model.' view-'.$entity->view : '' }}">
 <header>
-    @if(isset($website))
-    {!! $entity->model === 'home' ? '<h1>' : '<p>' !!}
-        @if(isset($logo))
-            <img src="{{ $logo->logo }}" alt="{{ $website->title }}" />
+    <div class="container">
+        @if(isset($website))
+            {!! $entity->model === 'home' ? '<h1>' : '<p>' !!}
+            @if(isset($logo))
+                <img src="{{ $logo->logo }}" alt="{{ $website->title }}" />
+            @endif
+            {!! $entity->model === 'home' ? '</h1>' : '</p>' !!}
         @endif
-        {{ $website->title }}
-    {!! $entity->model === 'home' ? '</h1>' : '</p>' !!}
-    @endif
+    </div>
 </header>
-<main>
+<main class="container">
     @yield('main')
 </main>
-<footer>
+<footer class="container">
     <p>A kusikusi website.</p>
     @include('html.partials.langlist')
 </footer>

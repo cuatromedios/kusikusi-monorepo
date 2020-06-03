@@ -5,12 +5,23 @@
     @include('html.partials.breadcrumbs')
     <h1>{{ $entity->title }}</h1>
     <em>{{ $entity->description }}</em>
+
+    @if($images->isNotEmpty())
+        <div class="slider">
+            @foreach($images as $image)
+                <img src="{{ $image->thumb }}" alt="{{ $image->title }}" />
+            @endforeach
+        </div>
+    @endif
+
     {{ $entity->body }}
-<div>
-    @forelse ($media as $medium)
-        <img src="{{ $medium->thumb }}" alt="" />
-    @empty
-        <em>No children</em>
-    @endforelse
-</div>
+
+    <h2>Documents</h2>
+    <ul class="documents">
+        @forelse($docs as $doc)
+            <li><a href="{{ $doc->original }}" download>{{ $doc->title }}</a></li>
+        @empty
+            <li>No documents for download</li>
+        @endforelse
+    </ul>
 @endsection
