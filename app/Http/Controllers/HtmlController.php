@@ -97,7 +97,7 @@ class HtmlController extends Controller
             ->childOf($entity->id)
             ->appendContents(['title'], $request->lang)
             ->appendRoute($request->lang)
-            ->appendMedium('icon')
+            ->appendMedium('icon', $request->lang)
             ->orderBy('position')
             ->orderBy('title')
             ->get();

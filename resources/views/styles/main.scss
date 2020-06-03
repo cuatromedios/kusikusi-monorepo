@@ -43,3 +43,11 @@ a:visited {
 a:active, a:hover {
     color: lighten($color-primary, 10);
 }
+li img {
+    width: 64px;
+    height: auto;
+}
+.hero-slider img {
+    width: 100%;
+    display: block;
+}
