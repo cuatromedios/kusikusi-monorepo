@@ -23,6 +23,7 @@ class BasicStructureSeeder extends Seeder
         $slugs = [];
         foreach ($langs as $lang) {
             $names[$lang] = "The Website Name";
+            $iconNames[$lang] = "The Website Name Icon";
             $logoNames[$lang] = "The Website Name Logo";
             $titles[$lang] = "A Kusikusi website";
             $welcomes[$lang] = "A welcome message";
@@ -44,6 +45,26 @@ class BasicStructureSeeder extends Seeder
         $website->save();
 
         //The favicon entity
+        $icon = new \App\Models\Medium([
+            "id" => "icon",
+            "model" => "medium",
+            "contents"=> [
+                "title" => $iconNames
+            ]
+        ]);
+        $icon->save();
+        if (!is_dir ( storage_path("media/".$icon->id) )) mkdir(storage_path("media/".$icon->id));
+        copy(resource_path('images/icon.png'), storage_path("media/".$icon->id."/file.png"));
+        $website->addRelation([
+            "called_entity_id" => $icon->id,
+            "kind" => \Kusikusi\Models\EntityRelation::RELATION_MEDIA,
+            "tags" => ['favicon', 'social'],
+            "position" => 0
+        ]);
+        $icon->properties = array_merge($icon->properties, Medium::getProperties(resource_path('images/icon.png')));
+        $icon->save();
+
+        //The logo entity
         $logo = new \App\Models\Medium([
             "id" => "logo",
             "model" => "medium",
@@ -53,15 +74,16 @@ class BasicStructureSeeder extends Seeder
         ]);
         $logo->save();
         if (!is_dir ( storage_path("media/".$logo->id) )) mkdir(storage_path("media/".$logo->id));
-        copy(resource_path('images/icon.png'), storage_path("media/".$logo->id."/file.png"));
+        copy(resource_path('images/logo.svg'), storage_path("media/".$logo->id."/file.svg"));
         $website->addRelation([
             "called_entity_id" => $logo->id,
             "kind" => \Kusikusi\Models\EntityRelation::RELATION_MEDIA,
-            "tags" => ['favicon', 'social', 'logo'],
+            "tags" => ['logo'],
             "position" => 0
         ]);
-        $logo->properties = array_merge($logo->properties, Medium::getProperties(resource_path('images/icon.png')));
+        $logo->properties = array_merge($logo->properties, Medium::getProperties(resource_path('images/icon.svg')));
         $logo->save();
+
         $website->save();
 
         //Home entity
