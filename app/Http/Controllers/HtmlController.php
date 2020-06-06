@@ -80,6 +80,12 @@ class HtmlController extends Controller
                 ->orderBy('ancestor_relation_depth', 'desc')
                 ->appendContents(['title'], $request->lang)
                 ->appendRoute($request->lang)
+                ->get(),
+            "mainMenu" => EntityModel::select('id', 'model')
+                ->relatedBy('main-menu', 'menu')
+                ->appendContents(['title'], $request->lang)
+                ->orderBy('relation_position', 'asc')
+                ->appendRoute($request->lang)
                 ->get()
         ];
         return $result;

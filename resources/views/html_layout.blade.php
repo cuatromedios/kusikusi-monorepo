@@ -21,6 +21,13 @@
             @endif
             {!! $entity->model === 'home' ? '</h1>' : '</p>' !!}
         @endif
+        <nav>
+            <ul>
+            @foreach($mainMenu as $item)
+                <li><a href="{{ $item->route }}">{{ $item->title }}</a></li>
+            @endforeach
+            </ul>
+        </nav>
     </div>
 </header>
 <main class="container">
