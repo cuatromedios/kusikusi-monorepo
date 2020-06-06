@@ -48,6 +48,32 @@ return [
                 ]
             ]
         ],
+        "section" => [
+            "icon" => "folder",
+            "name" => "models.section",
+            "form" => [
+                [
+                    "label" => "contents.contents",
+                    "components" => [
+                        ["component" => "nq-input", "value" => "contents.title", "label" => "contents.title", "props" => ["size" => "xl"], "rules" => [["required"]]],
+                        ["component" => "nq-input", "value" => "contents.description", "label" => "contents.description"],
+                        ["component" => "slug", "value" => "contents.slug", "label" => "contents.slug"]
+                    ],
+                ],
+                [
+                    "label" => "contents.children",
+                    "components" => [
+                        ["component" => "children", "props" => ["models" => ["page"]]]
+                    ],
+                ],
+                [
+                    "label" => "contents.relations",
+                    "components" => [
+                        ["component" => "relations", "props" => [['kind' => 'medium', 'from_entity_id' => 'home', 'list' => 'descendants', 'models' => ['medium'], 'tags' => ['emphasize']]]]
+                    ],
+                ]
+            ]
+        ],
         "page" => [
             "icon" => "description",
             "name" => "models.page",
@@ -55,7 +81,7 @@ return [
                 [
                     "label" => "contents.contents",
                     "components" => [
-                        ["component" => "nq-input", "value" => "contents.title", "label" => "contents.title", "rules" => [["required"]]],
+                        ["component" => "nq-input", "value" => "contents.title", "label" => "contents.title", "props" => ["size" => "xl"], "rules" => [["required"]]],
                         ["component" => "nq-input", "value" => "contents.description", "label" => "contents.description"],
                         ["component" => "html-editor", "value" => "contents.body", "label" => "contents.body"],
                         ["component" => "slug", "value" => "contents.slug", "label" => "contents.slug"]
@@ -69,26 +95,6 @@ return [
                 ]
             ]
         ],
-        "section" => [
-            "icon" => "folder",
-            "name" => "models.section",
-            "form" => [
-                [
-                    "label" => "contents.contents",
-                    "components" => [
-                        ["component" => "nq-input", "value" => "contents.title", "label" => "contents.title", "rules" => [["required"]]],
-                        ["component" => "nq-input", "value" => "contents.description", "label" => "contents.description"],
-                        ["component" => "slug", "value" => "contents.slug", "label" => "contents.slug"]
-                    ],
-                ],
-                [
-                    "label" => "contents.children",
-                    "components" => [
-                        ["component" => "children", "props" => ["models" => ["page"]]]
-                    ],
-                ]
-            ]
-        ],
         "medium" => [
             "icon" => "insert_drive_file",
             "name" => "models.medium",
@@ -96,7 +102,7 @@ return [
                 [
                     "label" => "contents.contents",
                     "components" => [
-                        ["component" => "nq-input", "value" => "contents.title", "label" => "contents.title", "rules" => [["required"]]]
+                        ["component" => "nq-input", "value" => "contents.title", "label" => "contents.title", "props" => ["size" => "xl"], "rules" => [["required"]]]
                     ],
                 ]
             ]
