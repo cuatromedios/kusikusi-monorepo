@@ -20,12 +20,19 @@ class SampleSiteSeeder extends Seeder
         $media_per_page = 3;
 
         $home = EntityModel::where('id', 'home')->first();
+        $mainMenu = EntityModel::where('id', 'main-menu')->first();
         for ($s = 0; $s < $sections_count; $s++) {
             $section = factory(Kusikusi\Models\EntityModel::class)->make([
                 "model" => "section",
                 "parent_entity_id" => $home->id
             ]);
             $section->save();
+            $mainMenu->addRelation([
+                "called_entity_id" => $section->id,
+                "kind" => \Kusikusi\Models\EntityRelation::RELATION_MENU,
+                "tags" => [],
+                "position" => $s
+            ]);
             for ($m = 0; $m < $media_per_section; $m++) {
                 $medium = factory(Kusikusi\Models\EntityModel::class)->states('medium')->make();
                 $medium->save();

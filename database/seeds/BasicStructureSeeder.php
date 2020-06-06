@@ -44,6 +44,30 @@ class BasicStructureSeeder extends Seeder
         ]);
         $website->save();
 
+        // A container for media entities
+        $media = new EntityModel([
+            "id" => "media",
+            "parent_entity_id" => $website->id,
+            "model" => "media",
+        ]);
+        $media->save();
+
+        // A container for menus
+        $menusContainer = new EntityModel([
+            "id" => "menus-container",
+            "properties" => ["title" => "List of menus"],
+            "parent_entity_id" => $website->id,
+            "model" => "menus-container",
+        ]);
+        $menusContainer->save();
+        $mainMenu = new EntityModel([
+            "id" => "main-menu",
+            "properties" => ["title" => "Main menu"],
+            "parent_entity_id" => $menusContainer->id,
+            "model" => "menu",
+        ]);
+        $mainMenu->save();
+
         //The favicon entity
         $icon = new \App\Models\Medium([
             "id" => "icon",
@@ -109,13 +133,6 @@ class BasicStructureSeeder extends Seeder
         ]);
         $collections->save();
 
-        // A container for media entities
-        $media = new Medium([
-            "id" => "media",
-            "parent_entity_id" => $website->id,
-            "model" => "media",
-        ]);
-        $media->save();
 
         //The default admin user
         $user_name = "Administrator";

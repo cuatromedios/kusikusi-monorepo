@@ -65,12 +65,6 @@ return [
                     "components" => [
                         ["component" => "children", "props" => ["models" => ["page"]]]
                     ],
-                ],
-                [
-                    "label" => "contents.relations",
-                    "components" => [
-                        ["component" => "relations", "props" => [['kind' => 'medium', 'from_entity_id' => 'home', 'list' => 'descendants', 'models' => ['medium'], 'tags' => ['emphasize']]]]
-                    ],
                 ]
             ]
         ],
@@ -123,6 +117,39 @@ return [
                     "components" => [
                         ["component" => "media", "props" => ["allowed" => [ "images" ], "tags" => ["social", "favicon"]]]
                     ],
+                ]
+            ]
+        ],
+        "menus-container" => [
+            "icon" => "list",
+            "name" => "menus.title",
+            "views" => ["menu-container"],
+            "editable" => false,
+            "form" => [
+                [
+                    "label" => "menus.title",
+                    "components" => [
+                        ["component" => "children", "props" => ["models" => ["menu"], "order_by" => "contents.title", "tags" => []]]
+                    ]
+                ]
+            ]
+        ],
+        "menu" => [
+            "icon" => "list",
+            "name" => "menus.menu",
+            "views" => ["menu"],
+            "form" => [
+                [
+                    "label" => "contents.contents",
+                    "components" => [
+                        ["component" => "nq-input", "value" => "properties.title", "label" => "contents.name", "props" => ["size" => "xl"], "rules" => [["required"]]]
+                    ],
+                ],
+                [
+                    "label" => "menus.items",
+                    "components" => [
+                        ["component" => "relations", "props" => ['kind' => 'menu', 'from_entity_id' => 'home', 'list' => 'descendants', 'models' => ['medium'], 'tags' => ['emphasize']]]
+                    ]
                 ]
             ]
         ]
