@@ -23,9 +23,11 @@
         @endif
         <nav>
             <ul>
+            @if(isset($mainMenu))
             @foreach($mainMenu as $item)
                 <li><a href="{{ $item->route }}">{{ $item->title }}</a></li>
             @endforeach
+            @endif
             </ul>
         </nav>
     </div>
