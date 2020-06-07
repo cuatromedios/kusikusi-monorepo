@@ -1,6 +1,6 @@
 {
   "name": "kusikusi",
-  "version": "4.0.3",
+  "version": "4.2.0",
   "description": "Kusikusi is a Lumen based headless CMS with a head. A boilerplate for creating API-first applications based on hierarchical data, like the data found on most websites. Can be used as the backend for websites, web applications, mobile applications or platforms containing all of them. KusiKusi also ~~has~~ (will have) tools to build static websites.",
   "main": "index.js",
   "directories": {
