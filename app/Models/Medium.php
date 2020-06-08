@@ -12,10 +12,10 @@ class Medium extends MediumModel
      * Define the presets the images can use for server side optimization
      */
     const PRESETS = [
-        'icon' =>   ['quality' => 100, 'width' => 128,  'height' =>  128,  'background' => 'crop', 'alignment' => 'center', 'scale' => 'cover',  'format' => 'png',  'effects' => []],
-        'thumb' =>   ['quality' => 100, 'width' => 320,  'height' =>  320,  'background' => 'crop', 'alignment' => 'center', 'scale' => 'contain',  'format' => 'png',  'effects' => []],
-        'slide' => ['quality' => 95,  'width' => 1200, 'height' =>  600, 'background' => 'crop', 'alignment' => 'center', 'scale' => 'cover',  'format' => 'jpg',  'effects' => []],
-        'logo' =>    ['quality' => 100, 'width' => 128,  'height' =>  128,  'background' => 'crop', 'alignment' => 'center', 'scale' => 'contain', 'format' => 'png', 'effects' => []]
+        'icon' =>   ['quality' => 100, 'width' => 128,  'height' =>  128,  'crop' => true, 'alignment' => 'center', 'scale' => 'cover',  'format' => 'png',  'effects' => []],
+        'thumb' =>   ['quality' => 100, 'width' => 320,  'height' =>  320,  'background' => '#ffffff', 'alignment' => 'center', 'scale' => 'contain',  'format' => 'png',  'effects' => []],
+        'slide' => ['quality' => 95,  'width' => 1200, 'height' =>  600, 'alignment' => 'center', 'scale' => 'cover',  'format' => 'jpg',  'effects' => []],
+        'logo' =>    ['quality' => 100, 'width' => 128,  'height' =>  128,  'crop' => true, 'alignment' => 'center', 'scale' => 'contain', 'format' => 'png', 'effects' => []]
     ];
     /**
      * Create accessors for every preset
