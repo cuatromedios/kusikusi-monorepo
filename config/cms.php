@@ -109,7 +109,9 @@ return [
                 [
                     "label" => "contents.contents",
                     "components" => [
-                        ["component" => "nq-input", "value" => "contents.title", "label" => "contents.title", "props" => ["size" => "xl"], "rules" => [["required"]]]
+                        ["component" => "nq-input", "value" => "contents.title", "label" => "contents.title", "props" => ["size" => "xl"], "rules" => [["required"]]],
+                        ["component" => "nq-input", "value" => "properties.theme_color", "label" => "Theme color"],
+                        ["component" => "nq-input", "value" => "properties.background_color", "label" => "Background color"]
                     ],
                 ],
                 [

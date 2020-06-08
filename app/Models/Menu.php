@@ -9,5 +9,4 @@ class Menu extends EntityModel
     protected $contentFields = [];
     protected $propertiesFields = [ "title" ];
     protected $cacheViewsAs = 'file';
-
 }
