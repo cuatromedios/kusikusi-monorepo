@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3b6b88308e30bf119b473baeebf9b32f",
+    "content-hash": "bf90cfeb0bacb1786ab2dae223b7b190",
     "packages": [
         {
             "name": "ankurk91/laravel-eloquent-relationships",
@@ -203,16 +203,16 @@
         },
         {
             "name": "cuatromedios/kusikusi-lib",
-            "version": "4.2.0",
+            "version": "4.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cuatromedios/kusikusi-lib.git",
-                "reference": "5568c0f1b478da0bbaa0c3981365014b1bc12962"
+                "reference": "626eca631451d130aa8bff10c549ce42f76796d4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cuatromedios/kusikusi-lib/zipball/5568c0f1b478da0bbaa0c3981365014b1bc12962",
-                "reference": "5568c0f1b478da0bbaa0c3981365014b1bc12962",
+                "url": "https://api.github.com/repos/cuatromedios/kusikusi-lib/zipball/626eca631451d130aa8bff10c549ce42f76796d4",
+                "reference": "626eca631451d130aa8bff10c549ce42f76796d4",
                 "shasum": ""
             },
             "require": {
@@ -239,7 +239,7 @@
                 }
             ],
             "description": "Kusikusi PHP libraries",
-            "time": "2020-06-06T23:45:43+00:00"
+            "time": "2020-06-08T06:22:33+00:00"
         },
         {
             "name": "dnoegel/php-xdg-base-dir",
