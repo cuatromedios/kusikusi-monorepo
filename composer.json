@@ -9,7 +9,7 @@
         "php": "^7.2.5",
         "ext-json": "^1.7",
         "chrisjean/php-ico": "^1.0",
-        "cuatromedios/kusikusi-lib": "^4.2",
+        "cuatromedios/kusikusi-lib": "^4.3",
         "flipbox/lumen-generator": "^6.0",
         "intervention/image": "^2.5",
         "laravel/lumen-framework": "^7.0",

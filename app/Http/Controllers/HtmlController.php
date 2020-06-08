@@ -20,9 +20,6 @@ class HtmlController extends Controller
     {
         $result = $this->common($request, $entity);
         $result['children'] = $this->children($request, $entity);
-        $result['heros'] = $result['media']
-            ->where('properties.isWebImage')
-            ->filter(function ($entity) { return in_array('hero', $entity->media_tags); });
         return view('html.'.$entity->view, $result);
     }
     public function section(Request $request, EntityModel $entity)

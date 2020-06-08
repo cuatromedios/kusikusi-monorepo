@@ -3,10 +3,9 @@
 @section('description', $entity->description)
 @section('main')
     <h2>{{ $entity->title }}</h2>
-
-    @if($heros->isNotEmpty())
+    @if($media->isNotEmpty())
         <div class="hero-slider">
-            @foreach($heros as $hero)
+            @foreach($media->mediaWithTag('hero') as $hero)
                 <img src="{{ $hero->slide }}" alt="{{ $hero->title }}" />
             @endforeach
         </div>
