@@ -59,6 +59,7 @@ npm run prod
 Documentation for the framework can be found on [kusikusi.cuatromedios.com](https://kusikusi.cuatromedios.com).
 
 ## Testings
+You will need a database called `kusikusi4testing` or configure it on phpunit.xml
 ``` shell script
 ./vendor/bin/phpunit
 ```

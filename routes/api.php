@@ -31,6 +31,11 @@ $router->group(["prefix" => "api"], function () use ($router) {
             $router->delete('/entity/{caller_entity_id}/relation/{called_entity_id}/{kind}', ['uses' => 'EntityController@deleteRelation']);
             $router->post('/medium/{entity_id}/upload', ['uses' => 'MediaController@upload']);
             $router->post('/entity/{caller_entity_id}/create_and_relate', ['uses' => 'EntityController@createAndAddRelation']);
+            $router->delete('/static/web[/{entity_id}]', ['uses' => 'WebController@clearStatic']);
+            $router->patch('/static/web/{entity_id}[/format]', ['uses' => 'WebController@generateStatic']);
+            $router->post('/static/web', ['uses' => 'WebController@recreateStatic']);
+            $router->delete('/static/media[/{entity_id}]', ['uses' => 'MediaController@clearStatic']);
+            $router->patch('/static/media/{entity_id}[/preset]', ['uses' => 'MediaController@generateStatic']);
         });
     });
 
