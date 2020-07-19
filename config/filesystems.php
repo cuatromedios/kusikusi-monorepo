@@ -45,13 +45,13 @@ return [
         ],
         'media_processed' => [
             'driver' => 'local',
-            'root' => public_path('media'),
+            'root' => public_path('static/media'),
             'url' => env('APP_URL').'/media',
             'visibility' => 'public',
         ],
         'views_processed' => [
             'driver' => 'local',
-            'root' => public_path('/'),
+            'root' => public_path('static'),
             'url' => env('APP_URL').'/',
             'visibility' => 'public',
         ],

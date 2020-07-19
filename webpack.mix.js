@@ -11,7 +11,7 @@ let mix = require('laravel-mix');
  |
  */
 
-mix.sass('resources/views/styles/main.scss', 'public/styles')
+mix.sass('resources/views/styles/main.scss', 'public/static/styles')
     .browserSync('http://127.0.0.1:8000/');
 
 // Full API
