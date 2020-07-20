@@ -83,6 +83,7 @@ class HtmlController extends Controller
                 ->appendContents(['title'], $request->lang)
                 ->orderBy('relation_position', 'asc')
                 ->appendRoute($request->lang)
+                ->isPublished()
                 ->get()
         ];
         return $result;
@@ -103,6 +104,7 @@ class HtmlController extends Controller
             ->appendMedium('icon', $request->lang)
             ->orderBy('position')
             ->orderBy('title')
+            ->isPublished()
             ->get();
         return $children;
     }
