@@ -20,6 +20,7 @@ return [
     "page_size" => 25, // Default page size if not defined in the call
     "token_expiration_in_seconds" => 0, // Seconds to the token to be expired or 0
     "short_id_length" => 10, // Change if you database is going to be veeeery big. Maximum 16.
+    "title" => 'Kusikusi CMS',
     "models" => [
         "home" => [
             "icon" => "home",
