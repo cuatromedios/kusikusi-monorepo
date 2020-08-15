@@ -22,6 +22,7 @@ return [
     "short_id_length" => 10, // Change if you database is going to be veeeery big. Maximum 16.
     "title" => 'Kusikusi CMS',
     "copy_original_media_to_static" => true,
+    "include_in_sitemap" => ['home', 'page', 'section'],
     "models" => [
         "home" => [
             "icon" => "home",
