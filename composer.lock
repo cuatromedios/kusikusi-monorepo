@@ -203,16 +203,16 @@
         },
         {
             "name": "cuatromedios/kusikusi-lib",
-            "version": "4.5",
+            "version": "4.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cuatromedios/kusikusi-lib.git",
-                "reference": "ffeddb7e613694b04743936f782b3d4068855cd2"
+                "reference": "7260425172f02096efabd38549b675d8ae1c153a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cuatromedios/kusikusi-lib/zipball/ffeddb7e613694b04743936f782b3d4068855cd2",
-                "reference": "ffeddb7e613694b04743936f782b3d4068855cd2",
+                "url": "https://api.github.com/repos/cuatromedios/kusikusi-lib/zipball/7260425172f02096efabd38549b675d8ae1c153a",
+                "reference": "7260425172f02096efabd38549b675d8ae1c153a",
                 "shasum": ""
             },
             "require": {
@@ -239,7 +239,7 @@
                 }
             ],
             "description": "Kusikusi PHP libraries",
-            "time": "2020-08-15T16:26:02+00:00"
+            "time": "2020-08-16T01:03:42+00:00"
         },
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -6245,6 +6245,7 @@
             "keywords": [
                 "tokenizer"
             ],
+            "abandoned": true,
             "time": "2019-09-17T06:23:10+00:00"
         },
         {
