@@ -45,10 +45,10 @@ $factory->state(EntityModel::class, 'medium', function (Faker $faker) {
     $id = Shortid::generate(config('cms.short_id_length', 10));
     $width = rand(540, 960);
     $height = rand(540, 960);
-    $image = Image::canvas($width, $height, getRandomGrey());
+    $image = Image::canvas($width, $height, getRandomColor());
     for ($c = 0; $c < 5; $c++) {
         $image->circle(min($width, $height), rand(0, $width), rand(0, $height), function ($draw) {
-            $draw->background(getRandomGrey());
+            $draw->background(getRandomColor());
         });
     }
     if (!is_dir ( storage_path("media/".$id) )) mkdir(storage_path("media/".$id));
@@ -67,4 +67,7 @@ $factory->state(EntityModel::class, 'medium', function (Faker $faker) {
 
 function getRandomGrey() {
     return "#".str_repeat(dechex(rand(64,204)),3);
+}
+function getRandomColor() {
+  return "#".dechex(rand(64,204)).dechex(rand(64,204)).dechex(rand(64,204));
 }
