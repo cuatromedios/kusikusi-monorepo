@@ -30,7 +30,7 @@ This is the starting point for creating new websites that require Laravel featur
 The individual packages or components can also be used in existing Laravel or Lumen applications:
 
 * Models
-* Website Controller
+* Website
 * API Controller
 * Admin Interfaces
 

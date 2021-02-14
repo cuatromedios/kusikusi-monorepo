@@ -13,11 +13,14 @@
         }
     ],
     "require": {
-        "illuminate/support": "^7.0|^8.0"
+        "illuminate/support": "^7.0|^8.0",
+        "pugx/shortid-php": "^0.7.0",
+        "ankurk91/laravel-eloquent-relationships": "^1.1"
     },
     "autoload": {
         "psr-4": {
-            "Cuatromedios\\Kusikusi\\": "./src"
+            "Cuatromedios\\Kusikusi\\": "./src",
+            "Cuatromedios\\Kusikusi\\Database\\Factories\\": "database/factories"
         }
     },
     "autoload-dev": {
@@ -31,11 +34,12 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Cuatromedios\\Kusikusi\\KusikusiModelsServiceProvider"
+                "Cuatromedios\\Kusikusi\\ModelsServiceProvider"
             ]
         }
     },
     "require-dev": {
-        "orchestra/testbench": "^6.0"
+        "orchestra/testbench": "^6.0",
+        "phpunit/phpunit": "^9.5"
     }
 }

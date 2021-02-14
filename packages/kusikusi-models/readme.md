@@ -8,7 +8,10 @@
 `composer require cuatromedios/kusikusi-models`
 
 ## Usage
-Write a few lines about the usage of this package.
+#### Export the config file
+```shell
+php artisan vendor:publish --provider="Cuatromedios\Kusikusi\ModelsServiceProvider" --tag="config"
+```
 
 ## Testing
 Run the tests with:

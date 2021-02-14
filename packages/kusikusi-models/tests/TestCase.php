@@ -1,11 +1,16 @@
 <?php
 
-namespace Cuatromedios\KusikusiModels\Tests;
+namespace Cuatromedios\Kusikusi\Tests;
 
 use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
 {
+    public function setUp(): void
+    {
+        parent::setUp();
+        // additional setup
+    }
     /**
      * Get package providers.
      *
@@ -16,7 +21,7 @@ class TestCase extends Orchestra
     protected function getPackageProviders($app)
     {
         return [
-            \Cuatromedios\KusikusiModels\KusikusiModelsServiceProvider::class,
+            \Cuatromedios\Kusikusi\ModelsServiceProvider::class,
         ];
     }
 
@@ -29,6 +34,13 @@ class TestCase extends Orchestra
      */
     protected function getEnvironmentSetUp($app)
     {
-        //
+        include_once __DIR__ . '/../database/migrations/create_entities_table.php.stub';
+        include_once __DIR__ . '/../database/migrations/create_entities_contents_table.php.stub';
+        include_once __DIR__ . '/../database/migrations/create_entities_relations_table.php.stub';
+        include_once __DIR__ . '/../database/migrations/create_entities_archives_table.php.stub';
+        (new \CreateEntitiesTable)->up();
+        (new \CreateEntitiesContentsTable)->up();
+        (new \CreateEntitiesRelationsTable)->up();
+        (new \CreateEntitiesArchivesTable)->up();
     }
 }

@@ -12,7 +12,7 @@
         <p>This project is for package development</p>
         <ul>
             <li>Models</li>
-            <li>Website Controller</li>
+            <li>Website</li>
             <li>API Controller</li>
         </ul>
     </body>
