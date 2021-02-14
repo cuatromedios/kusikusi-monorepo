@@ -139,7 +139,7 @@ class Entity extends Model
     }
     private static function createId() {
         do {
-            $id = Shortid::generate(Config::get('cms.shortIdLength', 10));
+            $id = (string) Shortid::generate(Config::get('cms.shortIdLength', 10));
             $found_duplicate = Entity::find($id);
         } while (!!$found_duplicate);
         return $id;
@@ -160,6 +160,7 @@ class Entity extends Model
             if (!isset($entity['model'])) {     $entity['model'] = 'Entity'; }
             if (!isset($entity['view'])) {      $entity['view'] = Str::snake($entity['model']); }
             if (!isset($entity['is_active'])) { $entity['is_active'] = true; }
+            if (!isset($entity['properties'])) { $entity['properties'] = (object) []; }
             if (!isset($entity['published_at'])) { $entity['published_at'] = Carbon::now(); }
             $entity['version'] = 1;
             $entity['version_tree'] = 1;
