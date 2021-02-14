@@ -31,3 +31,7 @@ The individual packages or components can also be used in existing Laravel or Lu
 * Website Controller
 * API Controller
 * Admin Interfaces
+
+##License
+
+Kusikusi is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
