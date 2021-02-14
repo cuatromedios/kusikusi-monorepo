@@ -1,0 +1,41 @@
+{
+    "name": "cuatromedios/kusikusi-models",
+    "description": "A description for kusikusi-models.",
+    "type": "package",
+    "license": "MIT",
+    "keywords": [
+        "laravel"
+    ],
+    "authors": [
+        {
+            "name": "Cuatromedios",
+            "email": "dev@cuatromedios.com"
+        }
+    ],
+    "require": {
+        "illuminate/support": "^7.0|^8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Cuatromedios\\Kusikusi\\": "./src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Cuatromedios\\Kusikusi\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Cuatromedios\\Kusikusi\\KusikusiModelsServiceProvider"
+            ]
+        }
+    },
+    "require-dev": {
+        "orchestra/testbench": "^6.0"
+    }
+}
