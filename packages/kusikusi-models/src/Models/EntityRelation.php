@@ -2,12 +2,10 @@
 
 namespace Cuatromedios\Kusikusi\Models;
 
-use Cuatromedios\Kusikusi\Models\Traits\UsesShortId;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class EntityRelation extends Pivot
 {
-    use UsesShortId;
 
     const RELATION_ANCESTOR = 'ancestor';
     const RELATION_MEDIA = 'medium';

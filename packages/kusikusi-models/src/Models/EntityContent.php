@@ -2,13 +2,10 @@
 
 namespace Cuatromedios\Kusikusi\Models;
 
-use Kusikusi\Models\Traits\UsesShortId;
 use Illuminate\Database\Eloquent\Model;
 
 class EntityContent extends Model
 {
-    use UsesShortId;
-
     protected $table = 'entities_contents';
 
     /**
@@ -35,5 +32,12 @@ class EntityContent extends Model
         return $this->belongsTo('Kusikusi\Models\Entity', 'entity_id', 'id');
     }
 
+    protected static function boot()
+    {
+        parent::boot();
+        static::creating(function (Model $entityContent) {
+            self::where('entity_id', $entityContent->entity_id)->where('lang', $entityContent->lang)->where('field', $entityContent->field)->delete();
+        });
+    }
 
 }

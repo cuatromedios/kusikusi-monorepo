@@ -3,11 +3,9 @@
 namespace Cuatromedios\Kusikusi\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Kusikusi\Models\Traits\UsesShortId;
 
 class EntityArchive extends Model
 {
-    use UsesShortId;
 
     protected $table = 'entities_archives';
     protected $fillable = ["entity_id", "kind", "version", "payload"];

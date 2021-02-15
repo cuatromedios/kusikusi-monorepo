@@ -14,7 +14,7 @@ class CreateEntitiesArchivesTable extends Migration
     public function up()
     {
         Schema::create('entities_archives', function (Blueprint $table) {
-            $table->string('version_id', 32)->primary();
+            $table->id('version_id');
             $table->string('entity_id', 32)->index();
             $table->string('kind', 32)->index();
             $table->unsignedInteger('version');

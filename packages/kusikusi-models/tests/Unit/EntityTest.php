@@ -5,6 +5,7 @@ namespace Cuatromedios\Kusikusi\Tests\Unit;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Cuatromedios\Kusikusi\Tests\TestCase;
 use Cuatromedios\Kusikusi\Models\Entity;
+use Cuatromedios\Kusikusi\Models\EntityContent;
 
 class EntityTest extends TestCase
 {
@@ -14,17 +15,19 @@ class EntityTest extends TestCase
   function an_entity_can_be_created()
   {
     $entity = Entity::factory()->create();
+    $this->assertDatabaseCount((new Entity())->getTable(), 1);
     $this->assert_default_values($entity);
-    $this->assertDatabaseCount('entities', 1);
   }
+
   /** @test */
   function an_entity_can_be_saved()
   {
     $entity = new Entity();
     $entity->save();
-    $this->assertDatabaseCount('entities', 1);
+    $this->assertDatabaseCount((new Entity())->getTable(), 1);
     $this->assert_default_values($entity);
   }
+
   /** @test */
   function an_id_can_be_set()
   {

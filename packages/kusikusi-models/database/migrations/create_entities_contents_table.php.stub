@@ -14,13 +14,13 @@ class CreateEntitiesContentsTable extends Migration
     public function up()
     {
         Schema::create('entities_contents', function (Blueprint $table) {
-            $table->string('content_id', 32)->primary();
+            $table->id('content_id');
             $table->string('entity_id', 32)->index();
             $table->char('lang', 5)->index();
             $table->string('field', 32)->index();
-            $table->text('text');
+            $table->text('text')->nullable()->default('');
             $table->timestampsTz();
-            $table->index('entity_id', 'lang');
+            $table->unique(['entity_id', 'lang', 'field']);
             $table->foreign('entity_id')
                 ->references('id')->on('entities')
                 ->onDelete('cascade')->onUpdate('cascade');

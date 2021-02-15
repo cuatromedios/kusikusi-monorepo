@@ -14,7 +14,7 @@ class CreateEntitiesRelationsTable extends Migration
     public function up()
     {
         Schema::create('entities_relations', function (Blueprint $table) {
-            $table->string('relation_id', 32)->primary();
+            $table->id('relation_id');
             $table->string('caller_entity_id', 32)->index('caller');
             $table->string('called_entity_id', 32)->index('called');
             $table->string('kind', 25)->default('relation')->index('kind');
@@ -28,7 +28,7 @@ class CreateEntitiesRelationsTable extends Migration
             $table->foreign('called_entity_id')
                 ->references('id')->on('entities')
                 ->onDelete('restrict')->onUpdate('cascade');;
-            $table->index(['caller_entity_id', 'called_entity_id', 'kind'], 'relation_search');
+            $table->unique(['caller_entity_id', 'called_entity_id', 'kind'], 'relation_search');
         });
     }
 
