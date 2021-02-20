@@ -19,6 +19,7 @@ php artisan vendor:publish --provider="Kusikusi\ModelsServiceProvider" --tag="co
 ```shell
 php artisan vendor:publish --provider="Kusikusi\ModelsServiceProvider" --tag="migrations"
 ```
+> Please note the migrations have commented lines you could use to define foreing keys to user tables
 
 ##### Run the migrations
 ```shell

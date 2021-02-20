@@ -20,8 +20,8 @@ class CreateEntitiesTable extends Migration
             $table->string('view', 32)->nullable();
             $table->string('parent_entity_id', 32)->index('parent')->nullable();
             $table->boolean('is_active')->default(true)->index();
-            $table->string('created_by')->nullable();
-            $table->string('updated_by')->nullable();
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
             $table->dateTime('published_at')->default('2000-01-01 00:00:00');
             $table->dateTime('unpublished_at')->nullable();
             $table->integer('version')->unsigned()->default(1);
@@ -30,6 +30,9 @@ class CreateEntitiesTable extends Migration
             $table->integer('version_full')->unsigned()->default(1);
             $table->timestampsTz();
             $table->softDeletesTz();
+            // Uncomment if you want a foreign key to users table for created_by and / or updated_by
+            // $table->foreign('created_by')->references('id')->on('users')->onDelete('set null')->onUpdate('cascade');
+            // $table->foreign('updated_by')->references('id')->on('users')->onDelete('set null')->onUpdate('cascade');
         });
     }
 
