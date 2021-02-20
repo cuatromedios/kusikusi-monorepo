@@ -4,13 +4,25 @@
 [![Travis](https://img.shields.io/travis/cuatromedios/kusikusi-models.svg?style=flat-square)]()
 [![Total Downloads](https://img.shields.io/packagist/dt/cuatromedios/kusikusi-models.svg?style=flat-square)](https://packagist.org/packages/cuatromedios/kusikusi-models)
 
-## Install
-`composer require cuatromedios/kusikusi-models`
-
+<a name="usage"></a>
 ## Usage
-#### Export the config file
+##### Require
 ```shell
-php artisan vendor:publish --provider="Cuatromedios\Kusikusi\ModelsServiceProvider" --tag="config"
+composer require cuatromedios/kusikusi-models
+```
+
+##### Export the config file
+```shell
+php artisan vendor:publish --provider="Kusikusi\ModelsServiceProvider" --tag="config"
+```
+##### Export the migrations
+```shell
+php artisan vendor:publish --provider="Kusikusi\ModelsServiceProvider" --tag="migrations"
+```
+
+##### Run the migrations
+```shell
+php artisan migrate
 ```
 
 ## Testing

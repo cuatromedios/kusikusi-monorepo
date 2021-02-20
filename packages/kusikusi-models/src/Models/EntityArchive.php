@@ -1,6 +1,6 @@
 <?php
 
-namespace Cuatromedios\Kusikusi\Models;
+namespace Kusikusi\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,7 +11,7 @@ class EntityArchive extends Model
     protected $fillable = ["entity_id", "kind", "version", "payload"];
 
     public function entity () {
-        return $this->belongsTo('Cuatromedios\Kusikusi\Models\Entity');
+        return $this->belongsTo('Kusikusi\Models\Entity');
     }
 
     public static function archive(string $entity_id) {

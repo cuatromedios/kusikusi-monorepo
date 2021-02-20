@@ -1,0 +1,45 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateEntitiesTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('entities', function (Blueprint $table) {
+            $table->string('id', 32)->primary();
+            $table->string('model', 32)->index();
+            $table->json('properties')->nullable();
+            $table->string('view', 32)->nullable();
+            $table->string('parent_entity_id', 32)->index('parent')->nullable();
+            $table->boolean('is_active')->default(true)->index();
+            $table->string('created_by')->nullable();
+            $table->string('updated_by')->nullable();
+            $table->dateTime('published_at')->default('2000-01-01 00:00:00');
+            $table->dateTime('unpublished_at')->nullable();
+            $table->integer('version')->unsigned()->default(1);
+            $table->integer('version_tree')->unsigned()->default(1);
+            $table->integer('version_relations')->unsigned()->default(1);
+            $table->integer('version_full')->unsigned()->default(1);
+            $table->timestampsTz();
+            $table->softDeletesTz();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('entities');
+    }
+}

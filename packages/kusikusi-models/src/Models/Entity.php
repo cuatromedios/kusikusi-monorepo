@@ -1,6 +1,6 @@
 <?php
 
-namespace Cuatromedios\Kusikusi\Models;
+namespace Kusikusi\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -9,8 +9,9 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 use PUGX\Shortid\Shortid;
 use Ankurk91\Eloquent\BelongsToOne;
-use Cuatromedios\Kusikusi\Extensions\EntityCollection;
-use Cuatromedios\Kusikusi\Models\Traits\UsesShortId;
+use Kusikusi\Extensions\EntityCollection;
+use Kusikusi\Models\Traits\UsesShortId;
+use Kusikusi\Exceptions\DuplicatedEntityIdException;
 use Illuminate\Support\Carbon;
 
 class Entity extends Model
@@ -22,7 +23,7 @@ class Entity extends Model
 
     protected $table = 'entities';
 
-    protected $guarded = ['id'];
+    protected $guarded = ['created_at', 'updated_at'];
     protected $contentFields = [];
     protected $touches = ['entities_relating'];
     protected $propertiesFields = [];
@@ -60,7 +61,7 @@ class Entity extends Model
      */
     protected static function newFactory()
     {
-        return \Cuatromedios\Kusikusi\Database\Factories\EntityFactory::new();
+        return \Kusikusi\Database\Factories\EntityFactory::new();
     }
 
     /**
@@ -87,7 +88,7 @@ class Entity extends Model
      * RELATIONS
      */
 
-    public function entities_related($kind = null, $modelClassPath = 'Cuatromedios\Kusikusi\Models\Entity')
+    public function entities_related($kind = null, $modelClassPath = 'Kusikusi\Models\Entity')
     {
         return $this->belongsToMany($modelClassPath, EntityRelation::table, 'caller_entity_id', 'called_entity_id')
             ->using('Kusikusi\Models\EntityRelation')
@@ -101,7 +102,7 @@ class Entity extends Model
             })
             ->withTimestamps();
     }
-    public function entities_relating($kind = null, $modelClassPath = 'Cuatromedios\Kusikusi\Models\Entity') {
+    public function entities_relating($kind = null, $modelClassPath = 'Kusikusi\Models\Entity') {
         return $this->belongsToMany($modelClassPath, EntityRelation::TABLE, 'called_entity_id', 'caller_entity_id')
             ->using('Kusikusi\Models\EntityRelation')
             ->as('relation')
@@ -153,7 +154,10 @@ class Entity extends Model
             if (!isset($entity[$entity->getKeyName()])) {
                 $entity->setAttribute($entity->getKeyName(), self::createId());
             } else {
-                $entity->setAttribute($entity->getKeyName(), substr($entity[$entity->getKeyName()], 0, 16));
+                if (self::find($entity[$entity->getKeyName()])) {
+                   throw new DuplicatedEntityIdException();
+                }
+                $entity->setAttribute($entity->getKeyName(), substr($entity[$entity->getKeyName()], 0, 32));
             }
 
             // Setting default values

@@ -1,8 +1,8 @@
 <?php
 
-namespace Cuatromedios\Kusikusi\Database\Factories;
+namespace Kusikusi\Database\Factories;
 
-use Cuatromedios\Kusikusi\Models\Entity;
+use Kusikusi\Models\Entity;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class EntityFactory extends Factory

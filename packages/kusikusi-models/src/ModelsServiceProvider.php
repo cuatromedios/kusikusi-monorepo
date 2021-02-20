@@ -1,6 +1,6 @@
 <?php
 
-namespace Cuatromedios\Kusikusi;
+namespace Kusikusi;
 
 use Illuminate\Support\ServiceProvider;
 

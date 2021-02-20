@@ -1,6 +1,6 @@
 <?php
 
-namespace Cuatromedios\Kusikusi\Tests;
+namespace Kusikusi\Tests;
 
 use Orchestra\Testbench\TestCase as Orchestra;
 
@@ -21,7 +21,7 @@ class TestCase extends Orchestra
     protected function getPackageProviders($app)
     {
         return [
-            \Cuatromedios\Kusikusi\ModelsServiceProvider::class,
+            \Kusikusi\ModelsServiceProvider::class,
         ];
     }
 

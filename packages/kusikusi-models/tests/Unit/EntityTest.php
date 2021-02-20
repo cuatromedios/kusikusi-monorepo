@@ -1,11 +1,11 @@
 <?php
 
-namespace Cuatromedios\Kusikusi\Tests\Unit;
+namespace Kusikusi\Tests\Unit;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Cuatromedios\Kusikusi\Tests\TestCase;
-use Cuatromedios\Kusikusi\Models\Entity;
-use Cuatromedios\Kusikusi\Models\EntityContent;
+use Kusikusi\Tests\TestCase;
+use Kusikusi\Models\Entity;
+use Kusikusi\Models\EntityContent;
 
 class EntityTest extends TestCase
 {

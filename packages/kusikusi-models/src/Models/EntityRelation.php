@@ -1,6 +1,6 @@
 <?php
 
-namespace Cuatromedios\Kusikusi\Models;
+namespace Kusikusi\Models;
 
 use Illuminate\Database\Eloquent\Relations\Pivot;
 

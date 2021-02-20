@@ -19,13 +19,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Cuatromedios\\Kusikusi\\": "./src",
-            "Cuatromedios\\Kusikusi\\Database\\Factories\\": "database/factories"
+            "Kusikusi\\": "./src",
+            "Kusikusi\\Database\\Factories\\": "database/factories"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Cuatromedios\\Kusikusi\\Tests\\": "tests"
+            "Kusikusi\\Tests\\": "tests"
         }
     },
     "scripts": {
@@ -34,7 +34,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Cuatromedios\\Kusikusi\\ModelsServiceProvider"
+                "Kusikusi\\ModelsServiceProvider"
             ]
         }
     },

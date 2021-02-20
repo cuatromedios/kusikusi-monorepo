@@ -1,6 +1,6 @@
 <?php
 
-namespace Cuatromedios\Kusikusi\Extensions;
+namespace Kusikusi\Extensions;
 
 class EntityCollection extends \Illuminate\Database\Eloquent\Collection
 {

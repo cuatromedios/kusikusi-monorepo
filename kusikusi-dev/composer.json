@@ -9,12 +9,13 @@
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
+        "cuatromedios/kusikusi-models": "dev-monorepo",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.12",
         "laravel/tinker": "^2.5",
-        "cuatromedios/kusikusi-models": "*"
+        "scrivo/highlight.php": "v9.18.1.6"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
@@ -40,7 +41,10 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        }
+        },
+        "files": [
+            "app/helpers.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
