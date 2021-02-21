@@ -54,8 +54,8 @@ class EntityController extends Controller
     public function show($id)
     {
         $entity = Entity::findOrFail($id);
-        $entityWithContents = Entity::select('id')->with('contents')->findOrFail($id);
-        $entityWithContentsByField = Entity::select('id')->withContentsByFields('es')->findOrFail($id)->contents->pluck('text', 'field');
+        $entityWithContents = Entity::select('id')->with('contents_raw')->findOrFail($id);
+        $entityWithContentsByField = Entity::select('id')->withContents()->findOrFail($id);
         $entityWithContentsByLang = Entity::select('id')->withContents()->findOrFail($id);
         return View::make('entities.show')
            ->with('entityWithContents', $entityWithContents)

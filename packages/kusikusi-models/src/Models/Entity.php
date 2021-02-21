@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use PUGX\Shortid\Shortid;
 use Ankurk91\Eloquent\BelongsToOne;
 use Kusikusi\Extensions\EntityCollection;
+use Kusikusi\Relations\PluckedHasMany;
 use Kusikusi\Models\Traits\UsesShortId;
 use Kusikusi\Exceptions\DuplicatedEntityIdException;
 use Kusikusi\Casts\Json;
@@ -121,8 +122,11 @@ class Entity extends Model
         return $this->hasMany(EntityRelation::class, 'caller_entity_id', 'id')
             ->where('kind', '!=', EntityRelation::RELATION_ANCESTOR);
     }
-    public function contents() {
+    public function contents_raw() {
         return $this->hasMany(EntityContent::class, 'entity_id', 'id');
+    }
+    public function contents() {
+        return $this->pluckedHasMany(EntityContent::class, 'entity_id', 'id', 'text', 'lang');
     }
     public function archives() {
         return $this->hasMany(EntityArchive::class, 'entity_id', 'id');
@@ -142,10 +146,6 @@ class Entity extends Model
             });
         }]);
     }
-    public function scopeWithContentsByFields($query, $lang = null, $fields = null)
-    {
-        return $this->scopeWithContents($query, $lang, $fields);
-    }
 
     /**
      * AGGREGATES
@@ -163,6 +163,10 @@ class Entity extends Model
     }
 
     /**
+     * PRIVATES AND OTHERS
+     */
+
+    /**
      * Returns the id of the instance, if none is defined, it creates one
      */
     private function getId() {
@@ -178,6 +182,39 @@ class Entity extends Model
         } while (!!$found_duplicate);
         return $id;
     }
+    /**
+     * Define a one-to-many plucked relationship.
+     *
+     * @param  string  $related
+     * @param  string|null  $foreignKey
+     * @param  string|null  $localKey
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function pluckedHasMany($related, $foreignKey = null, $localKey = null, $pluckValue = null, $pluckKey= null) {
+        $instance = $this->newRelatedInstance($related);
+        $foreignKey = $foreignKey ?: $this->getForeignKey();
+        $localKey = $localKey ?: $this->getKeyName();
+        return $this->newPluckedHasMany(
+            $instance->newQuery(), $this, $instance->getTable().'.'.$foreignKey, $localKey, $pluckValue, $pluckKey
+        );
+    }
+    /**
+     * Instantiate a new PluckedHasMany relationship.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  \Illuminate\Database\Eloquent\Model  $parent
+     * @param  string  $foreignKey
+     * @param  string  $localKey
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    protected function newPluckedHasMany(\Illuminate\Database\Eloquent\Builder $query, Model $parent, $foreignKey, $localKey, $pluckValue, $pluckKey)
+    {
+        return new PluckedHasMany($query, $parent, $foreignKey, $localKey, $pluckValue, $pluckKey);
+    }
+
+    /**
+     * BOOT
+     */
     protected static function boot()
     {
         parent::boot();
