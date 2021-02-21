@@ -121,14 +121,45 @@ class Entity extends Model
         return $this->hasMany(EntityRelation::class, 'caller_entity_id', 'id')
             ->where('kind', '!=', EntityRelation::RELATION_ANCESTOR);
     }
-    public function contents($lang = null) {
-        return $this->hasMany(EntityContent::class, 'entity_id', 'id')
-            ->when($lang !== null, function ($q) use ($lang) {
-                return $q->where('lang', $lang);
-            });
+    public function contents() {
+        return $this->hasMany(EntityContent::class, 'entity_id', 'id');
     }
     public function archives() {
         return $this->hasMany(EntityArchive::class, 'entity_id', 'id');
+    }
+
+    /**
+     * SCOPES
+     */
+    public function scopeWithContents($query, $lang = null, $fields = null)
+    {
+        return $query->with(['contents' => function($q) use ($lang, $fields) {
+            $q->when($lang !== null, function ($q) use ($lang) {
+                return $q->where('lang', $lang);
+            });
+            $q->when($fields !== null, function ($q) use ($fields) {
+                return $q->where('field', $fields);
+            });
+        }]);
+    }
+    public function scopeWithContentsByFields($query, $lang = null, $fields = null)
+    {
+        return $this->scopeWithContents($query, $lang, $fields);
+    }
+
+    /**
+     * AGGREGATES
+     */
+
+     /**
+     * Add subselect queries to count the relations.
+     *
+     * @param  mixed  $relations
+     * @return $this
+     */
+    public function withCount2($relations)
+    {
+        return $this->withAggregate(is_array($relations) ? $relations : func_get_args(), '*', 'count');
     }
 
     /**
@@ -174,5 +205,6 @@ class Entity extends Model
             $entity['version_full'] = 1;
 
         });
+
     }
 }
