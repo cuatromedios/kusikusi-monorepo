@@ -11,9 +11,8 @@ class EntityRelation extends Pivot
     const RELATION_MEDIA = 'medium';
     const RELATION_UNDEFINED = 'relation';
     const RELATION_MENU = 'menu';
-    const TABLE = 'entities_relations';
 
-    protected $table = TABLE;
+    protected $table = 'entities_relations';
 
     /**
      * To avoid "ambiguos" errors Get the primary key for the model.

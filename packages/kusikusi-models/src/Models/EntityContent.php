@@ -19,7 +19,7 @@ class EntityContent extends Model
     }
 
     protected $fillable = ['entity_id', 'lang', 'field', 'text'];
-    protected $hidden = array('created_at', 'updated_at', 'entity_id', 'content_id');
+    protected $hidden = array('created_at', 'updated_at');
 
     /**
      * RELATIONS

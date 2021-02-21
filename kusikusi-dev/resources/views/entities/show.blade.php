@@ -10,6 +10,9 @@
     <h4>Entity with contents by field</h4>
     {!! pretty_json($entityWithContent) !!}
 
+    <h4>Entity with relations</h4>
+    {!! pretty_json($entityWithRelations) !!}
+
     <a href="{{ route('entities.create') }}">Create</a>
     
 </x-entity>

@@ -12,6 +12,7 @@ use Ankurk91\Eloquent\BelongsToOne;
 use Kusikusi\Extensions\EntityCollection;
 use Kusikusi\Relations\PluckedHasMany;
 use Kusikusi\Models\Traits\UsesShortId;
+use Kusikusi\Models\EntityRelation;
 use Kusikusi\Exceptions\DuplicatedEntityIdException;
 use Kusikusi\Casts\Json;
 use Illuminate\Support\Carbon;
@@ -93,7 +94,7 @@ class Entity extends Model
 
     public function entities_related($kind = null, $modelClassPath = 'Kusikusi\Models\Entity')
     {
-        return $this->belongsToMany($modelClassPath, EntityRelation::table, 'caller_entity_id', 'called_entity_id')
+        return $this->belongsToMany($modelClassPath, (new EntityRelation())->getTable(), 'caller_entity_id', 'called_entity_id')
             ->using('Kusikusi\Models\EntityRelation')
             ->as('relation')
             ->withPivot('kind', 'position', 'depth', 'tags')
@@ -106,7 +107,7 @@ class Entity extends Model
             ->withTimestamps();
     }
     public function entities_relating($kind = null, $modelClassPath = 'Kusikusi\Models\Entity') {
-        return $this->belongsToMany($modelClassPath, EntityRelation::TABLE, 'called_entity_id', 'caller_entity_id')
+        return $this->belongsToMany($modelClassPath, (new EntityRelation())->getTable(), 'called_entity_id', 'caller_entity_id')
             ->using('Kusikusi\Models\EntityRelation')
             ->as('relation')
             ->withPivot('kind', 'position', 'depth', 'tags')
