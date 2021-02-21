@@ -122,11 +122,11 @@ class Entity extends Model
         return $this->hasMany(EntityRelation::class, 'caller_entity_id', 'id')
             ->where('kind', '!=', EntityRelation::RELATION_ANCESTOR);
     }
-    public function contents_raw() {
+    public function contents() {
         return $this->hasMany(EntityContent::class, 'entity_id', 'id');
     }
-    public function contents() {
-        return $this->pluckedHasMany(EntityContent::class, 'entity_id', 'id', 'text', 'lang');
+    public function content() {
+        return $this->pluckedHasMany(EntityContent::class, 'entity_id', 'id', 'text', 'field');
     }
     public function archives() {
         return $this->hasMany(EntityArchive::class, 'entity_id', 'id');
@@ -135,9 +135,9 @@ class Entity extends Model
     /**
      * SCOPES
      */
-    public function scopeWithContents($query, $lang = null, $fields = null)
+    public function scopeWithContent($query, $lang = null, $fields = null)
     {
-        return $query->with(['contents' => function($q) use ($lang, $fields) {
+        return $query->with(['content' => function($q) use ($lang, $fields) {
             $q->when($lang !== null, function ($q) use ($lang) {
                 return $q->where('lang', $lang);
             });

@@ -8,10 +8,7 @@
     {!! pretty_json($entityWithContents) !!}
 
     <h4>Entity with contents by field</h4>
-    {!! pretty_json($entityWithContentsByField) !!}
-
-    <h4>Entity with contents by language</h4>
-    {!! pretty_json($entityWithContentsByLang) !!}
+    {!! pretty_json($entityWithContent) !!}
 
     <a href="{{ route('entities.create') }}">Create</a>
     
