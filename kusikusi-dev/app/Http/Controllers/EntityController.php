@@ -15,8 +15,8 @@ class EntityController extends Controller
      */
     public function index()
     {
-       $entities = Entity::all();
-       return View::make('entities.index')
+        $entities = Entity::select()->orderBy('created_at')->get();
+        return View::make('entities.index')
            ->with('entities', $entities);
     }
 
@@ -27,7 +27,9 @@ class EntityController extends Controller
      */
     public function create()
     {
-        return View::make('entities.create');
+        $entities = Entity::select()->orderBy('created_at')->get();
+        return View::make('entities.create')
+           ->with('entities', $entities);
     }
 
     /**
@@ -38,8 +40,9 @@ class EntityController extends Controller
      */
     public function store(Request $request)
     {
-        Entity::create($request->except(['_token']));
-        return redirect()->route('entities.index');
+        $fields = $request->except(['_token']);
+        $entity = Entity::create($fields);
+        return redirect()->route('entities.show', $entity->id);
     }
 
     /**

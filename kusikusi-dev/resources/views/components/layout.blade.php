@@ -38,6 +38,9 @@
             a {
                 text-decoration-style: dotted;
             }
+            label {
+                display: block;
+            }
         </style>
     </head>
     <body class="antialiased">

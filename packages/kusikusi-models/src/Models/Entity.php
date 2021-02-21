@@ -12,6 +12,7 @@ use Ankurk91\Eloquent\BelongsToOne;
 use Kusikusi\Extensions\EntityCollection;
 use Kusikusi\Models\Traits\UsesShortId;
 use Kusikusi\Exceptions\DuplicatedEntityIdException;
+use Kusikusi\Casts\Json;
 use Illuminate\Support\Carbon;
 
 class Entity extends Model
@@ -44,7 +45,7 @@ class Entity extends Model
     * @var array A list of columns from the entities tables and other joins needs to be casted
     */
     protected $casts = [
-        'properties' => 'array',
+        'properties' => Json::class,
         'tags' => 'array',
         'child_relation_tags' => 'array',
         'descendant_relation_tags' => 'array',
@@ -83,6 +84,7 @@ class Entity extends Model
     {
         if ($value !== null) $this->attributes['unpublished_at'] = Carbon::make($value)->setTimezone(env('APP_TIMEZONE', 'UTC'))->format('Y-m-d\TH:i:s');
     }
+    
 
     /**
      * RELATIONS
@@ -161,10 +163,10 @@ class Entity extends Model
             }
 
             // Setting default values
-            if (!isset($entity['model'])) {     $entity['model'] = 'Entity'; }
-            if (!isset($entity['view'])) {      $entity['view'] = Str::snake($entity['model']); }
-            if (!isset($entity['is_active'])) { $entity['is_active'] = true; }
-            if (!isset($entity['properties'])) { $entity['properties'] = (object) []; }
+            if (!isset($entity['model']))        { $entity['model'] = 'Entity'; }
+            if (!isset($entity['view']))         { $entity['view'] = Str::snake($entity['model']); }
+            if (!isset($entity['is_active']))    { $entity['is_active'] = true; }
+            if (!isset($entity['properties']))   { $entity['properties'] = new \ArrayObject(); }
             if (!isset($entity['published_at'])) { $entity['published_at'] = Carbon::now(); }
             $entity['version'] = 1;
             $entity['version_tree'] = 1;

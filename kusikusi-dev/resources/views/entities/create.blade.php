@@ -8,6 +8,17 @@
         <label>Model
             <input type="text" name="model">
         </label>
+        <label>Parent
+            <select name="parent_entity_id">
+                <option value="">- None</option>
+                @foreach ($entities as $entity)
+                <option value="{{ $entity->id }}">{{ $entity->id }} - {{ $entity->model }}</option>
+                @endforeach
+            </select>
+        </label>
+        <label>Properties
+            <textarea name="properties"></textarea>
+        </label>
         <br>
         <button type="submit">Submit</button>
     </form>
