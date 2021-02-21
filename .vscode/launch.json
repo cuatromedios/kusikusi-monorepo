@@ -23,7 +23,7 @@
             "type": "node",
             "request": "launch",
             "runtimeExecutable": "browser-sync",
-            "runtimeArgs": ["http://kusikusi-dev.test", "-watch", "--files 'kusikusi-dev/**/*.php' 'packages/**/*.php'"]
+            "runtimeArgs": ["start", "--proxy http://kusikusi-dev.test", "--watch", "--files 'kusikusi-dev/**/*.php' 'packages/**/*.php'"]
         }
     ]
 }

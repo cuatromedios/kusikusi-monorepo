@@ -19,4 +19,5 @@
         </tbody>
     </table>
     <a href="{{ route('entities.create') }}">Create</a>
+    {!! pretty_json($entities) !!}
 </x-entity>

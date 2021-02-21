@@ -15,7 +15,7 @@ class EntityController extends Controller
      */
     public function index()
     {
-        $entities = Entity::select()->orderBy('created_at')->get();
+        $entities = Entity::select()->withContents()->orderBy('created_at')->get();
         return View::make('entities.index')
            ->with('entities', $entities);
     }
@@ -55,8 +55,8 @@ class EntityController extends Controller
     {
         $entity = Entity::findOrFail($id);
         $entityWithContents = Entity::select('id')->with('contents')->findOrFail($id);
-        $entityWithContentsByField = Entity::select('id')->withContentsByFields('es', ['title', 'url'])->findOrFail($id);
-        $entityWithContentsByLang = Entity::select('id')->with('contents')->findOrFail($id);
+        $entityWithContentsByField = Entity::select('id')->withContentsByFields('es')->findOrFail($id)->contents->pluck('text', 'field');
+        $entityWithContentsByLang = Entity::select('id')->withContents()->findOrFail($id);
         return View::make('entities.show')
            ->with('entityWithContents', $entityWithContents)
            ->with('entityWithContentsByField', $entityWithContentsByField)
