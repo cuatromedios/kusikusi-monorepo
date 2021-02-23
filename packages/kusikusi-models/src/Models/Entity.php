@@ -169,7 +169,7 @@ class Entity extends Model
     private static function createId() {
         do {
             $id = (string) Shortid::generate(Config::get('cms.shortIdLength', 10));
-            $found_duplicate = Entity::find($id);
+            $found_duplicate = self::find($id);
         } while (!!$found_duplicate);
         return $id;
     }
