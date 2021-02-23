@@ -152,16 +152,6 @@ class Entity extends Model
      * AGGREGATES
      */
 
-     /**
-     * Add subselect queries to count the relations.
-     *
-     * @param  mixed  $relations
-     * @return $this
-     */
-    public function withCount2($relations)
-    {
-        return $this->withAggregate(is_array($relations) ? $relations : func_get_args(), '*', 'count');
-    }
 
     /**
      * PRIVATES AND OTHERS
