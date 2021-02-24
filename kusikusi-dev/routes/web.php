@@ -18,5 +18,5 @@ use App\Http\Controllers\ContentController;
 Route::get('/', function () { return view('welcome'); })->name('welcome');
 Route::get('/models', function () { return view('models'); })->name('models');
 Route::resource('entities', EntityController::class);
-Route::get('contents/create/{idEntity}', [ContentController::class, 'create']);
+Route::get('contents/create/{entity_id}', [ContentController::class, 'create']);
 Route::resource('contents', ContentController::class);

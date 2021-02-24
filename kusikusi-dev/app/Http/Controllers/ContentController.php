@@ -28,7 +28,7 @@ class ContentController extends Controller
     public function create(Request $request)
     {
         return View::make('contents.create')
-           ->with('id', $request->input('idEntity'));
+           ->with('entity_id', $request->input('entity_id'));
     }
 
     /**
