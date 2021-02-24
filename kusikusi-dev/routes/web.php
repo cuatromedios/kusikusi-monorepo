@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EntityController;
+use App\Http\Controllers\ContentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,3 +18,5 @@ use App\Http\Controllers\EntityController;
 Route::get('/', function () { return view('welcome'); })->name('welcome');
 Route::get('/models', function () { return view('models'); })->name('models');
 Route::resource('entities', EntityController::class);
+Route::get('contents/create/{idEntity}', [ContentController::class, 'create']);
+Route::resource('contents', ContentController::class);

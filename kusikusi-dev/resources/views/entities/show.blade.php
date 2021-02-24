@@ -7,6 +7,8 @@
     <h4>Entity with contents</h4>
     {!! pretty_json($entityWithContents) !!}
 
+    <a href="{{ route('contents.create', ['idEntity' => $entity->id]) }}">Create content</a>
+
     <h4>Entity with contents by field</h4>
     {!! pretty_json($entityWithContent) !!}
 
