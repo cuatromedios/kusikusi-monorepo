@@ -85,6 +85,9 @@ class Entity extends Model
      * RELATIONS
      */
 
+    /**
+     * Get the entities this entity is calling
+     */ 
     public function entities_related($kind = null, $modelClassPath = 'Kusikusi\Models\Entity')
     {
         return $this->belongsToMany($modelClassPath, (new EntityRelation())->getTable(), 'caller_entity_id', 'called_entity_id')
@@ -99,6 +102,10 @@ class Entity extends Model
             })
             ->withTimestamps();
     }
+
+    /**
+     * Get the other entities calling this entity
+     */ 
     public function entities_relating($kind = null, $modelClassPath = 'Kusikusi\Models\Entity') {
         return $this->belongsToMany($modelClassPath, (new EntityRelation())->getTable(), 'called_entity_id', 'caller_entity_id')
             ->using('Kusikusi\Models\EntityRelation')
@@ -112,16 +119,28 @@ class Entity extends Model
             })
             ->withTimestamps();
     }
+    /**
+     * Get the records in the entities_relations table this entity is using
+     */ 
     public function entity_relations() {
         return $this->hasMany(EntityRelation::class, 'caller_entity_id', 'id')
             ->where('kind', '!=', EntityRelation::RELATION_ANCESTOR);
     }
+    /**
+     * Get the raw contents related to this entity
+     */ 
     public function contents() {
         return $this->hasMany(EntityContent::class, 'entity_id', 'id');
     }
+    /**
+     * Get the contents by field name (plucked)
+     */ 
     public function content() {
         return $this->pluckedHasMany(EntityContent::class, 'entity_id', 'id', 'text', 'field');
     }
+    /**
+     * Get the archives of this entity
+     */ 
     public function archives() {
         return $this->hasMany(EntityArchive::class, 'entity_id', 'id');
     }
