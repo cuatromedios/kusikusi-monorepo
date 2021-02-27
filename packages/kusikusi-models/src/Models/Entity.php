@@ -68,6 +68,17 @@ class Entity extends Model
     {
         return \Kusikusi\Database\Factories\EntityFactory::new();
     }
+
+    /**
+     * Prepare a date for array / JSON serialization.
+     *
+     * @param  \DateTimeInterface  $date
+     * @return string
+     */
+    protected function serializeDate($date)
+    {
+        return $date->format('Y-m-d\TH:i:sP');
+    }
     
 
     /**
