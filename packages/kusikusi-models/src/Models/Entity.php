@@ -26,7 +26,7 @@ class Entity extends Model
 
     protected $table = 'entities';
 
-    protected $guarded = ['created_at', 'updated_at'];
+    protected $guarded = ['created_at', 'updated_at', 'version', 'version_tree', 'version_relations', 'version_full'];
     protected $contentFields = [];
     protected $touches = ['entities_relating'];
     protected $propertiesFields = [];
