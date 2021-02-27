@@ -54,7 +54,9 @@ class Entity extends Model
         'siblings_relation_tags' => 'array',
         'media_tags' => 'array',
         'relation_tags' => 'array',
-        'is_active' => 'boolean'
+        'is_active' => 'boolean',
+        'published_at' => 'datetime',
+        'unpublished_at' => 'datetime',
     ];
 
     /**
@@ -65,26 +67,6 @@ class Entity extends Model
     protected static function newFactory()
     {
         return \Kusikusi\Database\Factories\EntityFactory::new();
-    }
-
-    /**
-     * ACCESORS AND MUTATORS
-     */
-    public function getPublishedAtAttribute($value)
-    {
-        return isset($value) ? Carbon::make($value)->format('Y-m-d\TH:i:sP') : null;
-    }
-    public function getUnpublishedAtAttribute($value)
-    {
-        return isset($value) ? Carbon::make($value)->format('Y-m-d\TH:i:sP') : null;
-    }
-    public function setPublishedAtAttribute($value)
-    {
-        if ($value !== null) $this->attributes['published_at'] = Carbon::make($value)->setTimezone(env('APP_TIMEZONE', 'UTC'))->format('Y-m-d\TH:i:s');
-    }
-    public function setUnpublishedAtAttribute($value)
-    {
-        if ($value !== null) $this->attributes['unpublished_at'] = Carbon::make($value)->setTimezone(env('APP_TIMEZONE', 'UTC'))->format('Y-m-d\TH:i:s');
     }
     
 
