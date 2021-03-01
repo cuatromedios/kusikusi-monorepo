@@ -13,6 +13,7 @@ use Kusikusi\Extensions\EntityCollection;
 use Kusikusi\Relations\PluckedHasMany;
 use Kusikusi\Models\Traits\UsesShortId;
 use Kusikusi\Models\EntityRelation;
+use Kusikusi\Models\EntityArchive;
 use Kusikusi\Exceptions\DuplicatedEntityIdException;
 use Kusikusi\Casts\Json;
 use Illuminate\Support\Carbon;
@@ -26,7 +27,8 @@ class Entity extends Model
 
     protected $table = 'entities';
 
-    protected $guarded = ['created_at', 'updated_at'];
+    /* protected $guarded = ['created_at', 'updated_at']; */
+    protected $fillable = ['id', 'model', 'view', 'properties', 'parent_entity_id', 'created_at', 'published_at', 'unpublished_at'];
     protected $contentFields = [];
     protected $touches = ['entities_relating'];
     protected $propertiesFields = [];
@@ -178,7 +180,7 @@ class Entity extends Model
     }
     private static function createId() {
         do {
-            $id = (string) Shortid::generate(Config::get('cms.shortIdLength', 10));
+            $id = (string) Shortid::generate(Config::get('cms.short_id_length', 10));
             $found_duplicate = Entity::find($id);
         } while (!!$found_duplicate);
         return $id;
@@ -241,7 +243,13 @@ class Entity extends Model
             $entity['version_tree'] = 1;
             $entity['version_relations'] = 1;
             $entity['version_full'] = 1;
-
+        });
+        static::saved(function (Model $entity) {
+            // Setting archive version
+            $config = Config::get('kusikusi_models.store_versions', false);
+            if(config('kusikusi_models.store_versions') === true){
+                EntityArchive::archive($entity->id, 'version');
+            }
         });
 
     }
