@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use PUGX\Shortid\Shortid;
 use Ankurk91\Eloquent\BelongsToOne;
@@ -17,6 +18,7 @@ use Kusikusi\Models\EntityArchive;
 use Kusikusi\Exceptions\DuplicatedEntityIdException;
 use Kusikusi\Casts\Json;
 use Illuminate\Support\Carbon;
+
 
 class Entity extends Model
 {
@@ -151,6 +153,199 @@ class Entity extends Model
     }
 
     /**
+     * Scope a query to only include entities of a given modelId.
+     *
+     * @param  Builder $query
+     * @param  mixed $modelId
+     * @return Builder
+     */
+    public function scopeOfModel($query, $modelId)
+    {
+        // TODO: Accept array of model ids
+        return $query->where('model', $modelId);
+    }
+
+    /**
+     * Scope a query to only include published entities.
+     *
+     * @param  Builder $query
+     * @return Builder
+     */
+    public function scopeIsPublished($query)
+    {
+        return $query->where('is_active', true)
+            ->whereDate('published_at', '<=', Carbon::now()->setTimezone('UTC')->format('Y-m-d\TH:i:s'))
+            ->where(function($query) {
+                $query->whereDate('unpublished_at', '>', Carbon::now()->setTimezone('UTC')->format('Y-m-d\TH:i:s'))
+                    ->orWhereNull('unpublished_at');
+            })
+            ->whereNull('deleted_at');
+    }
+
+    /**
+     * Scope a query to only include children of a given parent id.
+     *
+     * @param Builder $query
+     * @param integer $entity_id The id of the parent entity
+     * @param string $tag Filter by one tag
+     * @return Builder
+     * @throws \Exception
+     */
+    public function scopeChildOf($query, $entity_id, $tag = null)
+    {
+        $query->join('entities_relations as relation_children', function ($join) use ($entity_id, $tag) {
+            $join->on('relation_children.caller_entity_id', '=', 'entities.id')
+                ->where('relation_children.called_entity_id', '=', $entity_id)
+                ->where('relation_children.depth', '=', 1)
+                ->where('relation_children.kind', '=', EntityRelation::RELATION_ANCESTOR)
+                ->when($tag, function ($q) use ($tag) {
+                    return $q->whereJsonContains('relation_children.tags', $tag);
+                });
+            ;
+        })
+            ->addSelect('relation_children.position as child_relation_position')
+            ->addSelect('relation_children.tags as child_relation_tags');
+    }
+
+    /**
+     * Scope a query to only include the parent of the given id.
+     *
+     * @param Builder $query
+     * @param number $entity_id The id of the parent entity
+     * @return Builder
+     * @throws \Exception
+     */
+    public function scopeParentOf($query, $entity_id)
+    {
+        $query->join('entities_relations as relation_parent', function ($join) use ($entity_id) {
+            $join->on('relation_parent.called_entity_id', '=', 'entities.id')
+                ->where('relation_parent.caller_entity_id', '=', $entity_id)
+                ->where('relation_parent.depth', '=', 1)
+                ->where('relation_parent.kind', '=', EntityRelation::RELATION_ANCESTOR)
+            ;
+        })
+            ->addSelect('relation_parent.depth as parent_relation_depth');
+    }
+
+    /**
+     * Scope a query to only include ancestors of a given entity.
+     *
+     * @param Builder $query
+     * @param number $entity_id The id of the parent entity
+     * @return Builder
+     * @throws \Exception
+     */
+    public function scopeAncestorOf($query, $entity_id)
+    {
+        $query->join('entities_relations as relation_ancestor', function ($join) use ($entity_id) {
+            $join->on('relation_ancestor.called_entity_id', '=', 'entities.id')
+                ->where('relation_ancestor.caller_entity_id', '=', $entity_id)
+                ->where('relation_ancestor.kind', '=', EntityRelation::RELATION_ANCESTOR)
+            ;
+        })
+            ->addSelect('relation_ancestor.depth as ancestor_relation_depth');
+    }
+
+    /**
+     * Scope a query to only include descendants of a given entity id.
+     *
+     * @param Builder $query
+     * @param number $entity_id The id of the  entity
+     * @return Builder
+     * @throws \Exception
+     */
+    public function scopeDescendantOf($query, $entity_id, $depth = 99)
+    {
+        $query->join('entities_relations as relation_descendants', function ($join) use ($entity_id, $depth) {
+            $join->on('relation_descendants.caller_entity_id', '=', 'entities.id')
+                ->where('relation_descendants.called_entity_id', '=', $entity_id)
+                ->where('relation_descendants.kind', '=', EntityRelation::RELATION_ANCESTOR)
+                ->where('relation_descendants.depth', '<=', $depth);
+        })
+            ->addSelect('relation_descendants.position as descendant_relation_position')
+            ->addSelect('relation_descendants.depth as descendant_relation_depth')
+            ->addSelect('relation_descendants.tags as descendant_relation_tags');
+    }
+
+    /**
+     * Scope a query to only include descendants of a given entity id.
+     *
+     * @param Builder $query
+     * @param number $entity_id The id of the  entity
+     * @param string $tag Filter by tag in the relation with the parent
+     * @return Builder
+     * @throws \Exception
+     */
+    public function scopeSiblingsOf($query, $entity_id, $tag = null)
+    {
+        $parent_entity = Entity::find($entity_id);
+        $query->join('entities_relations as relation_siblings', function ($join) use ($parent_entity, $tag) {
+            $join->on('relation_siblings.caller_entity_id', '=', 'entities.id')
+                ->where('relation_siblings.called_entity_id', '=', $parent_entity->parent_entity_id)
+                ->where('relation_siblings.depth', '=', 1)
+                ->where('relation_siblings.kind', '=', EntityRelation::RELATION_ANCESTOR)
+                ->when($tag, function ($q) use ($tag) {
+                    return $q->whereJsonContains('relation_siblings.tags', $tag);
+                });
+            ;
+        })
+            ->where('entities.id', '!=', $entity_id)
+            ->addSelect('relation_siblings.position as siblings_relation_position')
+            ->addSelect('relation_siblings.tags as siblings_relation_tags');
+    }
+
+    /**
+     * Scope a query to only get entities being called by.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder $query
+     * @param  string $entity_id The id of the entity calling the relations
+     * @param  string $kind Filter by type of relation, if ommited all relations but 'ancestor' will be included
+     * @param  string $tag Filter by tag in relation
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeRelatedBy($query, $entity_id, $kind = null, $tag = null)
+    {
+        $query->join('entities_relations as related_by', function ($join) use ($entity_id, $kind, $tag) {
+            $join->on('related_by.called_entity_id', '=', 'entities.id')
+                ->where('related_by.caller_entity_id', '=', $entity_id)
+                ->when($tag, function ($q) use ($tag) {
+                    return $q->whereJsonContains('related_by.tags', $tag);
+                });;
+            if ($kind === null) {
+                $join->where('related_by.kind', '!=', 'ancestor');
+            } else {
+                $join->where('related_by.kind', '=', $kind);
+            }
+        })->addSelect('related_by.relation_id as relation_id', 'related_by.kind as relation_kind', 'related_by.position as relation_position', 'related_by.depth as relation_depth', 'related_by.tags as relation_tags');
+    }
+
+    /**
+     * Scope a query to only get entities calling.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string $entity_id The id of the entity calling the relations
+     * @param string $kind Filter by type of relation, if ommited all relations but 'ancestor' will be included
+     * @param string $tag Filter by tag in relation
+     * @return \Illuminate\Database\Eloquent\Builder
+     * @throws \Exception
+     */
+    public function scopeRelating($query, $entity_id, $kind = null, $tag = null)
+    {
+        $query->join('entities_relations as relating', function ($join) use ($entity_id, $kind, $tag) {
+            $join->on('relating.caller_entity_id', '=', 'entities.id')
+                ->where('relating.called_entity_id', '=', $entity_id)
+                ->when($tag, function ($q) use ($tag) {
+                    return $q->whereJsonContains('relating.tags', $tag);
+                });;
+            if ($kind === null) {
+                $join->where('relating.kind', '!=', 'ancestor');
+            } else {
+                $join->where('relating.kind', '=', $kind);
+            }
+        })->addSelect('relating.kind as relation_kind', 'relating.position as relation_position', 'relating.depth as relation_depth', 'relating.tags as relation_tags');
+    }
+
+    /**
      * AGGREGATES
      */
 
@@ -216,6 +411,50 @@ class Entity extends Model
     }
 
     /**
+     * Version Increments
+     */
+    /* private */ 
+    public static function incrementEntityVersion($entity_id) {
+        $e = DB::table('entities')
+            ->where('id', $entity_id);
+        $e->increment('version');
+        $e->increment('version_full');
+        self::incrementTreeVersion($entity_id);
+        self::incrementRelationsVersion($entity_id);
+    }
+    private static function incrementTreeVersion($entity_id) {
+        $ancestors = Entity::select('id')->ancestorOf($entity_id)->get();
+        if (!empty($ancestors)) {
+            foreach ($ancestors as $ancestor) {
+                $e = DB::table('entities')
+                    ->where('id', $ancestor['id']);
+                $e->increment('version_tree');
+                $e->increment('version_full');
+            }
+        }
+    }
+    /* private */ 
+    public static function incrementRelationsVersion($entity_id) {
+        $relating = Entity::select('id')->relating($entity_id)->get();
+        if (!empty($relating)) {
+            foreach ($relating as $entityRelating) {
+                $e = DB::table('entities')
+                    ->where('id', $entityRelating['id']);
+                $e->increment('version_relations');
+                $e->increment('version_full');
+                $ancestors = Entity::select('id')->ancestorOf($entityRelating->id)->get();
+                if (!empty($ancestors)) {
+                    foreach ($ancestors as $ancestor) {
+                        $e = DB::table('entities')
+                            ->where('id', $ancestor['id']);
+                        $e->increment('version_full');
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * BOOT
      */
     protected static function boot()
@@ -245,6 +484,31 @@ class Entity extends Model
             $entity['version_full'] = 1;
         });
         static::saved(function (Model $entity) {
+            $parentEntity = Entity::/* with('routes')-> */find($entity['parent_entity_id']);
+            // Create the ancestors relations
+            if ($parentEntity && isset($entity['parent_entity_id']) && $entity['parent_entity_id'] != NULL && $entity->isDirty('parent_entity_id')){
+                EntityRelation::where("caller_entity_id", $entity->id)->where('kind', EntityRelation::RELATION_ANCESTOR)->delete();
+                EntityRelation::create([
+                    "caller_entity_id" => $entity->id,
+                    "called_entity_id" => $parentEntity->id,
+                    "kind" => EntityRelation::RELATION_ANCESTOR,
+                    "depth" => 1
+                ]);
+                $depth = 2;
+                $ancestors = Entity::select('id')->ancestorOf($parentEntity->id)->orderBy('ancestor_relation_depth')->get();
+
+                foreach ($ancestors as $ancestor) {
+                    EntityRelation::create([
+                        "caller_entity_id" => $entity->id,
+                        "called_entity_id" => $ancestor->id,
+                        "kind" => EntityRelation::RELATION_ANCESTOR,
+                        "depth" => $depth
+                    ]);
+                    $depth++;
+                }
+            };
+            // Update versions
+            self::incrementEntityVersion($entity->id);
             // Setting archive version
             $config = Config::get('kusikusi_models.store_versions', false);
             if(config('kusikusi_models.store_versions') === true){
