@@ -191,7 +191,7 @@ class Entity extends Model
      * @return Builder
      * @throws \Exception
      */
-    public function scopeChildOf($query, $entity_id, $tag = null)
+    public function scopeChildrenOf($query, $entity_id, $tag = null)
     {
         $query->join('entities_relations as relation_children', function ($join) use ($entity_id, $tag) {
             $join->on('relation_children.caller_entity_id', '=', 'entities.id')
@@ -235,7 +235,7 @@ class Entity extends Model
      * @return Builder
      * @throws \Exception
      */
-    public function scopeAncestorOf($query, $entity_id)
+    public function scopeAncestorsOf($query, $entity_id)
     {
         $query->join('entities_relations as relation_ancestor', function ($join) use ($entity_id) {
             $join->on('relation_ancestor.called_entity_id', '=', 'entities.id')
@@ -254,7 +254,7 @@ class Entity extends Model
      * @return Builder
      * @throws \Exception
      */
-    public function scopeDescendantOf($query, $entity_id, $depth = 99)
+    public function scopeDescendantsOf($query, $entity_id, $depth = 99)
     {
         $query->join('entities_relations as relation_descendants', function ($join) use ($entity_id, $depth) {
             $join->on('relation_descendants.caller_entity_id', '=', 'entities.id')
