@@ -30,7 +30,7 @@ class Entity extends Model
     protected $table = 'entities';
 
     /* protected $guarded = ['created_at', 'updated_at']; */
-    protected $fillable = ['id', 'model', 'view', 'properties', 'parent_entity_id', 'created_at', 'published_at', 'unpublished_at'];
+    protected $fillable = ['id', 'model', 'view', 'properties', 'is_active', 'parent_entity_id', 'created_at', 'published_at', 'unpublished_at'];
     protected $contentFields = [];
     protected $touches = ['entities_relating'];
     protected $propertiesFields = [];
@@ -423,7 +423,7 @@ class Entity extends Model
         self::incrementRelationsVersion($entity_id);
     }
     private static function incrementTreeVersion($entity_id) {
-        $ancestors = Entity::select('id')->ancestorOf($entity_id)->get();
+        $ancestors = Entity::select('id')->ancestorsOf($entity_id)->get();
         if (!empty($ancestors)) {
             foreach ($ancestors as $ancestor) {
                 $e = DB::table('entities')
@@ -442,7 +442,7 @@ class Entity extends Model
                     ->where('id', $entityRelating['id']);
                 $e->increment('version_relations');
                 $e->increment('version_full');
-                $ancestors = Entity::select('id')->ancestorOf($entityRelating->id)->get();
+                $ancestors = Entity::select('id')->ancestorsOf($entityRelating->id)->get();
                 if (!empty($ancestors)) {
                     foreach ($ancestors as $ancestor) {
                         $e = DB::table('entities')
@@ -495,7 +495,7 @@ class Entity extends Model
                     "depth" => 1
                 ]);
                 $depth = 2;
-                $ancestors = Entity::select('id')->ancestorOf($parentEntity->id)->orderBy('ancestor_relation_depth')->get();
+                $ancestors = Entity::select('id')->ancestorsOf($parentEntity->id)->orderBy('ancestor_relation_depth')->get();
 
                 foreach ($ancestors as $ancestor) {
                     EntityRelation::create([
