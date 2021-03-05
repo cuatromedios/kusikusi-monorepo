@@ -130,7 +130,6 @@ class EntityArchiveTest extends TestCase
     EntityArchive::archive($id2, 'version');
     EntityArchive::updateFromArchive($id1, 1);
     $entityDuplicated = Entity::with('contents')->find($id1);  
-    $out = new \Symfony\Component\Console\Output\ConsoleOutput();    
     $this->assertEquals($entityDuplicated->model, $model2);
     $this->assertEquals($entityDuplicated->view, $view2);
   }
