@@ -15,6 +15,7 @@ use Kusikusi\Relations\PluckedHasMany;
 use Kusikusi\Models\Traits\UsesShortId;
 use Kusikusi\Models\EntityRelation;
 use Kusikusi\Models\EntityArchive;
+use Kusikusi\Models\EntityRoute;
 use Kusikusi\Exceptions\DuplicatedEntityIdException;
 use Kusikusi\Casts\Json;
 use Illuminate\Support\Carbon;
@@ -135,6 +136,9 @@ class Entity extends Model
     }
     public function archives() {
         return $this->hasMany(EntityArchive::class, 'entity_id', 'id');
+    }
+    public function routes() {
+        return $this->hasMany(EntityRoute::class, 'entity_id', 'id');
     }
 
     /**
@@ -484,7 +488,7 @@ class Entity extends Model
             $entity['version_full'] = 1;
         });
         static::saved(function (Model $entity) {
-            $parentEntity = Entity::/* with('routes')-> */find($entity['parent_entity_id']);
+            $parentEntity = Entity::with('routes')->find($entity['parent_entity_id']);
             // Create the ancestors relations
             if ($parentEntity && isset($entity['parent_entity_id']) && $entity['parent_entity_id'] != NULL && $entity->isDirty('parent_entity_id')){
                 EntityRelation::where("caller_entity_id", $entity->id)->where('kind', EntityRelation::RELATION_ANCESTOR)->delete();
@@ -496,7 +500,6 @@ class Entity extends Model
                 ]);
                 $depth = 2;
                 $ancestors = Entity::select('id')->ancestorsOf($parentEntity->id)->orderBy('ancestor_relation_depth')->get();
-
                 foreach ($ancestors as $ancestor) {
                     EntityRelation::create([
                         "caller_entity_id" => $entity->id,
@@ -509,6 +512,11 @@ class Entity extends Model
             };
             // Update versions
             self::incrementEntityVersion($entity->id);
+            // Setting routes
+            /* Config::get('kusikusi_models.generate_routes', false);
+            if(config('kusikusi_models.generate_routes') === true){
+                EntityRoute::generateRoutes($entity, $parentEntity);
+            } */
             // Setting archive version
             $config = Config::get('kusikusi_models.store_versions', false);
             if(config('kusikusi_models.store_versions') === true){
