@@ -14,7 +14,7 @@
 
     <h4>Entity with relations</h4>
     {!! pretty_json($entityWithRelations) !!}
-    <h4><a href="{{ route('entities-relations.create', ['entity_id' => $entity->id]) }}">Create relation in the model</a></h4>
+    <h4><a href="{{ route('contents.create', ['entity_id' => $entity->id]) }}">Create relation in the model</a></h4>
 
 
     <a href="{{ route('entities.create') }}">Create Model</a>

@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use Kusikusi\Models\Entity;
+use Kusikusi\Models\EntityRelation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 
-class EntityController extends Controller
+class EntityRelationController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,8 +16,8 @@ class EntityController extends Controller
      */
     public function index()
     {
-        $entities = Entity::select()->withContent()->orderBy('created_at')->get();
-        return View::make('entities.index')
+        $entities = EntityRelation::select()->orderBy('created_at')->get();
+        return View::make('entity-relations.index')
            ->with('entities', $entities);
     }
 
@@ -25,11 +26,12 @@ class EntityController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
         $entities = Entity::select()->orderBy('created_at')->get();
-        return View::make('entities.create')
-           ->with('entities', $entities);
+        return View::make('entity-relations.create')
+           ->with('entities', $entities)
+           ->with('entity_id', $request->input('entity_id'));
     }
 
     /**
@@ -41,8 +43,8 @@ class EntityController extends Controller
     public function store(Request $request)
     {
         $fields = $request->except(['_token']);
-        $entity = Entity::create($fields);
-        return redirect()->route('entities.show', $entity->id);
+        $entity = EntityRelation::create($fields);
+        return redirect()->route('entity.show', $entity->id);
     }
 
     /**
@@ -56,6 +58,7 @@ class EntityController extends Controller
         $entity = Entity::findOrFail($id);
         $entityWithContents = Entity::select('id', 'model')->with('contents')->findOrFail($id);
         $entityWithContent = Entity::select('id', 'model')->withContent('es', ['title', 'description'])->findOrFail($id);
+        //dd($entityWithContent);
         $entityWithRelations = Entity::select('id', 'model')->withContent('es', ['title', 'description'])->with(['entities_related' => function ($q) {$q->withContent('es')->select('id');}])->findOrFail($id);
         return View::make('entities.show')
            ->with('entityWithContents', $entityWithContents)
