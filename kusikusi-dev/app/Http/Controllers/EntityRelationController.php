@@ -44,7 +44,7 @@ class EntityRelationController extends Controller
     {
         $fields = $request->except(['_token']);
         $entity = EntityRelation::create($fields);
-        return redirect()->route('entity.show', $entity->id);
+        return redirect()->route('entities.show', $entity->caller_entity_id);
     }
 
     /**

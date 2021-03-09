@@ -21,4 +21,5 @@ Route::get('/models', function () { return view('models'); })->name('models');
 Route::resource('entities', EntityController::class);
 Route::get('contents/create/{entity_id}', [ContentController::class, 'create']);
 Route::resource('contents', ContentController::class);
+Route::get('entities-relations/create/{entity_id}', [EntityRelationController::class, 'create']);
 Route::resource('entities-relations', EntityRelationController::class);
