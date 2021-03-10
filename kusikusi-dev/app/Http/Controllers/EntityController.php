@@ -63,13 +63,13 @@ class EntityController extends Controller
             ->with(['entities_related' => function ($q) {
                 $q->withContent('es')->select('id');}])
             ->findOrFail($id);
-        $childrenOfEntity = Entity::select()->childrenOf($id)->get();
-        $parentOfEntity = Entity::select()->parentOf($id)->get();
-        $ancestorsOfEntity = Entity::select()->ancestorsOf($id)->get();
-        $descendantsOfEntity = Entity::select()->descendantsOf($id)->get();
-        $siblingsOfEntity = Entity::select()->siblingsOf($id)->get();
-        $relatedByEntity = Entity::select()->relatedBy($id)->get();
-        $relatingEntity = Entity::select()->relating($id)->get();
+        $childrenOfEntity = Entity::select('id', 'model')->childrenOf($id)->get();
+        $parentOfEntity = Entity::select('id', 'model')->parentOf($id)->get();
+        $ancestorsOfEntity = Entity::select('id', 'model')->ancestorsOf($id)->get();
+        $descendantsOfEntity = Entity::select('id', 'model')->descendantsOf($id)->get();
+        $siblingsOfEntity = Entity::select('id', 'model')->siblingsOf($id)->get();
+        $relatedByEntity = Entity::select('id', 'model')->relatedBy($id)->get();
+        $relatingEntity = Entity::select('id', 'model')->relating($id)->get();
         return View::make('entities.show')
            ->with('entityWithContents', $entityWithContents)
            ->with('entityWithContent', $entityWithContent)
