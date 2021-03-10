@@ -55,13 +55,33 @@ class EntityController extends Controller
     {
         $entity = Entity::findOrFail($id);
         $entityWithContents = Entity::select('id', 'model')->with('contents')->findOrFail($id);
-        $entityWithContent = Entity::select('id', 'model')->withContent('es', ['title', 'description'])->findOrFail($id);
-        $entityWithRelations = Entity::select('id', 'model')->withContent('es', ['title', 'description'])->with(['entities_related' => function ($q) {$q->withContent('es')->select('id');}])->findOrFail($id);
+        $entityWithContent = Entity::select('id', 'model')
+            ->withContent('es', ['title', 'summary'])
+            ->findOrFail($id);
+        $entityWithRelations = Entity::select('id', 'model')
+            ->withContent('es')
+            ->with(['entities_related' => function ($q) {
+                $q->withContent('es')->select('id');}])
+            ->findOrFail($id);
+        $childrenOfEntity = Entity::select()->childrenOf($id)->get();
+        $parentOfEntity = Entity::select()->parentOf($id)->get();
+        $ancestorsOfEntity = Entity::select()->ancestorsOf($id)->get();
+        $descendantsOfEntity = Entity::select()->descendantsOf($id)->get();
+        $siblingsOfEntity = Entity::select()->siblingsOf($id)->get();
+        $relatedByEntity = Entity::select()->relatedBy($id)->get();
+        $relatingEntity = Entity::select()->relating($id)->get();
         return View::make('entities.show')
            ->with('entityWithContents', $entityWithContents)
            ->with('entityWithContent', $entityWithContent)
            ->with('entityWithRelations', $entityWithRelations)
-           ->with('entity', $entity);
+           ->with('entity', $entity)
+           ->with('childrenOfEntity', $childrenOfEntity)
+           ->with('parentOfEntity', $parentOfEntity)
+           ->with('ancestorsOfEntity', $ancestorsOfEntity)
+           ->with('descendantsOfEntity', $descendantsOfEntity)
+           ->with('siblingsOfEntity', $siblingsOfEntity)
+           ->with('relatedByEntity', $relatedByEntity)
+           ->with('relatingEntity', $relatingEntity);
     }
 
     /**

@@ -1,5 +1,5 @@
 <?php
 
 return [
-  'shortIdLength' => 10,
+  'short_id_length' => 10,
 ];

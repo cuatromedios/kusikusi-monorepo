@@ -39,4 +39,16 @@ class EntityRelation extends Pivot
     public function called_entity() {
         return $this->belongsTo('Kusikusi\Models\Entity', 'called_entity_id', 'relation_id');
     }
+
+    /**
+     * BOOT
+     */
+    protected static function boot(){
+        parent::boot();
+        static::saved(function (Pivot $entityRelation) {
+            Entity::incrementEntityVersion($entityRelation['caller_entity_id']);
+            Entity::incrementRelationsVersion($entityRelation['called_entity_id']);
+        });
+
+    }
 }
