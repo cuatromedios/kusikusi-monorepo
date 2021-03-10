@@ -27,7 +27,7 @@
     @endif
 
     @if (isset($ancestorsOfEntity) && count($ancestorsOfEntity) > 0)
-        <h4>Ancestors of Entity</h4>)    
+        <h4>Ancestors of Entity</h4>
         {!! pretty_json($ancestorsOfEntity) !!}
     @endif
 
