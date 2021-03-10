@@ -159,11 +159,11 @@ class Entity extends Model
     public function scopeWithContent($query, $lang = null, $fields = null)
     {
         return $query->with(['content' => function($q) use ($lang, $fields) {
-            $q->when($lang !== null, function ($q) use ($lang) {
-                return $q->where('lang', $lang);
+            $q->when($lang !== null, function ($q) use ($lang, $fields) {
+                return $q->orWhere('lang', $lang)->orWhere('lang', $fields);
             });
             $q->when($fields !== null, function ($q) use ($fields) {
-                return $q->where('field', $fields);
+                return $q->whereField('field', $fields);
             });
         }]);
     }

@@ -7,11 +7,14 @@
     <h4>Entity with contents</h4>
     {!! pretty_json($entityWithContents) !!}
 
+    <a href="{{ route('contents.create', ['entity_id' => $entity->id]) }}">Create content in the model</a>
+
     <h4>Entity with contents by field</h4>
     {!! pretty_json($entityWithContent) !!}
 
     <h4>Entity with relations</h4>
     {!! pretty_json($entityWithRelations) !!}
+    <h4><a href="{{ route('entities-relations.create', ['entity_id' => $entity->id]) }}">Create relation in the model</a></h4>
 
     @if (isset($childrenOfEntity) && count($childrenOfEntity) > 0)
         <h4>Children of Entity</h4>
