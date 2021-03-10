@@ -19,7 +19,6 @@ class CreateEntitiesRoutesTable extends Migration
             $table->string('path')->index()->nullable();
             $table->string('entity_model', 32);
             $table->char('lang', 5)->index()->nullable();
-            $table->boolean('default')->default(false);
             $table->set('kind',['main','alias','permanent_redirect', 'temporal_redirect']);
             $table->timestampsTz();
             $table->foreign('entity_id')
