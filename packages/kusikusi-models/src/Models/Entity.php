@@ -228,6 +228,7 @@ class Entity extends Model
                 });
             ;
         })
+            ->addSelect('id')
             ->addSelect('relation_children.position as child_relation_position')
             ->addSelect('relation_children.tags as child_relation_tags');
     }
@@ -249,6 +250,7 @@ class Entity extends Model
                 ->where('relation_parent.kind', '=', EntityRelation::RELATION_ANCESTOR)
             ;
         })
+            ->addSelect('id')
             ->addSelect('relation_parent.depth as parent_relation_depth');
     }
 
@@ -268,6 +270,7 @@ class Entity extends Model
                 ->where('relation_ancestor.kind', '=', EntityRelation::RELATION_ANCESTOR)
             ;
         })
+            ->addSelect('id')
             ->addSelect('relation_ancestor.depth as ancestor_relation_depth');
     }
 
@@ -287,6 +290,7 @@ class Entity extends Model
                 ->where('relation_descendants.kind', '=', EntityRelation::RELATION_ANCESTOR)
                 ->where('relation_descendants.depth', '<=', $depth);
         })
+            ->addSelect('id')
             ->addSelect('relation_descendants.position as descendant_relation_position')
             ->addSelect('relation_descendants.depth as descendant_relation_depth')
             ->addSelect('relation_descendants.tags as descendant_relation_tags');
@@ -314,6 +318,7 @@ class Entity extends Model
                 });
             ;
         })
+            ->addSelect('id')
             ->where('entities.id', '!=', $entity_id)
             ->addSelect('relation_siblings.position as siblings_relation_position')
             ->addSelect('relation_siblings.tags as siblings_relation_tags');
@@ -341,7 +346,9 @@ class Entity extends Model
             } else {
                 $join->where('related_by.kind', '=', $kind);
             }
-        })->addSelect('related_by.relation_id as relation_id', 'related_by.kind as relation_kind', 'related_by.position as relation_position', 'related_by.depth as relation_depth', 'related_by.tags as relation_tags');
+        })
+        ->addSelect('id')
+        ->addSelect('related_by.relation_id as relation_id', 'related_by.kind as relation_kind', 'related_by.position as relation_position', 'related_by.depth as relation_depth', 'related_by.tags as relation_tags');
     }
 
     /**
@@ -367,7 +374,9 @@ class Entity extends Model
             } else {
                 $join->where('relating.kind', '=', $kind);
             }
-        })->addSelect('relating.kind as relation_kind', 'relating.position as relation_position', 'relating.depth as relation_depth', 'relating.tags as relation_tags');
+        })
+        ->addSelect('id')
+        ->addSelect('relating.kind as relation_kind', 'relating.position as relation_position', 'relating.depth as relation_depth', 'relating.tags as relation_tags');
     }
 
     /**

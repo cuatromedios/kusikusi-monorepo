@@ -64,14 +64,14 @@ class EntityController extends Controller
                 $q->withContent('es')->select('id');}])
             ->findOrFail($id);
         $childrenOfEntity = Entity::select('id', 'model')->childrenOf($id)->get();
-        $parentOfEntity = Entity::select('id', 'model')->parentOf($id)->first();
+        $parentOfEntity = Entity::parentOf($id)->first();
         $ancestorsOfEntity = Entity::select('id', 'model')->ancestorsOf($id)->get();
         $descendantsOfEntity = Entity::select('id', 'model')->descendantsOf($id)->get();
         $siblingsOfEntity = Entity::select('id', 'model')->siblingsOf($id)->get();
         $relatedByEntity = Entity::select('id', 'model')->relatedBy($id)->get();
         $relatingEntity = Entity::select('id', 'model')->relating($id)->get();
         $entityWithRoutes = Entity::select('id', 'model')->withRoutes('en')->find($id);
-        $entityWithRoute = Entity::select('id', 'model')->withRoute('en', 'alias')->find($id);
+        $entityWithRoute = Entity::select('id', 'model')->withRoute('en', 'main')->find($id);
         return View::make('entities.show')
            ->with('entityWithContents', $entityWithContents)
            ->with('entityWithContent', $entityWithContent)
