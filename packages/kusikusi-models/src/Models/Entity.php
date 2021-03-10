@@ -149,8 +149,17 @@ class Entity extends Model
     public function archives() {
         return $this->hasMany(EntityArchive::class, 'entity_id', 'id');
     }
+    /**
+     * Get the routes of this entity
+     */
     public function routes() {
         return $this->hasMany(EntityRoute::class, 'entity_id', 'id');
+    }
+    /**
+     * Get one routes of this entity, main if no other defined
+     */
+    public function route() {
+        return $this->hasOne(EntityRoute::class, 'entity_id', 'id');
     }
 
     /**
@@ -362,6 +371,50 @@ class Entity extends Model
     }
 
     /**
+     * Scope a query include routes.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string $entity_id The id of the entity calling the relations
+     * @param string $kind Filter by type of relation, if ommited all relations but 'ancestor' will be included
+     * @param string $tag Filter by tag in relation
+     * @return \Illuminate\Database\Eloquent\Builder
+     * @throws \Exception
+     */
+    public function scopeWithRoutes($query, $lang = null, $kind = null)
+    {
+        return $query->with(['routes' => function($q) use ($lang, $kind) {
+            $q->when($lang !== null, function ($q) use ($lang) {
+                return $q->where('lang', $lang);
+            });
+            $q->when($kind !== null, function ($q) use ($kind) {
+                return $q->where('kind', $kind);
+            });
+        }]);
+    }
+
+    /**
+     * Scope a query include a route, main by default.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string $entity_id The id of the entity calling the relations
+     * @param string $kind Filter by type of relation, if ommited all relations but 'ancestor' will be included
+     * @param string $tag Filter by tag in relation
+     * @return \Illuminate\Database\Eloquent\Builder
+     * @throws \Exception
+     */
+    public function scopeWithRoute($query, $lang = null, $kind = null)
+    {
+        return $query->with(['route' => function($q) use ($lang, $kind) {
+            $q->when($lang !== null, function ($q) use ($lang) {
+                return $q->where('lang', $lang);
+            });
+            $q->when($kind !== null, function ($q) use ($kind) {
+                return $q->where('kind', $kind);
+            });
+        }]);
+    }
+
+    /**
      * AGGREGATES
      */
 
@@ -514,11 +567,6 @@ class Entity extends Model
             };
             // Update versions
             self::incrementEntityVersion($entity->id);
-            // Setting routes
-            /* Config::get('kusikusi_models.generate_routes', false);
-            if(config('kusikusi_models.generate_routes') === true){
-                EntityRoute::generateRoutes($entity, $parentEntity);
-            } */
             // Setting archive version
             $config = Config::get('kusikusi_models.store_versions', false);
             if(config('kusikusi_models.store_versions') === true){

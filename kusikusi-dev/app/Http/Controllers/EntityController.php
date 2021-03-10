@@ -70,6 +70,8 @@ class EntityController extends Controller
         $siblingsOfEntity = Entity::select('id', 'model')->siblingsOf($id)->get();
         $relatedByEntity = Entity::select('id', 'model')->relatedBy($id)->get();
         $relatingEntity = Entity::select('id', 'model')->relating($id)->get();
+        $entityWithRoutes = Entity::select('id', 'model')->withRoutes('en')->find($id);
+        $entityWithRoute = Entity::select('id', 'model')->withRoute('en', 'alias')->find($id);
         return View::make('entities.show')
            ->with('entityWithContents', $entityWithContents)
            ->with('entityWithContent', $entityWithContent)
@@ -81,6 +83,8 @@ class EntityController extends Controller
            ->with('descendantsOfEntity', $descendantsOfEntity)
            ->with('siblingsOfEntity', $siblingsOfEntity)
            ->with('relatedByEntity', $relatedByEntity)
+           ->with('entityWithRoutes', $entityWithRoutes)
+           ->with('entityWithRoute', $entityWithRoute)
            ->with('relatingEntity', $relatingEntity);
     }
 

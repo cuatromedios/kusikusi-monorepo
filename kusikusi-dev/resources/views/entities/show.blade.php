@@ -51,6 +51,16 @@
         {!! pretty_json($relatingEntity) !!}
     @endif
 
+    @if (isset($entityWithRoutes))
+        <h4>Entity with routes</h4>  
+        {!! pretty_json($entityWithRoutes) !!}
+    @endif
+
+    @if (isset($entityWithRoute))
+        <h4>Entity with routes</h4>  
+        {!! pretty_json($entityWithRoute) !!}
+    @endif
+
     <a href="{{ route('entities.create') }}">Create</a>
     
 </x-entity>
