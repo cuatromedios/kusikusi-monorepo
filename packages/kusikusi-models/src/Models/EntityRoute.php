@@ -31,6 +31,7 @@ class EntityRoute extends Model
     // Create the automatic created routes
     public static function createFromSlug($entity_id, $lang, $slug) {
         $entity = Entity::withRoute($lang, 'main')->find($entity_id);
+        if (!$entity) return;
         $parent = Entity::withRoute($lang, 'main')->parentOf($entity_id)->first();
         if (config('kusikusi_models.create_routes_redirects', false)) {
             self::where('entity_id', $entity_id)->where('lang', $lang)->where('kind', 'main')->update(['kind' => 'permanent_redirect']);
