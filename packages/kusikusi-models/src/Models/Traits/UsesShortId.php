@@ -19,7 +19,7 @@ trait UsesShortId
         self::creating(function ($model) {
             if (!isset($model[$model->getKeyName()])) {
                 do {
-                    $id = Shortid::generate(Config::get('kusikusi_models.shortIdLength', 10));
+                    $id = Shortid::generate(Config::get('kusikusi_models.short_id_length', 10));
                     $found_duplicate = self::where($model->getKeyName(), $id)->first();
                 } while (!!$found_duplicate);
                 $model->setAttribute($model->getKeyName(), $id);
