@@ -3,6 +3,7 @@
 namespace Kusikusi\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Config;
 
 class EntityContent extends Model
 {
@@ -37,6 +38,11 @@ class EntityContent extends Model
         parent::boot();
         static::creating(function (Model $entityContent) {
             self::where('entity_id', $entityContent->entity_id)->where('lang', $entityContent->lang)->where('field', $entityContent->field)->delete();
+        });
+        static::saved(function (Model $entityContent) {
+            if ($entityContent->field === 'slug' && config('kusikusi_models.create_routes_from_slugs', false) === true){
+                EntityRoute::createFromSlug($entityContent->entity_id, $entityContent->lang, $entityContent->text);
+            }
         });
     }
 

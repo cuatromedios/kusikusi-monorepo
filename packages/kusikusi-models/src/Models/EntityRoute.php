@@ -29,40 +29,28 @@ class EntityRoute extends Model
     }
 
     // Create the automatic created routes
-    public static function generateRoutes($entity, $entity_parent) {
-        echo '<script type="text/javascript">' .
-            'console.log(' . print_r($entity->properties) . ');</script>';
-            consoleLog('Hello, console!');
-        if (isset($entity->properties['slug'])) {
-            EntityRoute::where('entity_id', $entity->id)->where('kind', 'main')->delete();
-            foreach ($entity->properties['slug'] as $lang => $slug) {
-                if ($entity_parent->routes->count()) {
-                    foreach($entity_parent->routes as $route) {
-                        if ($route->default && $route->lang === $lang) {
-                            $parent_path = $route->path;
-                            if ($parent_path === '/') {
-                                $parent_path = '';
-                            }
-                            EntityRoute::create([
-                                "entity_id" => $entity->id,
-                                "entity_model" => $entity->model,
-                                "path" => $parent_path."/".$slug,
-                                "lang" => $lang,
-                                "kind" => "main"
-                            ]);
-                        }
-                    }
-                } else {
-                    EntityRoute::create([
-                        "entity_id" => $entity->id,
-                        "entity_model" => $entity->model,
-                        "path" => "/".$slug,
-                        "lang" => $lang,
-                        "kind" => "main"
-                    ]);
-                }
+    public static function createFromSlug($entity_id, $lang, $slug) {
+        $entity = Entity::withRoute($lang, 'main')->find($entity_id);
+        $parent = Entity::withRoute($lang, 'main')->parentOf($entity_id)->first();
+        if (config('kusikusi_models.create_routes_redirects', false)) {
+            self::where('entity_id', $entity_id)->where('lang', $lang)->where('kind', 'main')->update(['kind' => 'permanent_redirect']);
+        } else {
+            self::where('entity_id', $entity_id)->where('lang', $lang)->where('kind', 'main')->delete();
+        }
+        $parent_path = '';
+        if ($parent && $parent->route) {
+            $parent_path = $parent->route->path;
+            if (!$parent_path || $parent_path === '/') {
+                $parent_path = '';
             }
         }
+        EntityRoute::create([
+            "entity_id" => $entity->id,
+            "entity_model" => $entity->model,
+            "path" => $parent_path."/".$slug,
+            "lang" => $lang,
+            "kind" => "main"
+        ]);
     }
 
 }
