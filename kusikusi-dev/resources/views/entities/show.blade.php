@@ -21,7 +21,7 @@
         {!! pretty_json($childrenOfEntity) !!}
     @endif
 
-    @if (isset($parentOfEntity) && count($parentOfEntity) > 0)
+    @if (isset($parentOfEntity))
         <h4>Parent of Entity</h4>    
         {!! pretty_json($parentOfEntity) !!}
     @endif

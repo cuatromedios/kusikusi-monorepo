@@ -64,7 +64,7 @@ class EntityController extends Controller
                 $q->withContent('es')->select('id');}])
             ->findOrFail($id);
         $childrenOfEntity = Entity::select('id', 'model')->childrenOf($id)->get();
-        $parentOfEntity = Entity::select('id', 'model')->parentOf($id)->get();
+        $parentOfEntity = Entity::select('id', 'model')->parentOf($id)->first();
         $ancestorsOfEntity = Entity::select('id', 'model')->ancestorsOf($id)->get();
         $descendantsOfEntity = Entity::select('id', 'model')->descendantsOf($id)->get();
         $siblingsOfEntity = Entity::select('id', 'model')->siblingsOf($id)->get();
