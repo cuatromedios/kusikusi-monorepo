@@ -13,16 +13,17 @@
         }
     ],
     "require": {
-        "illuminate/support": "^7.0|^8.0"
+        "illuminate/support": "^7.0|^8.0",
+        "cuatromedios/kusikusi-models": "^8.0"
     },
     "autoload": {
         "psr-4": {
-            "Cuatromedios\\KusikusiWebsite\\": "./src"
+            "Kusikusi\\": "./src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Cuatromedios\\KusikusiWebsite\\Tests\\": "tests"
+            "Kusikusi\\Tests\\": "tests"
         }
     },
     "scripts": {
@@ -31,7 +32,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Cuatromedios\\KusikusiWebsite\\KusikusiWebsiteServiceProvider"
+                "Kusikusi\\WebsiteServiceProvider"
             ]
         }
     },
