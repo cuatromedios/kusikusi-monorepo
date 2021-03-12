@@ -62,14 +62,14 @@ class WebController extends Controller
         // Search for the entity is being called by its url, ignore inactive and soft deleted.
         $defaultLang = config('cms.langs', [''])[0];
         App::setLocale($defaultLang);
-        $searchResult = Route::where('path', $path)->first();
+        $searchResult = EntityRoute::where('path', $path)->first();
         if (!$searchResult) {
             $request->lang = $defaultLang;
             $controller = new HtmlController();
             return ($controller->error($request, 404));
         }
         if ($searchResult->default === false) {
-            $redirect = Route::where('entity_id', $searchResult->entity_id)
+            $redirect = EntityRoute::where('entity_id', $searchResult->entity_id)
                 ->where('lang', $searchResult->lang)
                 ->where('default', true)
                 ->first();
@@ -80,13 +80,13 @@ class WebController extends Controller
         // Select an entity with its properties
         $lang = $searchResult->lang;
         App::setLocale($lang);
-        $modelClassName = "App\\Models\\" . ucfirst($searchResult->entity_model);
+        $modelClassName = "Kusikusi\\Models\\" . ucfirst($searchResult->entity_model);
         $entity = $modelClassName::select("*")
             ->where("id", $searchResult->entity_id)
-            ->appendProperties()
+            /* ->appendProperties()
             ->appendContents('*', $lang)
             ->appendRoute($lang)
-            ->appendMedium('social')
+            ->appendMedium('social') */
             ->with('entities_related')
             ->with('routes');
         $entity=$entity->first();
@@ -104,7 +104,7 @@ class WebController extends Controller
         $controller = new $controllerClassName;
         if (method_exists($controller, $model_name)) {
             $view = $controller->$model_name($request, $entity, $lang);
-            if (Config::get('cms.static_generation', 'lazy') === 'lazy') {
+            /* if (Config::get('cms.static_generation', 'lazy') === 'lazy') {
                 $modelInstance = new $modelClassName;
                 if ($modelInstance->getCacheViewsAs()) {
                     $render = $view->render();
@@ -118,7 +118,7 @@ class WebController extends Controller
                     }
                     Storage::disk('views_processed')->put($cachePath, $render);
                 }
-            }
+            } */
             return $view;
         } else {
             return ($controller->error($request, 501));
