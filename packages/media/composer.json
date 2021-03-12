@@ -1,0 +1,41 @@
+{
+    "name": "kusikusi/media",
+    "description": "A description for media.",
+    "type": "package",
+    "license": "MIT",
+    "keywords": [
+        "laravel"
+    ],
+    "authors": [
+        {
+            "name": "Cuatromedios",
+            "email": "dev@cuatromedios.com"
+        }
+    ],
+    "require": {
+        "illuminate/support": "^7.0|^8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Kusikusi\\Media\\": "./src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Kusikusi\\Media\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Kusikusi\\Media\\MediaServiceProvider"
+            ]
+        }
+    },
+    "require-dev": {
+        "orchestra/testbench": "^6.0"
+    }
+}
