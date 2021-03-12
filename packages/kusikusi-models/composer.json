@@ -1,6 +1,6 @@
 {
-    "name": "cuatromedios/kusikusi-models",
-    "description": "A description for kusikusi-models.",
+    "name": "kusikusi/models",
+    "description": "Base models used for Kusikusi CMS.",
     "type": "package",
     "license": "MIT",
     "keywords": [

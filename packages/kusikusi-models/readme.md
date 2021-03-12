@@ -8,7 +8,7 @@
 ## Usage
 ##### Require
 ```shell
-composer require cuatromedios/kusikusi-models
+composer require kusikusi/models
 ```
 
 ##### Export the config file
