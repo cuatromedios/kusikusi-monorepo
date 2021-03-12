@@ -165,9 +165,38 @@ class Entity extends Model
     /**
      * SCOPES
      */
+
+    /**
+     * Scope to include contents relation, plucked (field->value) filtered by lang and fields.
+     *
+     * @param  Builder $query
+     * @param  string $lang
+     * @param  array $fields
+     * @return Builder
+     */
     public function scopeWithContent($query, $lang = null, $fields = null)
     {
         return $query->with(['content' => function($q) use ($lang, $fields) {
+            $q->when($lang !== null, function ($q) use ($lang, $fields) {
+                return $q->orWhere('lang', $lang)->orWhere('lang', $fields);
+            });
+            $q->when($fields !== null, function ($q) use ($fields) {
+                return $q->whereField('field', $fields);
+            });
+        }]);
+    }
+
+    /**
+     * Scope to include contents relation, filtered by lang and fields.
+     *
+     * @param  Builder $query
+     * @param  string $lang
+     * @param  array $fields
+     * @return Builder
+     */
+    public function scopeWithContents($query, $lang = null, $fields = null)
+    {
+        return $query->with(['contents' => function($q) use ($lang, $fields) {
             $q->when($lang !== null, function ($q) use ($lang, $fields) {
                 return $q->orWhere('lang', $lang)->orWhere('lang', $fields);
             });

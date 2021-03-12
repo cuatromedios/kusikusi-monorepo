@@ -54,15 +54,16 @@ class EntityController extends Controller
     public function show($id)
     {
         $entity = Entity::findOrFail($id);
-        $entityWithContents = Entity::select('id', 'model')->with('contents')->findOrFail($id);
+        $entityWithContents = Entity::select('id', 'model')->withContents()->findOrFail($id);
         $entityWithContent = Entity::select('id', 'model')
-            ->withContent('es', ['title', 'summary'])
+            ->withContent(null)
             ->findOrFail($id);
         $entityWithRelations = Entity::select('id', 'model')
-            ->withContent('es')
+            ->withContent()
             ->with(['entities_related' => function ($q) {
-                $q->withContent('es')->select('id');}])
-            ->findOrFail($id);
+                $q->withContent()
+                ->select('id');}])
+                ->findOrFail($id);
         $childrenOfEntity = Entity::select('id', 'model')->childrenOf($id)->get();
         $parentOfEntity = Entity::parentOf($id)->first();
         $ancestorsOfEntity = Entity::select('id', 'model')->ancestorsOf($id)->get();
