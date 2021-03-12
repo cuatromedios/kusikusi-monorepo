@@ -12,10 +12,13 @@
 ```shell
 php artisan vendor:publish --provider="Kusikusi\Website\WebsiteServiceProvider" --tag="htmlcontroller"
 ```
-## Usage
-##### Export the website route file
+##### Export the website route file for Laravel
 ```shell
-php artisan vendor:publish --provider="Kusikusi\Website\WebsiteServiceProvider" --tag="route"
+php artisan vendor:publish --provider="Kusikusi\Website\WebsiteServiceProvider" --tag="route-laravel"
+```
+##### Export the website route file for Lumen
+```shell
+php artisan vendor:publish --provider="Kusikusi\Website\WebsiteServiceProvider" --tag="route-laravel"
 ```
 
 ## Testing

@@ -2,7 +2,6 @@
 
 use Kusikusi\Website\Http\Controllers\WebController;
 
-
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -14,5 +13,4 @@ use Kusikusi\Website\Http\Controllers\WebController;
 |
 */
 
-/* $router->get('/{path:.*}', 'Kusikusi\Website\Http\Controllers\WebController@any'); */
 Route::get('/{path}', [WebController::class, 'any'])->where('path', '.*');

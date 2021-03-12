@@ -1,5 +1,7 @@
 <?php
 
+use Kusikusi\Website\Http\Controllers\WebController;
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes
