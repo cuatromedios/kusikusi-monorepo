@@ -15,8 +15,7 @@
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.12",
         "laravel/tinker": "^2.5",
-        "scrivo/highlight.php": "v9.18.1.6",
-        "cuatromedios/kusikusi-media": "*"
+        "scrivo/highlight.php": "v9.18.1.6"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
@@ -70,10 +69,6 @@
         "kusikusi-models": {
             "type": "path",
             "url": "../packages/kusikusi-models"
-        },
-        "kusikusi-media": {
-            "type": "path",
-            "url": "../packages/kusikusi-media"
         }
     }
 }

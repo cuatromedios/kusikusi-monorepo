@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b89dd06d8318af3b28c2a18d59685456",
+    "content-hash": "f9ff6055ef4a20e9d767dde683beaedc",
     "packages": [
         {
             "name": "ankurk91/laravel-eloquent-relationships",
@@ -169,60 +169,6 @@
                 }
             ],
             "time": "2021-01-20T22:51:39+00:00"
-        },
-        {
-            "name": "cuatromedios/kusikusi-media",
-            "version": "dev-monorepo-media",
-            "dist": {
-                "type": "path",
-                "url": "../packages/kusikusi-media",
-                "reference": "4706b0680cea36765585b78ad75e7bfc5d6291b3"
-            },
-            "require": {
-                "illuminate/support": "^7.0|^8.0"
-            },
-            "require-dev": {
-                "orchestra/testbench": "^6.0"
-            },
-            "type": "package",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Kusikusi\\MediaServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Kusikusi\\": "./src"
-                }
-            },
-            "autoload-dev": {
-                "psr-4": {
-                    "Kusikus\\Tests\\": "tests"
-                }
-            },
-            "scripts": {
-                "test": [
-                    "vendor/bin/phpunit"
-                ]
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Cuatromedios",
-                    "email": "dev@cuatromedios.com"
-                }
-            ],
-            "description": "A description for kusikusi-media.",
-            "keywords": [
-                "laravel"
-            ],
-            "transport-options": {
-                "relative": true
-            }
         },
         {
             "name": "cuatromedios/kusikusi-models",
