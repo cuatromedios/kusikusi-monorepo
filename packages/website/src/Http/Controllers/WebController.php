@@ -13,7 +13,6 @@ use Kusikusi\Models\Website;
 use Illuminate\Support\Facades\Validator;
 use Mimey\MimeTypes;
 
-
 class WebController extends Controller
 {
     /**
