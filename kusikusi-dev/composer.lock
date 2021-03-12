@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f9ff6055ef4a20e9d767dde683beaedc",
+    "content-hash": "bf258beec719946e555a7a4fb6cad22b",
     "packages": [
         {
             "name": "ankurk91/laravel-eloquent-relationships",
@@ -991,6 +991,60 @@
             "description": "A Base Security Library",
             "homepage": "https://github.com/ircmaxell/SecurityLib",
             "time": "2015-03-20T14:31:23+00:00"
+        },
+        {
+            "name": "kusikusi/website",
+            "version": "dev-monorepo-website",
+            "dist": {
+                "type": "path",
+                "url": "../packages/website",
+                "reference": "202f0252bf425ea70a53ee6bbd5cc8ea1788b235"
+            },
+            "require": {
+                "illuminate/support": "^7.0|^8.0"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^6.0"
+            },
+            "type": "package",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Kusikusi\\Website\\WebsiteServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Kusikusi\\Website\\": "./src"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Kusikusi\\Website\\Tests\\": "tests"
+                }
+            },
+            "scripts": {
+                "test": [
+                    "vendor/bin/phpunit"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Cuatromedios",
+                    "email": "dev@cuatromedios"
+                }
+            ],
+            "description": "A description for website.",
+            "keywords": [
+                "laravel"
+            ],
+            "transport-options": {
+                "relative": true
+            }
         },
         {
             "name": "laravel/framework",
