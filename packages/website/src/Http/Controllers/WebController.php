@@ -39,11 +39,9 @@ class WebController extends Controller
         $format = strtolower(pathinfo($path, PATHINFO_EXTENSION));
 
         if ($format === '') {
-            $isDirectory = true;
             $format = 'html';
             $static_path = Str::finish($path, '/').'index.html';
         } else {
-            $isDirectory = false;
             $path = substr($path, 0, strrpos($path, "."));
             $static_path = $path.'.'.$format;
         }
@@ -52,45 +50,60 @@ class WebController extends Controller
         $filename = strtolower(pathinfo($path, PATHINFO_FILENAME));
 
         // Send the file stored in the static folder if it exist
-        if ($exists = Storage::disk('views_processed')->exists($static_path)  && (!env('APP_DEBUG', false) || $format !== 'html')) {
+        /* if ($exists = Storage::disk('views_processed')->exists($static_path)  && (!env('APP_DEBUG', false) || $format !== 'html')) {
             $mimes = new MimeTypes;
             $mimeType =  $mimes->getMimeType($format);
             $headers = ['Content-Type' => $mimeType];
             return Storage::disk('views_processed')->response($static_path, null, $headers);
-        }
+        } */
 
         // Search for the entity is being called by its url, ignore inactive and soft deleted.
         $defaultLang = config('cms.langs', [''])[0];
         App::setLocale($defaultLang);
-        $searchResult = EntityRoute::where('path', $path)->first();
-        if (!$searchResult) {
+        $searchRouteResult = EntityRoute::where('path', $path)->first();
+        if (!$searchRouteResult) {
             $request->lang = $defaultLang;
             $controller = new HtmlController();
             return ($controller->error($request, 404));
         }
-        if ($searchResult->default === false) {
-            $redirect = EntityRoute::where('entity_id', $searchResult->entity_id)
-                ->where('lang', $searchResult->lang)
-                ->where('default', true)
-                ->first();
-            if ($redirect) {
-                return redirect($redirect->path . ($originalExtension !== '' ? '.'.$originalExtension : ''), 301);
-            }
+        switch ($searchRouteResult->kind) {
+            case 'temporal_redirect':
+                $status = 307;
+            case 'permanent_redirect':
+                $redirect = EntityRoute::where('entity_id', $searchRouteResult->entity_id)
+                    ->where('lang', $searchRouteResult->lang)
+                    ->where('kind', 'main')
+                    ->first();
+                    return redirect($redirect->path . ($originalExtension !== '' ? '.'.$originalExtension : ''), $status || 301);
+                break;
+            case 'alias':
+            case 'main':
+                break;
         }
         // Select an entity with its properties
-        $lang = $searchResult->lang;
+        $lang = $searchRouteResult->lang;
         App::setLocale($lang);
-        $modelClassName = "Kusikusi\\Models\\" . ucfirst($searchResult->entity_model);
+
+        // Get the model class name from App or Kusikusi
+        if (class_exists("App\\Models\\".$searchRouteResult->entity_model)) {
+            $modelClassName = "App\\Models\\".$searchRouteResult->entity_model;
+        } else if (class_exists("Kusikusi\\Models\\".$searchRouteResult->entity_model)) {
+            $modelClassName = "Kusikusi\\Models\\".$searchRouteResult->entity_model;
+        } else {
+            $modelClassName = "Kusikusi\\Models\\Entity";
+        }
+    
         $entity = $modelClassName::select("*")
-            ->where("id", $searchResult->entity_id)
+            ->where("id", $searchRouteResult->entity_id)
+            ->isPublished()
+            ->withContent($lang)
             /* ->appendProperties()
-            ->appendContents('*', $lang)
             ->appendRoute($lang)
             ->appendMedium('social') */
             ->with('entities_related')
-            ->with('routes');
-        $entity=$entity->first();
-        if (!$entity->isPublished()) {
+            ->with('routes')
+            ->first();
+        if (!$entity) {
             $controller = new HtmlController();
             return ($controller->error($request, 404));
         }
@@ -128,7 +141,7 @@ class WebController extends Controller
     public function clearStatic(Request $request, $entity_id = null) {
         if ($entity_id) {
             $validator = Validator::make(get_defined_vars(),
-                ['entity_id' => 'string|min:1|max:16|regex:/^[A-Za-z0-9_-]+$/|exists:entities,id']
+                ['entity_id' => 'string|min:1|max:32|regex:/^[A-Za-z0-9_-]+$/|exists:entities,id']
             );
             if ($validator->fails()) {
                 return $validator->errors();
