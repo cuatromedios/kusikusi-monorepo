@@ -68,7 +68,7 @@
     "repositories": {
         "models": {
             "type": "path",
-            "url": "../packages/kusikusi-models"
+            "url": "../packages/models"
         }
     }
 }

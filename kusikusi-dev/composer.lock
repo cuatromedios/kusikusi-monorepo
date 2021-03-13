@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a96a3925bde5d1ae713ef985027b99d3",
+    "content-hash": "6c9321603c87d5a5913219125dc2dbd6",
     "packages": [
         {
             "name": "ankurk91/laravel-eloquent-relationships",
@@ -999,7 +999,7 @@
             "version": "dev-monorepo",
             "dist": {
                 "type": "path",
-                "url": "../packages/kusikusi-models",
+                "url": "../packages/models",
                 "reference": "858782ddbd286da984a2a6ddf3f88aee6deae587"
             },
             "require": {
