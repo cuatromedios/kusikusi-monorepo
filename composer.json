@@ -1,0 +1,45 @@
+{
+    "name": "kusikusi/models",
+    "description": "Base models used for Kusikusi CMS.",
+    "type": "package",
+    "license": "MIT",
+    "keywords": [
+        "laravel"
+    ],
+    "authors": [
+        {
+            "name": "Cuatromedios",
+            "email": "dev@cuatromedios.com"
+        }
+    ],
+    "require": {
+        "illuminate/support": "^7.0|^8.0",
+        "pugx/shortid-php": "^0.7.0",
+        "ankurk91/laravel-eloquent-relationships": "^1.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Kusikusi\\": "./src",
+            "Kusikusi\\Database\\Factories\\": "database/factories"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Kusikusi\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Kusikusi\\ModelsServiceProvider"
+            ]
+        }
+    },
+    "require-dev": {
+        "orchestra/testbench": "^6.0",
+        "phpunit/phpunit": "^9.5"
+    }
+}
