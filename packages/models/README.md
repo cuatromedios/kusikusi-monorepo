@@ -1,14 +1,14 @@
-# kusikusi-models
+# Kusikusi Models
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
 [![Travis](https://img.shields.io/travis/cuatromedios/kusikusi-models.svg?style=flat-square)]()
-[![Total Downloads](https://img.shields.io/packagist/dt/cuatromedios/kusikusi-models.svg?style=flat-square)](https://packagist.org/packages/cuatromedios/kusikusi-models)
+[![Total Downloads](https://img.shields.io/packagist/dt/cuatromedios/kusikusi-models.svg?style=flat-square)](https://packagist.org/packages/kusikusi/models)
 
 <a name="usage"></a>
 ## Usage
 ##### Require
 ```shell
-composer require cuatromedios/kusikusi-models
+composer require kusikusi/models
 ```
 
 ##### Export the config file

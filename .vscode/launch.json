@@ -14,15 +14,15 @@
             "name": "Test Kusikusi Models",
             "type": "php",
             "request": "launch",
-            "program": "${workspaceFolder}/packages/kusikusi-models/vendor/bin/phpunit",
-            "cwd": "${workspaceFolder}/packages/kusikusi-models"
+            "program": "${workspaceFolder}/packages/models/vendor/bin/phpunit",
+            "cwd": "${workspaceFolder}/packages/models"
         },
         {
             "name": "Browser Sync kusikusi-dev",
             "type": "node",
             "request": "launch",
             "runtimeExecutable": "browser-sync",
-            "runtimeArgs": ["start --proxy http://kusikusi-dev.test --watch --files 'kusikusi-dev/**/*.php' 'packages/**/*.php'"]
+            "args": ["start", "--proxy", "http://kusikusi-dev.test", "--watch", "--files", "'kusikusi-dev/**/*.php'", "'packages/**/*.php'"]
         }
     ]
 }

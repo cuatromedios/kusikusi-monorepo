@@ -3,4 +3,4 @@ This project is for package development, in the [composer.json] file, the packag
 
 ### Models package
 
-See usage section in [kusikusi-models/README.md](../packages/kusikusi-models/README.md#usage)
+See usage section in [models/README.md](../packages/models/README.md#usage)
