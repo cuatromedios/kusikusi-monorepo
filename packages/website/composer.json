@@ -17,12 +17,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Kusikusi\\Website\\": "./src"
+            "Kusikusi\\": "./src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Kusikusi\\Website\\Tests\\": "tests"
+            "Kusikusi\\Tests\\": "tests"
         }
     },
     "scripts": {
@@ -31,7 +31,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Kusikusi\\Website\\WebsiteServiceProvider"
+                "Kusikusi\\WebsiteServiceProvider"
             ]
         }
     },

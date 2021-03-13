@@ -1,6 +1,6 @@
 <?php
 
-namespace Kusikusi\Website\Http\Controllers;
+namespace Kusikusi\Http\Controllers;
 
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;

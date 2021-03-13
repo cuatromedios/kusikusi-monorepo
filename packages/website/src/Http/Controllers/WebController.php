@@ -1,6 +1,6 @@
 <?php
 
-namespace Kusikusi\Website\Http\Controllers;
+namespace Kusikusi\Http\Controllers;
 
 use App\Http\Controllers\HtmlController;
 use Illuminate\Http\Request;

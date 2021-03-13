@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Kusikusi\Http\Controllers;
 
 use Kusikusi\Models\Entity;
 use Illuminate\Http\Request;
-use Kusikusi\Website\Models\Website;
+use Kusikusi\Models\Website;
 
 /**
  * Class HtmlController

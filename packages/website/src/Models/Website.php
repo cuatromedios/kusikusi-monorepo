@@ -1,6 +1,6 @@
 <?php
 
-namespace Kusikusi\Website\Models;
+namespace Kusikusi\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;

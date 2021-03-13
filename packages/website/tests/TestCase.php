@@ -1,6 +1,6 @@
 <?php
 
-namespace Kusikusi\Website\Tests;
+namespace Kusikusi\Tests;
 
 use Orchestra\Testbench\TestCase as Orchestra;
 
@@ -16,7 +16,7 @@ class TestCase extends Orchestra
     protected function getPackageProviders($app)
     {
         return [
-            \Kusikusi\Website\WebsiteServiceProvider::class,
+            \Kusikusi\WebsiteServiceProvider::class,
         ];
     }
 

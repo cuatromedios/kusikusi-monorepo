@@ -1058,7 +1058,7 @@
             "dist": {
                 "type": "path",
                 "url": "../packages/website",
-                "reference": "202f0252bf425ea70a53ee6bbd5cc8ea1788b235"
+                "reference": "d4b15c77b98df567abf347e17e2761a6f6740b66"
             },
             "require": {
                 "illuminate/support": "^7.0|^8.0"
@@ -1070,18 +1070,18 @@
             "extra": {
                 "laravel": {
                     "providers": [
-                        "Kusikusi\\Website\\WebsiteServiceProvider"
+                        "Kusikusi\\WebsiteServiceProvider"
                     ]
                 }
             },
             "autoload": {
                 "psr-4": {
-                    "Kusikusi\\Website\\": "./src"
+                    "Kusikusi\\": "./src"
                 }
             },
             "autoload-dev": {
                 "psr-4": {
-                    "Kusikusi\\Website\\Tests\\": "tests"
+                    "Kusikusi\\Tests\\": "tests"
                 }
             },
             "scripts": {

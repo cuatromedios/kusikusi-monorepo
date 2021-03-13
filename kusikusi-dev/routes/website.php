@@ -1,6 +1,6 @@
 <?php
 
-use Kusikusi\Website\Http\Controllers\WebController;
+use Kusikusi\Http\Controllers\WebController;
 
 /*
 |--------------------------------------------------------------------------
