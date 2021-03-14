@@ -34,6 +34,15 @@ The individual packages or components can also be used in existing Laravel or Lu
 * API Controller
 * Admin Interfaces
 
+##### Splitting the packages
+As we are using a monorepo, the packages must be splitted to a separate repository, we use [splitsh/lite](https://github.com/splitsh/lite) to do so. There are some shell commands in the repo to automatize this, they make the split and commits to a specific branch, for example:
+
+```
+./splitmodels.sh
+```
+
+Will take the contnet of packages/models split it and send the changes to the branch `models`. The branch can be pushed to the specific remote in Github: `cuatromedios/kusikusi-models`
+
 ##License
 
 Kusikusi is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
