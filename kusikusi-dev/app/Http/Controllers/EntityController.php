@@ -15,7 +15,10 @@ class EntityController extends Controller
      */
     public function index()
     {
-        $entities = Entity::select()->withContent()->orderBy('created_at')->get();
+        $entities = Entity::select()
+        ->withContent()
+        ->orderBy('created_at')
+        ->get();
         return View::make('entities.index')
            ->with('entities', $entities);
     }

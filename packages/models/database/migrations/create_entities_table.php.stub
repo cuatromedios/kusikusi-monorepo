@@ -18,6 +18,7 @@ class CreateEntitiesTable extends Migration
             $table->string('model', 32)->index();
             $table->json('properties')->nullable();
             $table->string('view', 32)->nullable();
+            $table->json('langs')->nullable();
             $table->string('parent_entity_id', 32)->index('parent')->nullable();
             $table->boolean('is_active')->default(true)->index();
             $table->unsignedBigInteger('created_by')->nullable();

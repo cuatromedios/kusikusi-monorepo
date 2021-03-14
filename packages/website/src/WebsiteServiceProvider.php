@@ -13,7 +13,7 @@ class WebsiteServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'kusikusi_website');
     }
 
     /**
@@ -24,6 +24,11 @@ class WebsiteServiceProvider extends ServiceProvider
     public function boot()
     {
         if ($this->app->runningInConsole()) {
+            // Publish the config
+            $this->publishes([
+                __DIR__.'/../config/config.php' => config_path('kusikusi_website.php'),
+            ], 'config');
+
             // Publish controllers
             $this->publishes([
             __DIR__.'/../src/Http/Controllers/HtmlController.php' => app_path('Http/Controllers/HtmlController.php'),

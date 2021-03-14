@@ -62,6 +62,7 @@ class Entity extends Model
         'is_active' => 'boolean',
         'published_at' => 'datetime',
         'unpublished_at' => 'datetime',
+        'langs' => 'array'
     ];
 
     /**
@@ -409,6 +410,19 @@ class Entity extends Model
     }
 
     /**
+     * Scope a query to include only entities with a language active.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string $lang The lang to scope the query
+     * @return \Illuminate\Database\Eloquent\Builder
+     * @throws \Exception
+     */
+    public function scopeHaveLang($query, $lang = '')
+    {
+        return $query->whereJsonContains('langs', $lang);
+    }
+
+    /**
      * Scope a query include routes.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
@@ -574,6 +588,7 @@ class Entity extends Model
             if (!isset($entity['view']))         { $entity['view'] = Str::snake($entity['model']); }
             if (!isset($entity['is_active']))    { $entity['is_active'] = true; }
             if (!isset($entity['properties']))   { $entity['properties'] = new \ArrayObject(); }
+            if (!isset($entity['langs']))        { $entity['langs'] = Config::get('kusikusi_website.langs', ['']); }
             if (!isset($entity['published_at'])) { $entity['published_at'] = Carbon::now(); }
             $entity['version'] = 1;
             $entity['version_tree'] = 1;
