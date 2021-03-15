@@ -15,8 +15,8 @@ class MediaController extends Controller
      */
     public function index()
     {
-        $entities = Medium::select()
-        ->withContent()
+        $entities = Medium::select('id', 'model', 'properties')
+        ->withContent('en')
         ->orderBy('created_at')
         ->get();
         return View::make('media.index')

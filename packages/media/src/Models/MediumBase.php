@@ -4,6 +4,8 @@ namespace Kusikusi\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Config;
 use Kusikusi\Models\EntityRelation;
@@ -15,7 +17,7 @@ class MediumBase extends Entity
     protected $propertiesFields = [ "size", "lang", "format", "length", "exif", "width", "height" ];
 
     protected function getTitleAsSlug($preset) {
-        $filename = isset($this['title']) ? Str::slug($this['title']) : 'media';
+        $filename = isset($this['content']['title']) ? Str::slug($this['content']['title']) : 'media';
         $fileformat = Arr::get(Config::get('kusikusi_media.presets', []), "{$preset}.format", Str::slug($this->properties['format'] ?? 'bin'));
         return "{$filename}.{$fileformat}";
     }

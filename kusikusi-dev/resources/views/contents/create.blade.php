@@ -7,8 +7,8 @@
         </label>
         <label>Lenguage
             <select name="lang">
-                <option value="es">Spanish</option>
                 <option value="en">English</option>
+                <option value="es">Spanish</option>
             </select>
         </label>
         <label>Field
