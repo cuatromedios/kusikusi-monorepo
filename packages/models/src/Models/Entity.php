@@ -4,6 +4,7 @@ namespace Kusikusi\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
@@ -570,6 +571,12 @@ class Entity extends Model
      */
     protected static function boot()
     {
+        $modelName = Str::studly(Str::afterLast(get_called_class(), '\\'));
+        if ($modelName !== 'Entity') {
+            static::addGlobalScope($modelName, function (Builder $builder) use ($modelName) {
+                $builder->where('model', $modelName);
+            });
+        }
         parent::boot();
         static::creating(function (Model $entity) {
 

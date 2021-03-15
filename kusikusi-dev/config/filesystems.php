@@ -52,13 +52,6 @@ return [
             'endpoint' => env('AWS_ENDPOINT'),
         ],
 
-        'views_processed' => [
-            'driver' => 'local',
-            'root' => public_path('static'),
-            'url' => env('APP_URL').'/',
-            'visibility' => 'public',
-        ],
-
     ],
 
     /*

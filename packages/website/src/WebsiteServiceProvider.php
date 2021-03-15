@@ -32,17 +32,17 @@ class WebsiteServiceProvider extends ServiceProvider
             // Publish controllers
             $this->publishes([
             __DIR__.'/../src/Http/Controllers/HtmlController.php' => app_path('Http/Controllers/HtmlController.php'),
-            ], 'htmlcontroller');
+            ], 'controller');
 
             // Publish Laravel route
             $this->publishes([
             __DIR__.'/../routes/website-laravel.php' => base_path('routes/website.php'),
-            ], 'route-laravel');
+            ], 'route');
             
             // Publish Lumen route
-            $this->publishes([
+            /* $this->publishes([
             __DIR__.'/../routes/website-lumen.php' => base_path('routes/website.php'),
-            ], 'route-lumen');
+            ], 'route-lumen'); */
         }
     }
 }

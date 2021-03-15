@@ -8,18 +8,38 @@
 `composer require kusikusi/website`
 
 ## Usage
-##### Export the HtmlController file
+
+#### Export all the assets ...
 ```shell
-php artisan vendor:publish --provider="Kusikusi\WebsiteServiceProvider" --tag="htmlcontroller"
+php artisan vendor:publish --provider="Kusikusi\WebsiteServiceProvider"
 ```
-##### Export the website route file for Laravel
+
+
+#### Or Export individual Assets
+
+Configuration
 ```shell
-php artisan vendor:publish --provider="Kusikusi\WebsiteServiceProvider" --tag="route-laravel"
+php artisan vendor:publish --provider="Kusikusi\WebsiteServiceProvider" --tag="config"
 ```
-##### Export the website route file for Lumen
+
+HtmlController
 ```shell
-php artisan vendor:publish --provider="Kusikusi\WebsiteServiceProvider" --tag="route-laravel"
+php artisan vendor:publish --provider="Kusikusi\WebsiteServiceProvider" --tag="controller"
 ```
+
+Route file for Laravel
+
+```shell
+php artisan vendor:publish --provider="Kusikusi\WebsiteServiceProvider" --tag="route-"
+```
+
+Include the route in your `RouteServiceProvider.php` file, in the boot method, as the last routes:
+
+```php
+Route::middleware('web')
+    ->group(base_path('routes/website.php'));
+```
+
 
 ## Testing
 Run the tests with:

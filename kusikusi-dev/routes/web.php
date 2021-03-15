@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EntityController;
+use App\Http\Controllers\MediaController;
 use App\Http\Controllers\ContentController;
 use App\Http\Controllers\EntityRelationController;
 use App\Http\Controllers\EntityArchiveController;
@@ -18,7 +19,7 @@ use App\Http\Controllers\EntityArchiveController;
 */
 
 Route::get('/', function () { return view('welcome'); })->name('welcome');
-Route::get('/models', function () { return view('models'); })->name('models');
+Route::resource('/media-entities', MediaController::class);
 Route::resource('entities', EntityController::class);
 Route::get('contents/create/{entity_id}', [ContentController::class, 'create']);
 Route::resource('contents', ContentController::class);

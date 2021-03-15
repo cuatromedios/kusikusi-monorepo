@@ -1,3 +1,2 @@
 *.sqlite
 *.sqlite-journal
-migrations/*_entities_*
