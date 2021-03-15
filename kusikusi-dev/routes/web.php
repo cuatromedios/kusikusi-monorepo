@@ -19,7 +19,7 @@ use App\Http\Controllers\EntityArchiveController;
 */
 
 Route::get('/', function () { return view('welcome'); })->name('welcome');
-Route::resource('/media-entities', MediaController::class);
+Route::resource('media-entities', MediaController::class);
 Route::resource('entities', EntityController::class);
 Route::get('contents/create/{entity_id}', [ContentController::class, 'create']);
 Route::resource('contents', ContentController::class);

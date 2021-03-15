@@ -24,6 +24,19 @@ class MediaController extends Controller
     }
 
     /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        $entity = Medium::withContent()->findOrFail($id);
+        return View::make('media.show')
+           ->with('entity', $entity);
+    }
+
+    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
