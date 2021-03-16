@@ -9,5 +9,5 @@
             <button type="submit">Upload</button>
         </fieldset>
     </form>
-    <img src="{{$entity->icon}}" alt="{{$entity->content['title']}}">
+    <img src="{{$entity->icon}}" alt="{{$entity->content['title'] ?? ''}}">
 </x-medium>
