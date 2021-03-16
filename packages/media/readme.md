@@ -25,12 +25,6 @@ Route::middleware('web')
     ->group(base_path('routes/media.php'));
 ```
 
-
-##### Export the website route file for Lumen
-```shell
-php artisan vendor:publish --provider="Kusikusi\MediaServiceProvider" --tag="route-lumen"
-```
-
 ## Testing
 Run the tests with:
 

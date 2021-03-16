@@ -30,7 +30,7 @@ php artisan vendor:publish --provider="Kusikusi\WebsiteServiceProvider" --tag="c
 Route file for Laravel
 
 ```shell
-php artisan vendor:publish --provider="Kusikusi\WebsiteServiceProvider" --tag="route-"
+php artisan vendor:publish --provider="Kusikusi\WebsiteServiceProvider" --tag="route"
 ```
 
 Include the route in your `RouteServiceProvider.php` file, in the boot method, as the last routes:

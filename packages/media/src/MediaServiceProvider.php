@@ -41,9 +41,9 @@ class MediaServiceProvider extends ServiceProvider
             ], 'route');
             
             // Publish Lumen route
-            $this->publishes([
+            /* $this->publishes([
             __DIR__.'/../routes/media-lumen.php' => base_path('routes/media.php'),
-            ], 'route-lumen');
+            ], 'route-lumen'); */
         }
     }
 }
