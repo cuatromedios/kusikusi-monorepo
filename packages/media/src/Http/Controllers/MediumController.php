@@ -150,7 +150,11 @@ class MediumController extends Controller
                     }
                 }
             }
-            $medium['properties'] = array_merge($medium['properties'], $properties);
+            if (empty($medium['properties']) || $medium['properties']->count() === 0) {
+                $medium['properties'] = $properties;
+            } else {
+                $medium['properties'] = array_merge($medium['properties'], $properties);
+            }
             $medium->save();
         }
         if ($properties === NULL) {
