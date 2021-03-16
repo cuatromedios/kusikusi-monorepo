@@ -28,7 +28,7 @@ class MediumBase extends Entity
             }
         }
         if ((isset($this->properties['isWebImage']) && $this->properties['isWebImage']) || $preset == 'original') {
-            return "/".Config::get('kusikusi_media.prefix', 'media')."/$this->id/$preset/{$this->getTitleAsSlug($preset)}";
+            return Config::get('filesystems.disks.'.Config::get('kusikusi_media.static_storage.drive').'.url')."/".Config::get('kusikusi_media.prefix', 'media')."/$this->id/$preset/{$this->getTitleAsSlug($preset)}";
         }
         return null;
     }

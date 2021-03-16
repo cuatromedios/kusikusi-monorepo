@@ -4,7 +4,7 @@ return [
   'copy_original_to_static' => true,
   'process' => 'lazy', // none | lazy | on_upload (TBD)
   'original_storage' => [
-    'drive' => 'local',
+    'drive' => 'public',
     'folder' => 'media'
   ],
   'static_storage' => [

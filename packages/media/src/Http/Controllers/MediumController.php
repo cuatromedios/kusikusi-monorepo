@@ -3,7 +3,9 @@
 namespace Kusikusi\Http\Controllers;
 
 use Kusikusi\Models\Entity;
+use Kusikusi\Models\MediumBase;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -34,9 +36,9 @@ class MediumController extends Controller
         // TODO: Review if the user can read the media
         $entity = Entity::isPublished()->findOrFail($entity_id);
         // Paths
-        $originalFilePath =   Config::get('kusikusi_media.original_storage.folder') .'/'. $entity_id . '/file.' . (isset($entity->properties['format']) ? $entity->properties['format'] : 'bin');
+        $originalFilePath =  Config::get('kusikusi_media.original_storage.folder') .'/'. $entity_id . '/file.' . (isset($entity->properties['format']) ? $entity->properties['format'] : 'bin');
         $presetSettings = Config::get('kusikusi_media.presets', null);
-        $publicFilePath = Str::after($request->getPathInfo(), '/' . Config::get('kusikusi_media.prefix', 'media'));
+        $publicFilePath = Config::get('kusikusi_media.original_storage.folder') .'/'. $entity_id .'/'. $preset .'/'. $friendly;
         if ($exists = Storage::disk(Config::get('kusikusi_media.static_storage.drive'))->exists($publicFilePath)) {
             return $this->getStaticMedium($publicFilePath);
         }
@@ -124,13 +126,13 @@ class MediumController extends Controller
      */
     public function upload(Request $request, $entity_id)
     {
-        $medium = Medium::findOrFail($entity_id);
+        $medium = Entity::findOrFail($entity_id);
         function processFile($id, $function, UploadedFile $file)
         {
-            $properties = Medium::getProperties($file);
+            $properties = MediumBase::getProperties($file);
             $storageFileName = $function . '.' . $properties['format'];
-            Storage::disk(Config::get('kusikusi_media.original_storage.drive'))->putFileAs($id, $file, $storageFileName);
-            Storage::disk(Config::get('kusikusi_media.static_storage.drive'))->deleteDirectory($id);
+            Storage::disk(Config::get('kusikusi_media.static_storage.drive'))->deleteDirectory(Config::get('kusikusi_media.original_storage.folder').'/'.$id);
+            Storage::disk(Config::get('kusikusi_media.original_storage.drive'))->putFileAs(Config::get('kusikusi_media.original_storage.folder').'/'.$id, $file, $storageFileName);
             return $properties;
         }
 
@@ -152,7 +154,7 @@ class MediumController extends Controller
             $medium->save();
         }
         if ($properties === NULL) {
-            return(JsonResponse::create(["error" => "No files found in the request or exceed server setting of file size"], 422));
+            abort(400, "No files found in the request or exceed server setting of file size");
         } else {
             return ($properties);
         }
