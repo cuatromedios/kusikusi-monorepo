@@ -25,7 +25,7 @@ class EntityRelation extends Pivot
     }
 
     protected $guarded = ['relation_id'];
-    protected $fillable = ['relation_id', 'caller_entity_id', 'called_entity_id', 'kind', 'position', 'depth', 'tags'];
+    protected $fillable = ['caller_entity_id', 'called_entity_id', 'kind', 'position', 'depth', 'tags'];
     
     protected $casts = [
         'tags' => 'array'
