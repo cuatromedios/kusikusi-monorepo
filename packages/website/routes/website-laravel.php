@@ -1,6 +1,6 @@
 <?php
 
-use Kusikusi\Http\Controllers\WebController;
+use Kusikusi\Http\Controllers\WebsiteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,4 +13,4 @@ use Kusikusi\Http\Controllers\WebController;
 |
 */
 
-Route::get('/{path}', [WebController::class, 'any'])->where('path', '.*');
+Route::get('/{path}', [WebsiteController::class, 'any'])->where('path', '.*');
