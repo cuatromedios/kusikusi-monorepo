@@ -38,10 +38,6 @@ class Entity extends Model
     protected $touches = ['entities_relating'];
     protected $ancestorsRelations = true;
 
-
-    private $storedContents = [];
-    private $storedRelations = [];
-
     /**
      * Create a new Eloquent Collection instance.
      *
