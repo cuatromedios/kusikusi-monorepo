@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 use Kusikusi\Models\Website;
+use Kusikusi\Models\Entity;
 use Illuminate\Support\Facades\Validator;
 use Mimey\MimeTypes;
 
