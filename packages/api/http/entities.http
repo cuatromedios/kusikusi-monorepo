@@ -2,4 +2,10 @@
 GET http://{{host}}/api/entities HTTP/1.1
 
 ### Get only entities of a model
-GET http://{{host}}/api/entities?model=Medium HTTP/1.1
+GET http://{{host}}/api/entities?of-model=Medium HTTP/1.1
+
+### Get only published entities
+GET http://{{host}}/api/entities?only-published=trues HTTP/1.1
+
+### Get children of an entity
+GET http://{{host}}/api/entities?children-of=home HTTP/1.1
