@@ -1,6 +1,6 @@
 <?php
 
-use Kusikusi\Http\Controllers\WebController;
+use Kusikusi\Http\Controllers\WebsiteController;
 use Illuminate\Support\Facades\Config;
 
 /*
