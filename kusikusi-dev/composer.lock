@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c417e770faa4a5c0a3d8b3f912aa9f72",
+    "content-hash": "b7b745f33934a60fe0e64ee1c33bc465",
     "packages": [
         {
             "name": "ankurk91/laravel-eloquent-relationships",
@@ -1069,6 +1069,61 @@
             "time": "2015-03-20T14:31:23+00:00"
         },
         {
+            "name": "kusikusi/api",
+            "version": "dev-monorepo",
+            "dist": {
+                "type": "path",
+                "url": "../packages/api",
+                "reference": "9b41ab08977e83eae6567bd44a15de7b2b9ff8de"
+            },
+            "require": {
+                "illuminate/support": "^7.0|^8.0",
+                "kusikusi/models": "dev-master"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^6.0"
+            },
+            "type": "package",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Kusikusi\\ApiServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Kusikusi\\": "./src"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Kusikusi\\Api\\Tests\\": "tests"
+                }
+            },
+            "scripts": {
+                "test": [
+                    "vendor/bin/phpunit"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Cuatromedios",
+                    "email": "dev@cuatromedios.com"
+                }
+            ],
+            "description": "A description for api.",
+            "keywords": [
+                "laravel"
+            ],
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
             "name": "kusikusi/media",
             "version": "dev-monorepo",
             "dist": {
@@ -1239,16 +1294,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v8.32.1",
+            "version": "v8.33.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "7c37b64f8153c16b6406f5c28cf37828ebbe8846"
+                "reference": "354c57b8cb457549114074c500944455a288d6cc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/7c37b64f8153c16b6406f5c28cf37828ebbe8846",
-                "reference": "7c37b64f8153c16b6406f5c28cf37828ebbe8846",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/354c57b8cb457549114074c500944455a288d6cc",
+                "reference": "354c57b8cb457549114074c500944455a288d6cc",
                 "shasum": ""
             },
             "require": {
@@ -1403,7 +1458,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2021-03-09T15:37:45+00:00"
+            "time": "2021-03-16T19:42:32+00:00"
         },
         {
             "name": "laravel/tinker",
@@ -5871,16 +5926,16 @@
         },
         {
             "name": "filp/whoops",
-            "version": "2.9.2",
+            "version": "2.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filp/whoops.git",
-                "reference": "df7933820090489623ce0be5e85c7e693638e536"
+                "reference": "6ecda5217bf048088b891f7403b262906be5a957"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/filp/whoops/zipball/df7933820090489623ce0be5e85c7e693638e536",
-                "reference": "df7933820090489623ce0be5e85c7e693638e536",
+                "url": "https://api.github.com/repos/filp/whoops/zipball/6ecda5217bf048088b891f7403b262906be5a957",
+                "reference": "6ecda5217bf048088b891f7403b262906be5a957",
                 "shasum": ""
             },
             "require": {
@@ -5930,7 +5985,7 @@
             ],
             "support": {
                 "issues": "https://github.com/filp/whoops/issues",
-                "source": "https://github.com/filp/whoops/tree/2.9.2"
+                "source": "https://github.com/filp/whoops/tree/2.10.0"
             },
             "funding": [
                 {
@@ -5938,7 +5993,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-01-24T12:00:00+00:00"
+            "time": "2021-03-16T12:00:00+00:00"
         },
         {
             "name": "hamcrest/hamcrest-php",
@@ -5993,16 +6048,16 @@
         },
         {
             "name": "laravel/sail",
-            "version": "v1.4.7",
+            "version": "v1.4.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/sail.git",
-                "reference": "c57927e1e3919a317034ff706c684f01f15c10d8"
+                "reference": "66b26181c3e86266b0b98f45a3398b090f37dee9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/sail/zipball/c57927e1e3919a317034ff706c684f01f15c10d8",
-                "reference": "c57927e1e3919a317034ff706c684f01f15c10d8",
+                "url": "https://api.github.com/repos/laravel/sail/zipball/66b26181c3e86266b0b98f45a3398b090f37dee9",
+                "reference": "66b26181c3e86266b0b98f45a3398b090f37dee9",
                 "shasum": ""
             },
             "require": {
@@ -6049,7 +6104,7 @@
                 "issues": "https://github.com/laravel/sail/issues",
                 "source": "https://github.com/laravel/sail"
             },
-            "time": "2021-03-09T19:15:10+00:00"
+            "time": "2021-03-16T16:28:57+00:00"
         },
         {
             "name": "mockery/mockery",
@@ -6180,6 +6235,68 @@
                 }
             ],
             "time": "2020-11-13T09:40:50+00:00"
+        },
+        {
+            "name": "naoray/laravel-package-maker",
+            "version": "v4.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Naoray/laravel-package-maker.git",
+                "reference": "5152110f0f8539202688c3f096b4e3ae2de33528"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Naoray/laravel-package-maker/zipball/5152110f0f8539202688c3f096b4e3ae2de33528",
+                "reference": "5152110f0f8539202688c3f096b4e3ae2de33528",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/console": "^7.0|^8.0",
+                "illuminate/filesystem": "^7.0|^8.0",
+                "illuminate/support": "^7.0|^8.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.4",
+                "orchestra/testbench": "^5.0|^6.0"
+            },
+            "type": "package",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Naoray\\LaravelPackageMaker\\LaravelPackageMakerServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Naoray\\LaravelPackageMaker\\": "./src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Krishan Koenig",
+                    "email": "krishan.koenig@googlemail.com"
+                }
+            ],
+            "description": "Get a package skeleton and all other `make` commands from laravel base for package development.",
+            "keywords": [
+                "laravel"
+            ],
+            "support": {
+                "issues": "https://github.com/Naoray/laravel-package-maker/issues",
+                "source": "https://github.com/Naoray/laravel-package-maker/tree/v4.0.4"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/Naoray",
+                    "type": "github"
+                }
+            ],
+            "time": "2020-12-16T18:01:59+00:00"
         },
         {
             "name": "nunomaduro/collision",

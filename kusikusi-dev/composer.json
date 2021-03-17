@@ -12,6 +12,7 @@
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
+        "kusikusi/api": "*",
         "kusikusi/models": "*",
         "kusikusi/website": "*",
         "kusikusi/media": "*",
@@ -24,6 +25,7 @@
         "fakerphp/faker": "^1.9.1",
         "laravel/sail": "^1.0.1",
         "mockery/mockery": "^1.4.2",
+        "naoray/laravel-package-maker": "^4.0",
         "nunomaduro/collision": "^5.0",
         "phpunit/phpunit": "^9.3.3"
     },
@@ -78,6 +80,10 @@
         "media": {
             "type": "path",
             "url": "../packages/media"
+        },
+        "api": {
+            "type": "path",
+            "url": "../packages/api"
         }
     }
 }

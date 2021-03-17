@@ -1,0 +1,5 @@
+### Get all entities
+GET http://{{host}}/api/entities HTTP/1.1
+
+### Get only entities of a model
+GET http://{{host}}/api/entities?model=Medium HTTP/1.1
