@@ -1,6 +1,6 @@
 <?php
 
-use Kusikusi\Http\Controllers\WebController;
+use Kusikusi\Http\Controllers\WebsiteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,4 +13,4 @@ use Kusikusi\Http\Controllers\WebController;
 |
 */
 
-$router->get('/{path:.*}', 'Kusikusi\Http\Controllers\WebController@any');
+$router->get('/{path:.*}', 'Kusikusi\Http\Controllers\WebsiteController@any');
