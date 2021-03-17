@@ -33,8 +33,8 @@ class EntityRelationshipTest extends TestCase
     $entityData = Entity::factory()->create();
     $entityData2 = Entity::factory()->create();
     $entityData3 = Entity::factory()->create();
-    $relationData = EntityRelation::create(['relation_id' => 1, 'caller_entity_id' => $entityData->id, 'called_entity_id' => $entityData2->id, 'kind' => 'Relationship', 'position' => 1, 'depth' => 1, 'tags' => null, 'created_at' => '2021-03-10 10:00:00', 'updated_at' => null]);
-    $relationData2 = EntityRelation::create(['relation_id' => 2, 'caller_entity_id' => $entityData2->id, 'called_entity_id' => $entityData3->id, 'kind' => 'Relationship2', 'position' => 2, 'depth' => 2, 'tags' => null, 'created_at' => '2021-03-10 10:00:00', 'updated_at' => null]);
+    $relationData = EntityRelation::create(['caller_entity_id' => $entityData->id, 'called_entity_id' => $entityData2->id, 'kind' => 'Relationship', 'position' => 1, 'depth' => 1, 'tags' => null, 'created_at' => '2021-03-10 10:00:00', 'updated_at' => null]);
+    $relationData2 = EntityRelation::create(['caller_entity_id' => $entityData2->id, 'called_entity_id' => $entityData3->id, 'kind' => 'Relationship2', 'position' => 2, 'depth' => 2, 'tags' => null, 'created_at' => '2021-03-10 10:00:00', 'updated_at' => null]);
     $this->assertDatabaseHas((new EntityRelation())->getTable(), [ 'caller_entity_id' => $entityData->id]);
     $this->assertDatabaseHas((new EntityRelation())->getTable(), [ 'caller_entity_id' => $entityData2->id]);
   }
@@ -45,10 +45,10 @@ class EntityRelationshipTest extends TestCase
     $entityData = Entity::factory()->create();
     $entityData2 = Entity::factory()->create();
     $entityData3 = Entity::factory()->create();
-    EntityRelation::create(['relation_id' => 1, 'caller_entity_id' => $entityData->id, 'called_entity_id' => $entityData2->id, 'kind' => 'Relationship', 'position' => 1, 'depth' => 1, 'tags' => null, 'created_at' => '2021-03-10 10:00:00', 'updated_at' => null]);
-    EntityRelation::create(['relation_id' => 2, 'caller_entity_id' => $entityData2->id, 'called_entity_id' => $entityData3->id, 'kind' => 'Relationship2', 'position' => 1, 'depth' => 2, 'tags' => null, 'created_at' => '2021-03-10 10:00:00', 'updated_at' => null]);
-    EntityRelation::create(['relation_id' => 3, 'caller_entity_id' => $entityData3->id, 'called_entity_id' => $entityData->id, 'kind' => 'Relationship3', 'position' => 1, 'depth' => 3, 'tags' => null, 'created_at' => '2021-03-10 10:00:00', 'updated_at' => null]);
-    EntityRelation::create(['relation_id' => 4, 'caller_entity_id' => $entityData->id, 'called_entity_id' => $entityData3->id, 'kind' => 'Relationship4', 'position' => 1, 'depth' => 4, 'tags' => null, 'created_at' => '2021-03-10 10:00:00', 'updated_at' => null]);
+    EntityRelation::create(['caller_entity_id' => $entityData->id, 'called_entity_id' => $entityData2->id, 'kind' => 'Relationship', 'position' => 1, 'depth' => 1, 'tags' => null, 'created_at' => '2021-03-10 10:00:00', 'updated_at' => null]);
+    EntityRelation::create(['caller_entity_id' => $entityData2->id, 'called_entity_id' => $entityData3->id, 'kind' => 'Relationship2', 'position' => 1, 'depth' => 2, 'tags' => null, 'created_at' => '2021-03-10 10:00:00', 'updated_at' => null]);
+    EntityRelation::create(['caller_entity_id' => $entityData3->id, 'called_entity_id' => $entityData->id, 'kind' => 'Relationship3', 'position' => 1, 'depth' => 3, 'tags' => null, 'created_at' => '2021-03-10 10:00:00', 'updated_at' => null]);
+    EntityRelation::create(['caller_entity_id' => $entityData->id, 'called_entity_id' => $entityData3->id, 'kind' => 'Relationship4', 'position' => 1, 'depth' => 4, 'tags' => null, 'created_at' => '2021-03-10 10:00:00', 'updated_at' => null]);
     $this->assertDatabaseCount((new EntityRelation())->getTable(), 4);
   }
 
@@ -59,8 +59,8 @@ class EntityRelationshipTest extends TestCase
     $entityData = Entity::factory()->create();
     $entityData2 = Entity::factory()->create();
     $entityData3 = Entity::factory()->create();
-    EntityRelation::create(['relation_id' => 1, 'caller_entity_id' => $entityData->id, 'called_entity_id' => $entityData2->id, 'kind' => 'Relationship', 'position' => 1, 'depth' => 1, 'tags' => null, 'created_at' => '2021-03-10 10:00:00', 'updated_at' => null]);
-    $repeat1 = EntityRelation::create(['relation_id' => 1, 'caller_entity_id' => $entityData->id, 'called_entity_id' => $entityData3->id, 'kind' => 'Relationship', 'position' => 1, 'depth' => 1, 'tags' => null, 'created_at' => '2021-03-10 10:00:00', 'updated_at' => null]);
+    EntityRelation::create(['caller_entity_id' => $entityData->id, 'called_entity_id' => $entityData2->id, 'kind' => 'Relationship', 'position' => 1, 'depth' => 1, 'tags' => null, 'created_at' => '2021-03-10 10:00:00', 'updated_at' => null]);
+    $repeat1 = EntityRelation::create(['caller_entity_id' => $entityData->id, 'called_entity_id' => $entityData2->id, 'kind' => 'Relationship', 'position' => 1, 'depth' => 1, 'tags' => null, 'created_at' => '2021-03-10 10:00:00', 'updated_at' => null]);
     $this->assertDatabaseCount((new EntityRelation())->getTable(), 2);
   }
 
@@ -69,7 +69,7 @@ class EntityRelationshipTest extends TestCase
   {
     $entityData = Entity::factory()->create();
     $entityData2 = Entity::factory()->create();
-    $relation = EntityRelation::create(['relation_id' => 1, 'caller_entity_id' => $entityData->id, 'called_entity_id' => $entityData2->id, 'kind' => 'Relationship', 'position' => 1, 'depth' => 1, 'tags' => null, 'created_at' => '2021-03-10 10:00:00', 'updated_at' => null]);
+    $relation = EntityRelation::create(['caller_entity_id' => $entityData->id, 'called_entity_id' => $entityData2->id, 'kind' => 'Relationship', 'position' => 1, 'depth' => 1, 'tags' => null, 'created_at' => '2021-03-10 10:00:00', 'updated_at' => null]);
     $relation->kind = 'Relation';
     $relation->position = 2;
     $relation->depth = 2;
@@ -83,8 +83,8 @@ class EntityRelationshipTest extends TestCase
   {
     $entityData = Entity::factory()->create();
     $entityData2 = Entity::factory()->create();
-    $relation = EntityRelation::create(['relation_id' => 1, 'caller_entity_id' => $entityData->id, 'called_entity_id' => $entityData2->id, 'kind' => 'Relationship', 'position' => 1, 'depth' => 1, 'tags' => null, 'created_at' => '2021-03-10 10:00:00', 'updated_at' => null]);
+    $relation = EntityRelation::create(['caller_entity_id' => $entityData->id, 'called_entity_id' => $entityData2->id, 'kind' => 'Relationship', 'position' => 1, 'depth' => 1, 'tags' => null, 'created_at' => '2021-03-10 10:00:00', 'updated_at' => null]);
     $relation->delete();
-    $this->assertDatabaseCount((new EntityRelation())->getTable(), 0);
+    $this->assertDatabaseCount((new EntityRelation())->getTable(), 1);
   }
 }
