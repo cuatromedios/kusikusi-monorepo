@@ -32,7 +32,7 @@ class Entity extends Model
     protected $table = 'entities';
 
     /* protected $guarded = ['created_at', 'updated_at']; */
-    protected $fillable = ['id', 'model', 'view', 'properties', 'is_active', 'parent_entity_id', 'created_at', 'published_at', 'unpublished_at'];
+    protected $fillable = ['id', 'model', 'view', 'properties', 'visibility', 'parent_entity_id', 'created_at', 'published_at', 'unpublished_at'];
     protected $contentFields = [];
     protected $touches = ['entities_relating'];
     protected $propertiesFields = [];
@@ -60,7 +60,6 @@ class Entity extends Model
         'siblings_relation_tags' => 'array',
         'media_tags' => 'array',
         'relation_tags' => 'array',
-        'is_active' => 'boolean',
         'published_at' => 'datetime',
         'unpublished_at' => 'datetime',
         'langs' => 'array'
@@ -229,7 +228,7 @@ class Entity extends Model
      */
     public function scopeIsPublished($query)
     {
-        return $query->where('is_active', true)
+        return $query->where('visibility', 'public')
             ->whereDate('published_at', '<=', Carbon::now()->setTimezone('UTC')->format('Y-m-d\TH:i:s'))
             ->where(function($query) {
                 $query->whereDate('unpublished_at', '>', Carbon::now()->setTimezone('UTC')->format('Y-m-d\TH:i:s'))
@@ -593,7 +592,7 @@ class Entity extends Model
             // Setting default values
             if (!isset($entity['model']))        { $entity['model'] = 'Entity'; }
             if (!isset($entity['view']))         { $entity['view'] = Str::snake($entity['model']); }
-            if (!isset($entity['is_active']))    { $entity['is_active'] = true; }
+            if (!isset($entity['visibility']))   { $entity['visibility'] = 'public'; }
             if (!isset($entity['properties']))   { $entity['properties'] = new \ArrayObject(); }
             if (!isset($entity['langs']))        { $entity['langs'] = Config::get('kusikusi_website.langs', ['']); }
             if (!isset($entity['published_at'])) { $entity['published_at'] = Carbon::now(); }

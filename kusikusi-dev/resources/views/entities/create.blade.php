@@ -16,6 +16,13 @@
                 @endforeach
             </select>
         </label>
+        <label>Visibility
+            <select name="visibility">
+                <option value="public">Public</option>
+                <option value="draft">Draft</option>
+                <option value="private">Private</option>
+            </select>
+        </label>
         <label>Properties
             <textarea name="properties"></textarea>
         </label>

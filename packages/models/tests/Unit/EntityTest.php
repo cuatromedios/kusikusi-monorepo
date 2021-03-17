@@ -63,7 +63,7 @@ class EntityTest extends TestCase
   function assert_default_values($entity) {
     $this->assertEquals('Entity', $entity->model);
     $this->assertEquals('entity', $entity->view);
-    $this->assertEquals(true, $entity->is_active);
+    $this->assertEquals('public', $entity->visibility);
     $this->assertEquals(1, $entity->version);
     $this->assertNotEquals(null, $entity->published_at);
   }
@@ -105,8 +105,8 @@ class EntityTest extends TestCase
   function scope_is_published_can_be_used()
   {
     $now = Carbon::now();
-    Entity::create(['is_active' => true]);
-    Entity::create(['is_active' => false]);
+    Entity::create(['visibility' => 'public']);
+    Entity::create(['visibility' => 'private']);
     Entity::create(['published_at' => $now]);
     Entity::create(['unpublished_at' => $now]);
     $PublishedEntities = Entity::select()->isPublished()->get();

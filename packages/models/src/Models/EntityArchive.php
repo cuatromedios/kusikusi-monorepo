@@ -41,7 +41,7 @@ class EntityArchive extends Model
             "view" => $jsonArchive->view, 
             "model" => $jsonArchive->model, 
             "properties" => $jsonArchive->properties, 
-            "is_active" => $jsonArchive->is_active, 
+            "visibility" => $jsonArchive->visibility, 
             "parent_entity_id" => $jsonArchive->parent_entity_id, 
             "created_at" => $jsonArchive->created_at, 
             "created_by" => $jsonArchive->created_by, 
