@@ -59,7 +59,7 @@ class EntityController extends BaseController
         $request->validate($this->queryParamsValidation());
         $lang = $request->get('lang') ?? Config::get('kusikusi_website.langs')[0] ?? '';
         $modelClassName = Entity::getEntityClassName($request->get('of-model') ?? 'Entity');
-        $entities = $modelClassName::query()->select('*')
+        $entities = $modelClassName::query()->select('entities.*')
         ->when($request->get('of-model'), function ($q) use ($request) {
             return $q->ofModel($request->get('of-model'));
         })
@@ -70,6 +70,7 @@ class EntityController extends BaseController
             return $q->childrenOf($request->get('children-of'));
         });
         $entities = $entities
+            ->orderBy('children_relation_position')
             ->paginate($request
             ->get('per-page') ? intval($request->get('per-page')) : Config::get('kusikusi_api.page_size', 100))
             ->withQueryString();

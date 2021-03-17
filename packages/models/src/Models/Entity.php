@@ -258,8 +258,8 @@ class Entity extends Model
             ;
         })
             ->addSelect('id')
-            ->addSelect('relation_children.position as child_relation_position')
-            ->addSelect('relation_children.tags as child_relation_tags');
+            ->addSelect('relation_children.position as children_relation_position')
+            ->addSelect('relation_children.tags as children_relation_tags');
     }
 
     /**
