@@ -34,8 +34,11 @@ class Entity extends Model
     /* protected $guarded = ['created_at', 'updated_at']; */
     protected $fillable = ['id', 'model', 'view', 'properties', 'visibility', 'parent_entity_id', 'created_at', 'published_at', 'unpublished_at'];
     protected $contentFields = [];
-    protected $touches = ['entities_relating'];
     protected $propertiesFields = [];
+    protected $touches = ['entities_relating'];
+    protected $ancestorsRelations = true;
+
+
     private $storedContents = [];
     private $storedRelations = [];
 
@@ -602,8 +605,10 @@ class Entity extends Model
             $entity['version_full'] = 1;
         });
         static::saved(function (Model $entity) {
-            $parentEntity = Entity::with('routes')->find($entity['parent_entity_id']);
+            $instance = self::getInstanceFromName($entity->model);
+            if ($instance->ancestorsRelations) {
             // Create the ancestors relations
+            $parentEntity = Entity::with('routes')->find($entity['parent_entity_id']);
             if ($parentEntity && isset($entity['parent_entity_id']) && $entity['parent_entity_id'] != NULL && $entity->isDirty('parent_entity_id')){
                 EntityRelation::where("caller_entity_id", $entity->id)->where('kind', EntityRelation::RELATION_ANCESTOR)->delete();
                 EntityRelation::create([
@@ -624,6 +629,7 @@ class Entity extends Model
                     $depth++;
                 }
             };
+            }
             // Update versions
             self::incrementEntityVersion($entity->id);
             // Setting archive version
@@ -633,5 +639,19 @@ class Entity extends Model
             }
         });
 
+    }
+    protected static function getEntityClassName($name) {
+        if (class_exists("App\\Models\\".$name)) {
+            $modelClassName = "App\\Models\\".$name;
+        } else if (class_exists("Kusikusi\\Models\\".$name)) {
+            $modelClassName = "Kusikusi\\Models\\".$name;
+        } else {
+            $modelClassName = "Kusikusi\\Models\\Entity";
+        }
+        return $modelClassName;
+    }
+    protected static function getInstanceFromName($name) {
+        $modelClassName = self::getEntityClassName($name);
+        return new $modelClassName;
     }
 }

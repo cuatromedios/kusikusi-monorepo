@@ -8,6 +8,7 @@ class Medium extends MediumBase
 {
     protected $contentFields = [ "title", "description", "transcript", "caption" ];
     protected $propertiesFields = [ "size", "lang", "format", "length", "exif", "width", "height" ];
+    protected $ancestorsRelations = false;
 
     protected $appends = ['icon'];
 
