@@ -85,13 +85,7 @@ class WebController extends Controller
         App::setLocale($lang);
 
         // Get the model class name from App or Kusikusi
-        if (class_exists("App\\Models\\".$searchRouteResult->entity_model)) {
-            $modelClassName = "App\\Models\\".$searchRouteResult->entity_model;
-        } else if (class_exists("Kusikusi\\Models\\".$searchRouteResult->entity_model)) {
-            $modelClassName = "Kusikusi\\Models\\".$searchRouteResult->entity_model;
-        } else {
-            $modelClassName = "Kusikusi\\Models\\Entity";
-        }
+        $modelClassName = Entity::getEntityClassName($searchRouteResult->entity_model);
     
         $entity = $modelClassName::select("*")
             ->where("id", $searchRouteResult->entity_id)
