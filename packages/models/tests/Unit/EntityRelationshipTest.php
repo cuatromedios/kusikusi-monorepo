@@ -55,6 +55,7 @@ class EntityRelationshipTest extends TestCase
   /** @test */
   function entity_relationships_with_same_index_does_not_duplicate()
   {
+    $this->expectException(\Illuminate\Database\QueryException::class);
     $entityData = Entity::factory()->create();
     $entityData2 = Entity::factory()->create();
     $entityData3 = Entity::factory()->create();
@@ -63,4 +64,27 @@ class EntityRelationshipTest extends TestCase
     $this->assertDatabaseCount((new EntityRelation())->getTable(), 2);
   }
 
+  /** @test */
+  function entity_relationships_are_updated()
+  {
+    $entityData = Entity::factory()->create();
+    $entityData2 = Entity::factory()->create();
+    $relation = EntityRelation::create(['relation_id' => 1, 'caller_entity_id' => $entityData->id, 'called_entity_id' => $entityData2->id, 'kind' => 'Relationship', 'position' => 1, 'depth' => 1, 'tags' => null, 'created_at' => '2021-03-10 10:00:00', 'updated_at' => null]);
+    $relation->kind = 'Relation';
+    $relation->position = 2;
+    $relation->depth = 2;
+    $relation->updated_at = '2021-03-16 12:00:00';
+    $relation->update();
+    $this->assertDatabaseCount((new EntityRelation())->getTable(), 1);
+  }
+
+  /** @test */
+  function entity_relationships_are_cleared()
+  {
+    $entityData = Entity::factory()->create();
+    $entityData2 = Entity::factory()->create();
+    $relation = EntityRelation::create(['relation_id' => 1, 'caller_entity_id' => $entityData->id, 'called_entity_id' => $entityData2->id, 'kind' => 'Relationship', 'position' => 1, 'depth' => 1, 'tags' => null, 'created_at' => '2021-03-10 10:00:00', 'updated_at' => null]);
+    $relation->delete();
+    $this->assertDatabaseCount((new EntityRelation())->getTable(), 0);
+  }
 }
