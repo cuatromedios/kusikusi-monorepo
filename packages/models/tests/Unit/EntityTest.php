@@ -80,12 +80,18 @@ class EntityTest extends TestCase
     EntityContent::create(['entity_id' => $id1, 'lang' => 'en', 'field' => 'description', 'text' => $description]);
     EntityContent::create(['entity_id' => $id2, 'lang' => 'es', 'field' => 'title', 'text' => $titulo]);
     EntityContent::create(['entity_id' => $id2, 'lang' => 'es', 'field' => 'description', 'text' => $descripcion]);
-    $entityOneWithContents = Entity::select()->withContent('en')->where('id', $id1)->first();
-    $entityTwoWithContents = Entity::select()->withContent('es')->where('id', $id2)->first();
-    $this->assertEquals($entityOneWithContents->content['title'], $title);
-    $this->assertEquals($entityOneWithContents->content['description'], $description);
-    $this->assertEquals($entityTwoWithContents->content['title'], $titulo);
-    $this->assertEquals($entityTwoWithContents->content['description'], $descripcion);
+    $entityOneWithContent = Entity::select()->withContent('en')->where('id', $id1)->first();
+    $entityTwoWithContent = Entity::select()->withContent('es')->where('id', $id2)->first();
+    $this->assertEquals($entityOneWithContent->content['title'], $title);
+    $this->assertEquals($entityOneWithContent->content['description'], $description);
+    $this->assertEquals($entityTwoWithContent->content['title'], $titulo);
+    $this->assertEquals($entityTwoWithContent->content['description'], $descripcion);
+    $entityOneWithSpecificContent = Entity::select()->withContent('en', 'title')->where('id', $id1)->first();
+    $this->assertEquals($entityOneWithSpecificContent->content['title'], $title);
+    $this->assertEquals($entityOneWithSpecificContent->content['description'] ?? null, null);
+    $entityOneWithSpecificContent = Entity::select()->withContent('en', ['description'])->where('id', $id1)->first();
+    $this->assertEquals($entityOneWithSpecificContent->content['description'], $description);
+    $this->assertEquals($entityOneWithSpecificContent->content['title'] ?? null, null);
 }
 
   /** @test */
