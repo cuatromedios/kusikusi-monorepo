@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Medium;
+use Kusikusi\Models\Entity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 
@@ -19,8 +20,18 @@ class MediaController extends Controller
         ->withContent('en')
         ->orderBy('created_at')
         ->get();
+        $entitiesWithMedia = Entity::select('id', 'model')
+        ->withMedia('icon', ['id', 'model'], 'es')
+        ->where('model', '!=', 'Medium')
+        ->get();
+        $entitiesWithMedium = Entity::select('id', 'model')
+        ->where('model', '!=', 'Medium')
+        ->withMedium('icon', ['id', 'model'], 'en', ['title'])
+        ->get();
         return View::make('media.index')
-           ->with('entities', $entities);
+           ->with('entities', $entities)
+           ->with('with_media', $entitiesWithMedia)
+           ->with('with_medium', $entitiesWithMedium);
     }
 
     /**

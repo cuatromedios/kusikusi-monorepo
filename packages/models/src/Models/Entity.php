@@ -109,6 +109,24 @@ class Entity extends Model
     }
 
     /**
+     * Get the entities this entity is calling with kind medium
+     */ 
+    public function media() {
+        return $this->entities_related(EntityRelation::RELATION_MEDIA, 'App\Models\Medium');
+    }
+
+    /**
+     * Get only one entity this entity is calling with kind medium
+     */ 
+    public function medium($tag = null, $lang = null) {
+        return $this->belongsToOne('App\Models\Medium', 'entities_relations', 'caller_entity_id', 'called_entity_id')
+            ->using('Kusikusi\Models\EntityRelation')
+            ->as('relation')
+            ->withPivot('kind', 'position', 'depth', 'tags')
+            ->where('kind', EntityRelation::RELATION_MEDIA);
+    }
+
+    /**
      * Get the other entities calling this entity
      */ 
     public function entities_relating($kind = null, $modelClassPath = 'Kusikusi\Models\Entity') {
@@ -181,7 +199,8 @@ class Entity extends Model
                 return $q->where('lang', $lang);
             });
             $q->when($fields !== null, function ($q) use ($fields) {
-                return $q->whereField('field', $fields);
+                if (is_array($fields)) return $q->whereIn('field', $fields);
+                if (is_string($fields)) return $q->where('field', $fields);
             });
         }]);
     }
@@ -198,10 +217,11 @@ class Entity extends Model
     {
         return $query->with(['contents' => function($q) use ($lang, $fields) {
             $q->when($lang !== null, function ($q) use ($lang, $fields) {
-                return $q->orWhere('lang', $lang)->orWhere('lang', $fields);
+                return $q->where('lang', $lang);
             });
             $q->when($fields !== null, function ($q) use ($fields) {
-                return $q->whereField('field', $fields);
+                if (is_array($fields)) return $q->whereIn('field', $fields);
+                if (is_string($fields)) return $q->where('field', $fields);
             });
         }]);
     }
@@ -461,6 +481,53 @@ class Entity extends Model
             });
             $q->when($kind !== null, function ($q) use ($kind) {
                 return $q->where('kind', $kind);
+            });
+        }]);
+    }
+
+    /**
+     * Scope to append a medium url to the result.
+     *
+     * @param  Builder $query
+     * @param  string $tag Select the first related media that has this tag, the first medium if ommitted
+     * @param  string $fields An array of fields of the Medium entities to include, ['id', 'properties'] if omitted. To automatically generate urls, please include id, and properties
+     * @param  string $lang Language of the content fields of the medium
+     * @param  string $content_fields Restrict the content fields of the media, or 'title' if ommited
+     * @return Builder
+     */
+
+    public function scopeWithMedium($query, $tag = null, $fields = ['id', 'properties'], $lang = null, $content_fields = 'title') {
+        $lang = $lang ?? Config::get('kusikusi_website.langs', [''])[0];
+        $query->with(['medium' => function ($relation) use ($lang, $tag, $fields, $content_fields) {
+            $relation->select($fields)
+            ->when(isset($tag), function ($q) use ($tag) {
+                $q->whereJsonContains('tags', $tag);
+                $q->orderBy('position', 'asc');
+            })->when(isset($content_fields), function ($q) use ($lang, $content_fields) {
+                $q->withContent($lang);
+            });
+        }]);
+    }
+
+    /**
+     * Scope to append a media relation to the result, including title and medium properties.
+     *
+     * @param  Builder $query
+     * @param  string $tag Select the related media that has this tag, or all if ommited
+     * @param  string $fields An array of fields of the Medium entities to include, ['id', 'properties'] if omitted. To automatically generate urls, please include id, and properties
+     * @param  string $lang Language of the content fields of the medium
+     * @param  string $content_fields Restrict the content fields of the media, or 'title' if ommited
+     * @return Builder
+     */
+    public function scopeWithMedia($query, $tag = null, $fields = ['id', 'properties'], $lang = null, $content_fields = 'title') {
+        $lang = $lang ?? Config::get('kusikusi_website.langs', [''])[0];
+        $query->with(['media' => function ($relation) use ($tag, $fields, $lang, $content_fields) {
+            $relation->select($fields)
+            ->when(isset($tag), function ($q) use ($tag) {
+                $q->whereJsonContains('tags', $tag);
+                $q->orderBy('position', 'asc');
+            })->when(isset($content_fields), function ($q) use ($lang, $content_fields) {
+                $q->withContent($lang);
             });
         }]);
     }
