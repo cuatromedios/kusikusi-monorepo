@@ -9,3 +9,6 @@ GET http://{{host}}/api/entities?only-published=trues HTTP/1.1
 
 ### Get children of an entity
 GET http://{{host}}/api/entities?children-of=home HTTP/1.1
+
+### Get children of an entity
+GET http://{{host}}/api/entities?children-of=home&order-by=children_relation_position HTTP/1.1

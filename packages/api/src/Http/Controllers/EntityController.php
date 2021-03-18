@@ -34,13 +34,10 @@ class EntityController extends BaseController
      *
      * @group Entity
      * @authenticated
-     * @queryParam select A comma separated list of fields of the entity to include. It is possible to flat the properties json column using a dot syntax. Example: id,model,properties.price
      * @queryParam of-model (filter) The name of the model the entities should be, this will also call the query using the given model and not the default Entity model. Example: medium, page
      * @queryParam only-published (filter) Get only published, not deleted entities, true if not set. Example: true
      * @queryParam children-of (filter) The id or short id of the entity the result entities should be child of. Example: home
      * 
-     * @queryParam order-by A comma separated lis of fields to order by. Example: model,properties.price:desc,contents.title
-     * @queryParam where A comma separated list of conditions to met, Example: created_at>2020-01-01,properties.isImage,properties.format:png,model:medium
      * @queryParam parent-of (filter) The id or short id of the entity the result entities should be parent of (will return only one). Example: 8fguTpt5SB
      * @queryParam ancestor-of (filter) The id or short id of the entity the result entities should be ancestor of. Example: enKSUfUcZN
      * @queryParam descendant-of (filter) The id or short id of the entity the result entities should be descendant of. Example: xAaqz2RPyf
@@ -48,9 +45,11 @@ class EntityController extends BaseController
      * @queryParam related-by (filter) The id or short id of the entity the result entities should have been called by using a relation. Can be added a filter to a kind of relation for example: theShortId:category. The ancestor kind of relations are discarted unless are explicity specified. Example: ElFYpgEvWS
      * @queryParam relating (filter) The id or short id of the entity the result entities should have been a caller of using a relation. Can be added a filder to a kind o relation for example: shortFotoId:medium to know the entities has caller that medium. The ancestor kind of relations are discarted unless are explicity specified. Example: enKSUfUcZN
      * @queryParam media-of (filter) The id or short id of the entity the result entities should have a media relation to. Example: enKSUfUcZN
+     * @queryParam order-by A comma separated lis of fields to order by. Example: model,properties.price:desc,contents.title
+     * @queryParam select A comma separated list of fields of the entity to include. It is possible to flat the properties json column using a dot syntax. Example: id,model,properties.price
+     * @queryParam where A comma separated list of cond∫itions to met, Example: created_at>2020-01-01,properties.isImage,properties.format:png,model:medium
      * @queryParam with A comma separated list of relationships should be included in the result. Example: media,contents,entities_related, entities_related.contents (nested relations)
      * @queryParam per-page The amount of entities per page the result should be the amount of entities on a single page. Example: 6
-     * @urlParam model_name If a model name is provided, the results will have the corresponding scope and special defined relations and accesosrs will be available.
      * @responseFile responses/entities.index.json
      * @return \Illuminate\Http\JsonResponse
      */
@@ -70,7 +69,6 @@ class EntityController extends BaseController
             return $q->childrenOf($request->get('children-of'));
         });
         $entities = $entities
-            ->orderBy('children_relation_position')
             ->paginate($request
             ->get('per-page') ? intval($request->get('per-page')) : Config::get('kusikusi_api.page_size', 100))
             ->withQueryString();
