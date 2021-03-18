@@ -527,6 +527,20 @@ class Entity extends Model
     }
 
     /**
+     * Scope to include only entities that has a medium of certain tag.
+     *
+     * @param  Builder $query
+     * @param  string $tag Tag to search for
+     * @return Builder
+     */
+
+    public function scopeWhereHasMediumWithTag($query, $tag = null) {
+        $query->whereHas('medium', function (Builder $query) use ($tag) {
+            $query->whereJsonContains('tags', $tag);
+        });
+    }
+
+    /**
      * Scope to append the entities related to the result, including title a properties.
      *
      * @param  Builder $query
