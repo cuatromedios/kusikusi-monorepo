@@ -94,6 +94,26 @@ class EntityTest extends TestCase
     $this->assertEquals($entityOneWithSpecificContent->content['title'] ?? null, null);
 }
 
+//TODO: Needs to include Medium model
+/** @no_test */
+function scope_with_medium_can_be_used()
+{
+  $e1 = 'entity_1';
+  $m1 = 'medium_1';
+  $m2 = 'medium_2';
+  $m3 = 'medium_3';
+  $medium_title = 'The title medium';
+  Entity::create(['id' => $e1]);
+  Entity::create(['id' => $m1]);
+  Entity::create(['id' => $m2]);
+  Entity::create(['id' => $m3]);
+  EntityRelation::create([ 'kind' => 'medium', 'caller_entity_id' => $e1,  'called_entity_id' => $m1,  'tags' => ['slider'] ]);
+  EntityRelation::create([ 'kind' => 'medium', 'caller_entity_id' => $e1,  'called_entity_id' => $m2,  'tags' => ['icon'] ]);
+  EntityRelation::create([ 'kind' => 'medium', 'caller_entity_id' => $e1,  'called_entity_id' => $m3,  'tags' => ['slider'] ]);
+  $entity = Entity::select()->withMedium('icon')->where('id', $e1)->first();
+  $this->assertEquals($entity->medium->id, $m1);
+}
+
   /** @test */
   function scope_of_model_can_be_used()
   {

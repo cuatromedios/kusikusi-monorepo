@@ -485,8 +485,34 @@ class Entity extends Model
         }]);
     }
 
+
     /**
-     * Scope to append a medium url to the result.
+     * Scope to append just one entity related to the result.
+     *
+     * @param  Builder $query
+     * @param  string $kind The kind of relation
+     * @param  string $tag Select the first related media that has this tag, the first medium if ommitted
+     * @param  string $fields An array of fields of the Medium entities to include, ['id', 'properties'] if omitted. To automatically generate urls, please include id, and properties
+     * @param  string $lang Language of the content fields of the medium
+     * @param  string $content_fields Restrict the content fields of the media, or 'title' if ommited
+     * @return Builder
+     */
+
+    public function scopeWithRelation($query, $kind, $tag = null, $fields = ['id', 'model', 'properties'], $lang = null, $content_fields = 'title') {
+        $lang = $lang ?? Config::get('kusikusi_website.langs', [''])[0];
+        $query->with([$kind => function ($relation) use ($lang, $tag, $fields, $content_fields) {
+            $relation->select($fields)
+            ->when(isset($tag), function ($q) use ($tag) {
+                $q->whereJsonContains('tags', $tag);
+                $q->orderBy('position', 'asc');
+            })->when(isset($content_fields), function ($q) use ($lang, $content_fields) {
+                $q->withContent($lang);
+            });
+        }]);
+    }
+
+    /**
+     * Scope to append a medium to the result.
      *
      * @param  Builder $query
      * @param  string $tag Select the first related media that has this tag, the first medium if ommitted
@@ -497,8 +523,23 @@ class Entity extends Model
      */
 
     public function scopeWithMedium($query, $tag = null, $fields = ['id', 'properties'], $lang = null, $content_fields = 'title') {
+        $query->withRelation('medium', $tag, $fields, $lang, $content_fields);
+    }
+
+    /**
+     * Scope to append the entities related to the result, including title a properties.
+     *
+     * @param  Builder $query
+     * @param  string $tag Select the related media that has this tag, or all if ommited
+     * @param  string $fields An array of fields of the Medium entities to include, ['id', 'properties'] if omitted. To automatically generate urls, please include id, and properties
+     * @param  string $lang Language of the content fields of the medium
+     * @param  string $content_fields Restrict the content fields of the media, or 'title' if ommited
+     * @return Builder
+     */
+    public function scopeWithRelations($query, $kind = null, $tag = null, $fields = ['id', 'properties'], $lang = null, $content_fields = 'title') {
         $lang = $lang ?? Config::get('kusikusi_website.langs', [''])[0];
-        $query->with(['medium' => function ($relation) use ($lang, $tag, $fields, $content_fields) {
+        $query->with(['entities_related' => function ($relation) use ($kind, $tag, $fields, $lang, $content_fields) {
+            $relation->where('kind', $kind);
             $relation->select($fields)
             ->when(isset($tag), function ($q) use ($tag) {
                 $q->whereJsonContains('tags', $tag);

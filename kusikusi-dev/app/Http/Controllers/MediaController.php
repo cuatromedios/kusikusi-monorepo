@@ -21,7 +21,7 @@ class MediaController extends Controller
         ->orderBy('created_at')
         ->get();
         $entitiesWithMedia = Entity::select('id', 'model')
-        ->withMedia('icon', ['id', 'model'], 'es')
+        ->withMedia('icon', ['id', 'model'], 'en')
         ->where('model', '!=', 'Medium')
         ->get();
         $entitiesWithMedium = Entity::select('id', 'model')
