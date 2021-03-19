@@ -98,6 +98,9 @@ class EntityController extends BaseController
                 return $q->relating($values[0]);
             }
 
+        })
+        ->when($request->get('media-of'), function ($q) use ($request) {
+            return $q->mediaOf($request->get('media-of'));
         });
         $entities = $entities
             ->paginate($request

@@ -17,7 +17,7 @@ GET http://{{host}}/api/entities?children-of=home&order-by=children_relation_pos
 GET http://{{host}}/api/entities?parent-of=Home HTTP/1.1
 
 ### Get ancestors of an entity
-GET http://{{host}}/api/entities?ancestors-of=Home HTTP/1.1
+GET http://{{host}}/api/entities?ancestors-of=M4t4OxBI1C HTTP/1.1
 
 
 ### Get descendants of an entity
@@ -31,3 +31,6 @@ GET http://{{host}}/api/entities?related-by=Contact HTTP/1.1
 
 ### Get relating an entity
 GET http://{{host}}/api/entities?relating=Home HTTP/1.1
+
+### Get media of an entity
+GET http://{{host}}/api/entities?media-of=child_1 HTTP/1.1

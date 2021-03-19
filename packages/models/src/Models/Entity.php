@@ -594,6 +594,27 @@ class Entity extends Model
     }
 
     /**
+     * Scope a query to only get entities being called by another of type medium.
+     *
+     * @param Builder $query
+     * @param number $entity_id The id of the entity calling the media
+     * @return Builder
+     * @throws \Exception
+     */
+    public function scopeMediaOf($query, $entity_id, $tag = null)
+    {
+        $query->join('entities_relations as relation_media', function ($join) use ($entity_id, $tag) {
+            $join->on('relation_media.called_entity_id', '=', 'entities.id')
+                ->where('relation_media.caller_entity_id', '=', $entity_id)
+                ->where('relation_media.kind', '=', EntityRelation::RELATION_MEDIA)
+                ->when($tag, function ($q) use ($tag) {
+                    return $q->whereJsonContains('relation_media.tags', $tag);
+                });
+        })
+            ->addSelect( 'relation_media.position as media_position', 'relation_media.depth as media_depth', 'relation_media.tags as media_tags');
+    }
+
+    /**
      * AGGREGATES
      */
 
