@@ -17,7 +17,7 @@ class EntityRelationController extends Controller
     public function index()
     {
         $entities = EntityRelation::select()->orderBy('created_at')->get();
-        return View::make('entity-relations.index')
+        return View::make('entity_relations.index')
            ->with('entities', $entities);
     }
 
@@ -29,7 +29,7 @@ class EntityRelationController extends Controller
     public function create(Request $request)
     {
         $entities = Entity::select()->orderBy('created_at')->get();
-        return View::make('entity-relations.create')
+        return View::make('entity_relations.create')
            ->with('entities', $entities)
            ->with('entity_id', $request->input('entity_id'));
     }

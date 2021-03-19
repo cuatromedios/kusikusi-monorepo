@@ -19,4 +19,10 @@
         </tbody>
     </table>
     {!! pretty_json($entities) !!}
+
+    <h3>Entities with media</h3>
+    {!! pretty_json($with_media) !!}
+
+    <h3>Entities with medium</h3>
+    {!! pretty_json($with_medium) !!}
 </x-medium>

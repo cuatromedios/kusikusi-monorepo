@@ -109,6 +109,24 @@ class Entity extends Model
     }
 
     /**
+     * Get the entities this entity is calling with kind medium
+     */ 
+    public function media() {
+        return $this->entities_related(EntityRelation::RELATION_MEDIA, 'App\Models\Medium');
+    }
+
+    /**
+     * Get only one entity this entity is calling with kind medium
+     */ 
+    public function medium($tag = null, $lang = null) {
+        return $this->belongsToOne('App\Models\Medium', 'entities_relations', 'caller_entity_id', 'called_entity_id')
+            ->using('Kusikusi\Models\EntityRelation')
+            ->as('relation')
+            ->withPivot('kind', 'position', 'depth', 'tags')
+            ->where('kind', EntityRelation::RELATION_MEDIA);
+    }
+
+    /**
      * Get the other entities calling this entity
      */ 
     public function entities_relating($kind = null, $modelClassPath = 'Kusikusi\Models\Entity') {
@@ -181,7 +199,8 @@ class Entity extends Model
                 return $q->where('lang', $lang);
             });
             $q->when($fields !== null, function ($q) use ($fields) {
-                return $q->whereField('field', $fields);
+                if (is_array($fields)) return $q->whereIn('field', $fields);
+                if (is_string($fields)) return $q->where('field', $fields);
             });
         }]);
     }
@@ -198,10 +217,11 @@ class Entity extends Model
     {
         return $query->with(['contents' => function($q) use ($lang, $fields) {
             $q->when($lang !== null, function ($q) use ($lang, $fields) {
-                return $q->orWhere('lang', $lang)->orWhere('lang', $fields);
+                return $q->where('lang', $lang);
             });
             $q->when($fields !== null, function ($q) use ($fields) {
-                return $q->whereField('field', $fields);
+                if (is_array($fields)) return $q->whereIn('field', $fields);
+                if (is_string($fields)) return $q->where('field', $fields);
             });
         }]);
     }
@@ -469,6 +489,129 @@ class Entity extends Model
                 return $q->where('kind', $kind);
             });
         }]);
+    }
+
+
+    /**
+     * Scope to append just one entity related to the result.
+     *
+     * @param  Builder $query
+     * @param  string $kind The kind of relation
+     * @param  string $tag Select the first related media that has this tag, the first medium if ommitted
+     * @param  string $fields An array of fields of the Medium entities to include, ['id', 'properties'] if omitted. To automatically generate urls, please include id, and properties
+     * @param  string $lang Language of the content fields of the medium
+     * @param  string $content_fields Restrict the content fields of the media, or 'title' if ommited
+     * @return Builder
+     */
+
+    public function scopeWithRelation($query, $kind, $tag = null, $fields = ['id', 'model', 'properties'], $lang = null, $content_fields = 'title') {
+        $lang = $lang ?? Config::get('kusikusi_website.langs', [''])[0];
+        $query->with([$kind => function ($relation) use ($lang, $tag, $fields, $content_fields) {
+            $relation->select($fields)
+            ->when(isset($tag), function ($q) use ($tag) {
+                $q->whereJsonContains('tags', $tag);
+                $q->orderBy('position', 'asc');
+            })->when(isset($content_fields), function ($q) use ($lang, $content_fields) {
+                $q->withContent($lang);
+            });
+        }]);
+    }
+
+    /**
+     * Scope to append a medium to the result.
+     *
+     * @param  Builder $query
+     * @param  string $tag Select the first related media that has this tag, the first medium if ommitted
+     * @param  string $fields An array of fields of the Medium entities to include, ['id', 'properties'] if omitted. To automatically generate urls, please include id, and properties
+     * @param  string $lang Language of the content fields of the medium
+     * @param  string $content_fields Restrict the content fields of the media, or 'title' if ommited
+     * @return Builder
+     */
+
+    public function scopeWithMedium($query, $tag = null, $fields = ['id', 'properties'], $lang = null, $content_fields = 'title') {
+        $query->withRelation('medium', $tag, $fields, $lang, $content_fields);
+    }
+
+    /**
+     * Scope to include only entities that has a medium of certain tag.
+     *
+     * @param  Builder $query
+     * @param  string $tag Tag to search for
+     * @return Builder
+     */
+
+    public function scopeWhereHasMediumWithTag($query, $tag = null) {
+        $query->whereHas('medium', function (Builder $query) use ($tag) {
+            $query->whereJsonContains('tags', $tag);
+        });
+    }
+
+    /**
+     * Scope to append the entities related to the result, including title a properties.
+     *
+     * @param  Builder $query
+     * @param  string $tag Select the related media that has this tag, or all if ommited
+     * @param  string $fields An array of fields of the Medium entities to include, ['id', 'properties'] if omitted. To automatically generate urls, please include id, and properties
+     * @param  string $lang Language of the content fields of the medium
+     * @param  string $content_fields Restrict the content fields of the media, or 'title' if ommited
+     * @return Builder
+     */
+    public function scopeWithRelations($query, $kind = null, $tag = null, $fields = ['id', 'properties'], $lang = null, $content_fields = 'title') {
+        $lang = $lang ?? Config::get('kusikusi_website.langs', [''])[0];
+        $query->with(['entities_related' => function ($relation) use ($kind, $tag, $fields, $lang, $content_fields) {
+            $relation->where('kind', $kind);
+            $relation->select($fields)
+            ->when(isset($tag), function ($q) use ($tag) {
+                $q->whereJsonContains('tags', $tag);
+                $q->orderBy('position', 'asc');
+            })->when(isset($content_fields), function ($q) use ($lang, $content_fields) {
+                $q->withContent($lang);
+            });
+        }]);
+    }
+
+    /**
+     * Scope to append a media relation to the result, including title and medium properties.
+     *
+     * @param  Builder $query
+     * @param  string $tag Select the related media that has this tag, or all if ommited
+     * @param  string $fields An array of fields of the Medium entities to include, ['id', 'properties'] if omitted. To automatically generate urls, please include id, and properties
+     * @param  string $lang Language of the content fields of the medium
+     * @param  string $content_fields Restrict the content fields of the media, or 'title' if ommited
+     * @return Builder
+     */
+    public function scopeWithMedia($query, $tag = null, $fields = ['id', 'properties'], $lang = null, $content_fields = 'title') {
+        $lang = $lang ?? Config::get('kusikusi_website.langs', [''])[0];
+        $query->with(['media' => function ($relation) use ($tag, $fields, $lang, $content_fields) {
+            $relation->select($fields)
+            ->when(isset($tag), function ($q) use ($tag) {
+                $q->whereJsonContains('tags', $tag);
+                $q->orderBy('position', 'asc');
+            })->when(isset($content_fields), function ($q) use ($lang, $content_fields) {
+                $q->withContent($lang);
+            });
+        }]);
+    }
+
+    /**
+     * Scope a query to only get entities being called by another of type medium.
+     *
+     * @param Builder $query
+     * @param number $entity_id The id of the entity calling the media
+     * @return Builder
+     * @throws \Exception
+     */
+    public function scopeMediaOf($query, $entity_id, $tag = null)
+    {
+        $query->join('entities_relations as relation_media', function ($join) use ($entity_id, $tag) {
+            $join->on('relation_media.called_entity_id', '=', 'entities.id')
+                ->where('relation_media.caller_entity_id', '=', $entity_id)
+                ->where('relation_media.kind', '=', EntityRelation::RELATION_MEDIA)
+                ->when($tag, function ($q) use ($tag) {
+                    return $q->whereJsonContains('relation_media.tags', $tag);
+                });
+        })
+            ->addSelect( 'relation_media.position as media_position', 'relation_media.depth as media_depth', 'relation_media.tags as media_tags');
     }
 
     /**

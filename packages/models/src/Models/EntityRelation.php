@@ -24,13 +24,14 @@ class EntityRelation extends Pivot
         return 'relation_id';
     }
 
+    protected $guarded = ['relation_id'];
     protected $fillable = ['caller_entity_id', 'called_entity_id', 'kind', 'position', 'depth', 'tags'];
     
     protected $casts = [
         'tags' => 'array'
     ];
     
-    protected $hidden = ['created_at', 'updated_at'];
+    protected $hidden = ['created_at', 'updated_at', 'caller_entity_id', 'called_entity_id'];
 
     public function caller_entity() {
         return $this->belongsTo('Kusikusi\Models\Entity', 'caller_entity_id', 'relation_id');

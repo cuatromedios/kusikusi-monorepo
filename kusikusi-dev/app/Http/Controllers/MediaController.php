@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Medium;
+use Kusikusi\Models\Entity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
+use Illuminate\Database\Eloquent\Builder;
 
 class MediaController extends Controller
 {
@@ -19,8 +21,22 @@ class MediaController extends Controller
         ->withContent('en')
         ->orderBy('created_at')
         ->get();
+        $entitiesWithMedia = Entity::select('id', 'model')
+        ->withMedia('icon', ['id', 'model'], 'en')
+        ->whereHas('medium', function (Builder $query) {
+            $query->whereJsonContains('tags', 'icon');
+        })
+        ->where('model', '!=', 'Medium')
+        ->get();
+        $entitiesWithMedium = Entity::select('id', 'model')
+        ->where('model', '!=', 'Medium')
+        ->whereHasMediumWithTag('icon')
+        ->withMedium('icon', ['id', 'model'], 'en', ['title'])
+        ->get();
         return View::make('media.index')
-           ->with('entities', $entities);
+           ->with('entities', $entities)
+           ->with('with_media', $entitiesWithMedia)
+           ->with('with_medium', $entitiesWithMedium);
     }
 
     /**
