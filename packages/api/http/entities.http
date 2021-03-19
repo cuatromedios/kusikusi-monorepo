@@ -2,4 +2,32 @@
 GET http://{{host}}/api/entities HTTP/1.1
 
 ### Get only entities of a model
-GET http://{{host}}/api/entities?model=Medium HTTP/1.1
+GET http://{{host}}/api/entities?of-model=Medium HTTP/1.1
+
+### Get only published entities
+GET http://{{host}}/api/entities?only-published=trues HTTP/1.1
+
+### Get child of an entity
+GET http://{{host}}/api/entities?children-of=home HTTP/1.1
+
+### Get children of an entity
+GET http://{{host}}/api/entities?children-of=home&order-by=children_relation_position HTTP/1.1
+
+### Get parent of an entity
+GET http://{{host}}/api/entities?parent-of=Home HTTP/1.1
+
+### Get ancestors of an entity
+GET http://{{host}}/api/entities?ancestors-of=Home HTTP/1.1
+
+
+### Get descendants of an entity
+GET http://{{host}}/api/entities?descendants-of=Contact HTTP/1.1
+
+### Get siblings of an entity
+GET http://{{host}}/api/entities?siblings-of=Contact HTTP/1.1
+
+### Get related-by an entity
+GET http://{{host}}/api/entities?related-by=Contact HTTP/1.1
+
+### Get relating an entity
+GET http://{{host}}/api/entities?relating=Home HTTP/1.1

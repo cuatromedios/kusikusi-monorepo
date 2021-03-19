@@ -278,8 +278,9 @@ class Entity extends Model
             ;
         })
             ->addSelect('id')
-            ->addSelect('relation_children.position as child_relation_position')
-            ->addSelect('relation_children.tags as child_relation_tags');
+            ->addSelect('relation_children.position as child_position')
+            ->addSelect('relation_children.depth as child_depth')
+            ->addSelect('relation_children.tags as child_tags');
     }
 
     /**
@@ -300,7 +301,9 @@ class Entity extends Model
             ;
         })
             ->addSelect('id')
-            ->addSelect('relation_parent.depth as parent_relation_depth');
+            ->addSelect('relation_parent.position as parent_position')
+            ->addSelect('relation_parent.depth as parent_depth')
+            ->addSelect('relation_parent.tags as parent_tags');
     }
 
     /**
@@ -320,7 +323,9 @@ class Entity extends Model
             ;
         })
             ->addSelect('id')
-            ->addSelect('relation_ancestor.depth as ancestor_relation_depth');
+            ->addSelect('relation_ancestor.position as ancestor_position')
+            ->addSelect('relation_ancestor.depth as ancestor_depth')
+            ->addSelect('relation_ancestor.tags as ancestor_tags');
     }
 
     /**
@@ -340,9 +345,9 @@ class Entity extends Model
                 ->where('relation_descendants.depth', '<=', $depth);
         })
             ->addSelect('id')
-            ->addSelect('relation_descendants.position as descendant_relation_position')
-            ->addSelect('relation_descendants.depth as descendant_relation_depth')
-            ->addSelect('relation_descendants.tags as descendant_relation_tags');
+            ->addSelect('relation_descendants.position as descendant_position')
+            ->addSelect('relation_descendants.depth as descendant_depth')
+            ->addSelect('relation_descendants.tags as descendant_tags');
     }
 
     /**
@@ -369,8 +374,9 @@ class Entity extends Model
         })
             ->addSelect('id')
             ->where('entities.id', '!=', $entity_id)
-            ->addSelect('relation_siblings.position as siblings_relation_position')
-            ->addSelect('relation_siblings.tags as siblings_relation_tags');
+            ->addSelect('relation_siblings.position as sibling_position')
+            ->addSelect('relation_siblings.depth as sibling_depth')
+            ->addSelect('relation_siblings.tags as sibling_tags');
     }
 
     /**
