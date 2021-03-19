@@ -37,13 +37,13 @@ class EntityController extends BaseController
      * @queryParam of-model (filter) The name of the model the entities should be, this will also call the query using the given model and not the default Entity model. Example: medium, page
      * @queryParam only-published (filter) Get only published, not deleted entities, true if not set. Example: true
      * @queryParam children-of (filter) The id or short id of the entity the result entities should be child of. Example: home
-     * 
      * @queryParam parent-of (filter) The id or short id of the entity the result entities should be parent of (will return only one). Example: 8fguTpt5SB
      * @queryParam ancestor-of (filter) The id or short id of the entity the result entities should be ancestor of. Example: enKSUfUcZN
      * @queryParam descendant-of (filter) The id or short id of the entity the result entities should be descendant of. Example: xAaqz2RPyf
      * @queryParam siblings-of (filter) The id or short id of the entity the result entities should be siblings of. Example: _tuKwVy8Aa
      * @queryParam related-by (filter) The id or short id of the entity the result entities should have been called by using a relation. Can be added a filter to a kind of relation for example: theShortId:category. The ancestor kind of relations are discarted unless are explicity specified. Example: ElFYpgEvWS
      * @queryParam relating (filter) The id or short id of the entity the result entities should have been a caller of using a relation. Can be added a filder to a kind o relation for example: shortFotoId:medium to know the entities has caller that medium. The ancestor kind of relations are discarted unless are explicity specified. Example: enKSUfUcZN
+     * 
      * @queryParam media-of (filter) The id or short id of the entity the result entities should have a media relation to. Example: enKSUfUcZN
      * @queryParam order-by A comma separated lis of fields to order by. Example: model,properties.price:desc,contents.title
      * @queryParam select A comma separated list of fields of the entity to include. It is possible to flat the properties json column using a dot syntax. Example: id,model,properties.price
@@ -58,6 +58,7 @@ class EntityController extends BaseController
         $request->validate($this->queryParamsValidation());
         $lang = $request->get('lang') ?? Config::get('kusikusi_website.langs')[0] ?? '';
         $modelClassName = Entity::getEntityClassName($request->get('of-model') ?? 'Entity');
+        // Filters
         $entities = $modelClassName::query()->select('entities.*')
         ->when($request->get('of-model'), function ($q) use ($request) {
             return $q->ofModel($request->get('of-model'));
@@ -67,6 +68,36 @@ class EntityController extends BaseController
         })
         ->when($request->get('children-of'), function ($q) use ($request) {
             return $q->childrenOf($request->get('children-of'));
+        })
+        ->when($request->get('parent-of'), function ($q) use ($request) {
+            return $q->parentOf($request->get('parent-of'));
+        })
+        ->when($request->get('ancestors-of'), function ($q) use ($request) {
+            return $q->ancestorsOf($request->get('ancestors-of'));
+        })
+        ->when($request->get('descendants-of'), function ($q) use ($request) {
+            return $q->descendantsOf($request->get('descendants-of'));
+        })
+        ->when($request->get('siblings-of'), function ($q) use ($request) {
+            return $q->siblingsOf($request->get('siblings-of'));
+        })
+        ->when($request->get('related-by'), function ($q) use ($request) {
+            $values = explode(":", $request->get('related-by'));
+            if (isset($values[1])) {
+                return $q->relatedBy($values[0], $values[1]);
+            } else {
+                return $q->relatedBy($values[0]);
+            }
+
+        })
+        ->when($request->get('relating'), function ($q) use ($request) {
+            $values = explode(":", $request->get('relating'));
+            if (isset($values[1])) {
+                return $q->relating($values[0], $values[1]);
+            } else {
+                return $q->relating($values[0]);
+            }
+
         });
         $entities = $entities
             ->paginate($request
