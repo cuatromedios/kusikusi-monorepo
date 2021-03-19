@@ -1,0 +1,18 @@
+{
+  "api-wrapper": {},
+  "vuelidate-rules": {},
+  "nequ-components": {},
+  "filters": {
+    "thousandsDelimeter": ",",
+    "currencySymbol": "$",
+    "decimalDelimeter": ".",
+    "momentLocale": "en"
+  },
+  "@quasar/dotenv": {
+    "env_development": ".env.dev",
+    "env_production": ".env.prod",
+    "common_root_object": "none",
+    "create_env_files": true,
+    "add_env_to_gitignore": true
+  }
+}
