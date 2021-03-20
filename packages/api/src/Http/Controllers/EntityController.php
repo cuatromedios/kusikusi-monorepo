@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 use Illuminate\Routing\Controller as BaseController;
 use Kusikusi\Models\Entity;
 
@@ -14,7 +15,7 @@ class EntityController extends BaseController
 
     const ID_RULE = 'string|min:1|max:32|regex:/^[A-Za-z0-9_-]+$/';
     const ID_RULE_WITH_FILTER = 'string|min:1|max:64|regex:/^[A-Za-z0-9_-]+:?[a-z0-9]*$/';
-    const MODEL_RULE = 'string|min:1|max:32|regex:/^[A-Za-z0-9-]+$/';
+    const MODEL_RULE = 'string|min:1|max:32|regex:/^[A-Z][A-Za-z0-9]+$/';
     const TIMEZONED_DATE = 'nullable|date_format:Y-m-d\TH:i:sP|after_or_equal:1000-01-01T00:00:00-12:00|before_or_equal:9999-12-31T23:59:59-12:00';
     private $calledRelations = [];
     private $addedSelects = [];
@@ -36,7 +37,7 @@ class EntityController extends BaseController
      *
      * @group Entity
      * @authenticated
-     * @queryParam of-model (filter) The name of the model the entities should be, this will also call the query using the given model and not the default Entity model. Example: medium, page
+     * @queryParam of-model (filter) The name of the model the entities should be, this will also call the query using the given model and not the default Entity model. Example: Medium, Page
      * @queryParam only-published (filter) Get only published, not deleted entities, true if not set. Example: true
      * @queryParam children-of (filter) The id or short id of the entity the result entities should be child of. Example: home
      * @queryParam parent-of (filter) The id or short id of the entity the result entities should be parent of (will return only one). Example: 8fguTpt5SB
@@ -46,8 +47,8 @@ class EntityController extends BaseController
      * @queryParam related-by (filter) The id or short id of the entity the result entities should have been called by using a relation. Can be added a filter to a kind of relation for example: theShortId:category. The ancestor kind of relations are discarted unless are explicity specified. Example: ElFYpgEvWS
      * @queryParam relating (filter) The id or short id of the entity the result entities should have been a caller of using a relation. Can be added a filder to a kind o relation for example: shortFotoId:medium to know the entities has caller that medium. The ancestor kind of relations are discarted unless are explicity specified. Example: enKSUfUcZN
      * @queryParam media-of (filter) The id or short id of the entity the result entities should have a media relation to. Example: enKSUfUcZN
-     * 
      * @queryParam select A comma separated list of fields of the entity to include. It is possible to flat the properties json column using a dot syntax. Example: id,model,properties.price
+     * 
      * @queryParam order-by A comma separated lis of fields to order by. Example: model,properties.price:desc,contents.title
      * @queryParam where A comma separated list of cond∫itions to met, Example: created_at>2020-01-01,properties.isImage,properties.format:png,model:medium
      * @queryParam with A comma separated list of relationships should be included in the result. Example: media,contents,entities_related, entities_related.contents (nested relations)
@@ -57,60 +58,15 @@ class EntityController extends BaseController
      */
     public function index(Request $request)
     {
-        $request->validate($this->queryParamsValidation());
+        $validatedParams = $request->validate($this->queryParamsValidation());
         $lang = $request->get('lang') ?? Config::get('kusikusi_website.langs')[0] ?? '';
         $modelClassName = Entity::getEntityClassName($request->get('of-model') ?? 'Entity');
         
-        //Start the query
         $entities = $modelClassName::query();
-
-        // Add selects
         $entities = $this->addSelects($entities, $request, $lang, $modelClassName);
-        
+        $entities = $this->addScopes($entities, $request, $lang, $modelClassName);
         // Filters
-        $entities
-        ->when($request->get('of-model'), function ($q) use ($request) {
-            return $q->ofModel($request->get('of-model'));
-        })
-        ->when($request->exists('only-published') && ($request->get('only-published') === 'true' || $request->get('only-published') === ''), function ($q) use ($request) {
-            return $q->isPublished();
-        })
-        ->when($request->get('children-of'), function ($q) use ($request) {
-            return $q->childrenOf($request->get('children-of'));
-        })
-        ->when($request->get('parent-of'), function ($q) use ($request) {
-            return $q->parentOf($request->get('parent-of'));
-        })
-        ->when($request->get('ancestors-of'), function ($q) use ($request) {
-            return $q->ancestorsOf($request->get('ancestors-of'));
-        })
-        ->when($request->get('descendants-of'), function ($q) use ($request) {
-            return $q->descendantsOf($request->get('descendants-of'));
-        })
-        ->when($request->get('siblings-of'), function ($q) use ($request) {
-            return $q->siblingsOf($request->get('siblings-of'));
-        })
-        ->when($request->get('related-by'), function ($q) use ($request) {
-            $values = explode(":", $request->get('related-by'));
-            if (isset($values[1])) {
-                return $q->relatedBy($values[0], $values[1]);
-            } else {
-                return $q->relatedBy($values[0]);
-            }
-
-        })
-        ->when($request->get('relating'), function ($q) use ($request) {
-            $values = explode(":", $request->get('relating'));
-            if (isset($values[1])) {
-                return $q->relating($values[0], $values[1]);
-            } else {
-                return $q->relating($values[0]);
-            }
-
-        })
-        ->when($request->get('media-of'), function ($q) use ($request) {
-            return $q->mediaOf($request->get('media-of'));
-        });
+        
         $entities = $entities
             ->paginate($request
             ->get('per-page') ? intval($request->get('per-page')) : Config::get('kusikusi_api.page_size', 100))
@@ -128,7 +84,7 @@ class EntityController extends BaseController
             'relating' => self::ID_RULE_WITH_FILTER,
             'media-of' => self::ID_RULE,
             'of-model' => self::MODEL_RULE,
-            'only-published' => 'in:true,false',
+            'only-published' => Rule::in(['true', 'false', '']),
         ];
     }
     /**
@@ -197,5 +153,51 @@ class EntityController extends BaseController
                 return $q;
             });
         return $query;
+    }
+    private function addScopes($entities, $request) {
+        $entities
+        ->when($request->get('of-model'), function ($q) use ($request) {
+            return $q->ofModel($request->get('of-model'));
+        })
+        ->when($request->get('only-published') && (($request->get('only-published') === 'true' || $request->get('only-published')) === ''), function ($q) use ($request) {
+            // return $q->isPublished();
+        })
+        ->when($request->get('children-of'), function ($q) use ($request) {
+            return $q->childrenOf($request->get('children-of'));
+        })
+        ->when($request->get('parent-of'), function ($q) use ($request) {
+            return $q->parentOf($request->get('parent-of'));
+        })
+        ->when($request->get('ancestors-of'), function ($q) use ($request) {
+            return $q->ancestorsOf($request->get('ancestors-of'));
+        })
+        ->when($request->get('descendants-of'), function ($q) use ($request) {
+            return $q->descendantsOf($request->get('descendants-of'));
+        })
+        ->when($request->get('siblings-of'), function ($q) use ($request) {
+            return $q->siblingsOf($request->get('siblings-of'));
+        })
+        ->when($request->get('related-by'), function ($q) use ($request) {
+            $values = explode(":", $request->get('related-by'));
+            if (isset($values[1])) {
+                return $q->relatedBy($values[0], $values[1]);
+            } else {
+                return $q->relatedBy($values[0]);
+            }
+
+        })
+        ->when($request->get('relating'), function ($q) use ($request) {
+            $values = explode(":", $request->get('relating'));
+            if (isset($values[1])) {
+                return $q->relating($values[0], $values[1]);
+            } else {
+                return $q->relating($values[0]);
+            }
+
+        })
+        ->when($request->get('media-of'), function ($q) use ($request) {
+            return $q->mediaOf($request->get('media-of'));
+        });
+        return $entities;
     }
 }
