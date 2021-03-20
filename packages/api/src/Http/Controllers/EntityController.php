@@ -3,7 +3,9 @@
 namespace Kusikusi\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Routing\Controller as BaseController;
 use Kusikusi\Models\Entity;
 
@@ -43,10 +45,10 @@ class EntityController extends BaseController
      * @queryParam siblings-of (filter) The id or short id of the entity the result entities should be siblings of. Example: _tuKwVy8Aa
      * @queryParam related-by (filter) The id or short id of the entity the result entities should have been called by using a relation. Can be added a filter to a kind of relation for example: theShortId:category. The ancestor kind of relations are discarted unless are explicity specified. Example: ElFYpgEvWS
      * @queryParam relating (filter) The id or short id of the entity the result entities should have been a caller of using a relation. Can be added a filder to a kind o relation for example: shortFotoId:medium to know the entities has caller that medium. The ancestor kind of relations are discarted unless are explicity specified. Example: enKSUfUcZN
-     * 
      * @queryParam media-of (filter) The id or short id of the entity the result entities should have a media relation to. Example: enKSUfUcZN
-     * @queryParam order-by A comma separated lis of fields to order by. Example: model,properties.price:desc,contents.title
+     * 
      * @queryParam select A comma separated list of fields of the entity to include. It is possible to flat the properties json column using a dot syntax. Example: id,model,properties.price
+     * @queryParam order-by A comma separated lis of fields to order by. Example: model,properties.price:desc,contents.title
      * @queryParam where A comma separated list of cond∫itions to met, Example: created_at>2020-01-01,properties.isImage,properties.format:png,model:medium
      * @queryParam with A comma separated list of relationships should be included in the result. Example: media,contents,entities_related, entities_related.contents (nested relations)
      * @queryParam per-page The amount of entities per page the result should be the amount of entities on a single page. Example: 6
@@ -58,8 +60,15 @@ class EntityController extends BaseController
         $request->validate($this->queryParamsValidation());
         $lang = $request->get('lang') ?? Config::get('kusikusi_website.langs')[0] ?? '';
         $modelClassName = Entity::getEntityClassName($request->get('of-model') ?? 'Entity');
+        
+        //Start the query
+        $entities = $modelClassName::query();
+
+        // Add selects
+        $entities = $this->addSelects($entities, $request, $lang, $modelClassName);
+        
         // Filters
-        $entities = $modelClassName::query()->select('entities.*')
+        $entities
         ->when($request->get('of-model'), function ($q) use ($request) {
             return $q->ofModel($request->get('of-model'));
         })
@@ -121,5 +130,72 @@ class EntityController extends BaseController
             'of-model' => self::MODEL_RULE,
             'only-published' => 'in:true,false',
         ];
+    }
+    /**
+     * Get the parts of a item in the query
+     */
+    private function getParts($item) {
+        $partsParam = explode(':', $item);
+        $partsFields = explode('.', $partsParam[0]);
+        $param = $partsParam[1] ?? null;
+        $object = array_shift($partsFields);
+        return [
+            "relation" => $object,
+            "fields" => $partsFields,
+            "param" => $param
+        ];
+    }
+
+
+    /**
+     * Process the request to know for select query parameter and add the corresponding select statments
+     *
+     * @param $query
+     * @param $request
+     * @return mixed
+     */
+    private function addSelects($query, $request, $lang, $modelClassName) {
+        // Selects
+        $query->when(!$request->exists('select'), function ($q) use ($request) {
+            return $q->select('entities.*');
+        })
+            ->when($request->get('select'), function ($q) use ($request, $lang, $modelClassName) {
+                $selects = explode(',', $request->get('select'));
+                foreach (array_merge($selects) as $select) {
+                    $select = explode(":", $select)[0];
+                    if (!in_array($select, $this->addedSelects)) {
+                        $appendContents = [];
+                        $appendContent = [];
+                        if (Str::startsWith( $select, 'properties.')) {
+                            $q->addSelect(str_replace('.', '->', $select));
+                        } else if (Str::startsWith( $select, 'contents.')) {
+                            $contentsParts = $this->getParts($select);
+                            foreach ($contentsParts['fields'] as $field) {
+                                $appendContents[] = $field;
+                            }
+                        } else if (Str::startsWith( $select, 'content.')) {
+                            $contentsParts = $this->getParts($select);
+                            foreach ($contentsParts['fields'] as $field) {
+                                $appendContent[] = $field;
+                            }
+                        } else if ($select === "contents") {
+                            $q->withContents($lang);
+                        } else if ($select === "content") {
+                            $q->withContent($lang);
+                        } else if ($select) {
+                            $q->addSelect($select);
+                        }
+                        if (count($appendContents) > 0) {
+                            $q->withContents($lang, $appendContents);
+                        }
+                        if (count($appendContent) > 0) {
+                            $q->withContent( $lang, $appendContent);
+                        }
+                        $this->addedSelects[] = $select;
+                    }
+                }
+                return $q;
+            });
+        return $query;
     }
 }

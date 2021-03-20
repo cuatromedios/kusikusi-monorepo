@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Support\Arr;
 use PUGX\Shortid\Shortid;
 use Ankurk91\Eloquent\BelongsToOne;
 use Kusikusi\Extensions\EntityCollection;
@@ -725,6 +726,25 @@ class Entity extends Model
             });
         }
         parent::boot();
+
+        static::retrieved(function (Model $entity) {
+            if (!$entity->properties) {
+                $props = [];
+                $prefix1 = "json_unquote(json_extract(`properties`, '$.\"";
+                $prefix2 = 'properties.';
+                foreach ($entity->attributes as $key => $value) {
+                    if (Str::startsWith($key, $prefix1)) {
+                        Arr::set($props, $prefix2.preg_replace("/[\\\")]/", "", Str::after($key, $prefix1)), $value);
+                        unset($entity->attributes[$key]);
+                    }
+                    if (Str::startsWith($key, $prefix2)) {
+                        Arr::set($props, $key, $value);
+                        unset($entity->attributes[$key]);
+                    }
+                }
+                if (!empty($props)) $entity->properties = $props['properties'];
+            }
+        });
         static::creating(function (Model $entity) {
 
             // Set a default id

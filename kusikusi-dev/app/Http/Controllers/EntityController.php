@@ -15,7 +15,7 @@ class EntityController extends Controller
      */
     public function index()
     {
-        $entities = Entity::select()
+        $entities = Entity::select('id', 'properties->format', 'properties->size as properties.size', 'properties->exif->COMPUTED->IsColor')
         ->withContent()
         ->orderBy('created_at')
         ->get();
@@ -56,7 +56,7 @@ class EntityController extends Controller
      */
     public function show($id)
     {
-        $entity = Entity::findOrFail($id);
+        $entity = Entity::select('id', 'properties->p1 as properties.p1', 'properties->p2 as properties.p2')->findOrFail($id);
         $entityWithContents = Entity::select('id', 'model')
             ->withContents('en', 'title')
             ->findOrFail($id);

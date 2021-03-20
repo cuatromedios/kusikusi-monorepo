@@ -34,3 +34,24 @@ GET http://{{host}}/api/entities?relating=Home HTTP/1.1
 
 ### Get media of an entity
 GET http://{{host}}/api/entities?media-of=child_1 HTTP/1.1
+
+
+# SELECTS
+
+### Select entity fields
+GET http://{{host}}/api/entities?select=id,model HTTP/1.1
+
+### Select properties fields
+GET http://{{host}}/api/entities?select=id,properties.format,properties.size HTTP/1.1
+
+### Select all content fields as raw
+GET http://{{host}}/api/entities?select=id,contents HTTP/1.1
+
+### Select all content fields as plucked
+GET http://{{host}}/api/entities?select=id,content&lang=es HTTP/1.1
+
+### Select some content fields as raw
+GET http://{{host}}/api/entities?select=id,contents.title HTTP/1.1
+
+### Select some content fields as plucked
+GET http://{{host}}/api/entities?select=id,content.title HTTP/1.1
