@@ -49,11 +49,11 @@ class EntityController extends BaseController
      * @queryParam media-of (filter) The id or short id of the entity the result entities should have a media relation to. Example: enKSUfUcZN
      * @queryParam select A comma separated list of fields of the entity to include. It is possible to flat the properties json column using a dot syntax. Example: id,model,properties.price
      * @queryParam order-by A comma separated lis of fields to order by. Example: model,properties.price:desc,content.title
-     * 
-     * @queryParam where A comma separated list of cond∫itions to met, Example: created_at>2020-01-01,properties.isImage,properties.format:png,model:medium
-     * @queryParam with A comma separated list of relationships should be included in the result. Example: media,contents,entities_related, entities_related.contents (nested relations)
      * @queryParam per-page The amount of entities per page the result should be the amount of entities on a single page. Example: 6
      * @queryParam page The number of page to display, 1 by default
+     * 
+     * @queryParam where A comma separated list of conditions to met, Example: created_at>2020-01-01,properties.isImage,properties.format:png,model:medium
+     * @queryParam with A comma separated list of relationships should be included in the result. Example: media,contents,entities_related, entities_related.contents (nested relations)
      * @responseFile responses/entities.index.json
      * @return \Illuminate\Http\JsonResponse
      */

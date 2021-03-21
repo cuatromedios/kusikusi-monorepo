@@ -105,8 +105,9 @@ accept: application/json
 
 
 ###############
-# PAGINATION AND LIMITS
+# PAGINATION
 ###############
 
 GET http://{{host}}/api/entities?select=id&per-page=5&page=2 HTTP/1.1
 accept: application/json
+
