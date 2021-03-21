@@ -264,6 +264,12 @@ class EntityController extends BaseController
                     case 'route':
                         $q->withRoute($lang);
                         break;
+                    case 'medium':
+                        $q->withMedium($with['option'], null, $lang);
+                        break;
+                    case 'media':
+                        $q->withMedia($with['option'], null, $lang);
+                        break;
                     case 'contents':
                         $q->withContents($lang);
                         break;

@@ -527,7 +527,8 @@ class Entity extends Model
      * @return Builder
      */
 
-    public function scopeWithMedium($query, $tag = null, $fields = ['id', 'properties'], $lang = null, $content_fields = 'title') {
+    public function scopeWithMedium($query, $tag = null, $fields = null, $lang = null, $content_fields = 'title') {
+        $fields = $fields === null ? ['id', 'properties->format', 'properties->mimeType', 'properties->isWebImage', 'properties->isImage', 'properties->isAudio', 'properties->isWebAudio', 'properties->isVideo', 'properties->isWebVideo', 'properties->isDocument'] : $fields;
         $query->withRelation('medium', $tag, $fields, $lang, $content_fields);
     }
 
@@ -579,7 +580,8 @@ class Entity extends Model
      * @param  string $content_fields Restrict the content fields of the media, or 'title' if ommited
      * @return Builder
      */
-    public function scopeWithMedia($query, $tag = null, $fields = ['id', 'properties'], $lang = null, $content_fields = 'title') {
+    public function scopeWithMedia($query, $tag = null, $fields = null, $lang = null, $content_fields = 'title') {
+        $fields = $fields === null ? ['id', 'properties->format', 'properties->mimeType', 'properties->isWebImage', 'properties->isImage', 'properties->isAudio', 'properties->isWebAudio', 'properties->isVideo', 'properties->isWebVideo', 'properties->isDocument'] : $fields;
         $lang = $lang ?? Config::get('kusikusi_website.langs', [''])[0];
         $query->with(['media' => function ($relation) use ($tag, $fields, $lang, $content_fields) {
             $relation->select($fields)

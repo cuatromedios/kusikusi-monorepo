@@ -144,12 +144,21 @@ GET http://{{host}}/api/entities?select=id,model&with=routes HTTP/1.1
 accept: application/json
 
 ### With a defined relation
-GET http://{{host}}/api/entities?select=id,model&with=routes HTTP/1.1
+GET http://{{host}}/api/entities?select=id,model&with=routes,contents&lang=en HTTP/1.1
 accept: application/json
 
 ### With contents relations
 GET http://{{host}}/api/entities?select=id,model&with=contents HTTP/1.1
 accept: application/json
+
+### With media relations
+GET http://{{host}}/api/entities?select=id,model&with=media:icon HTTP/1.1
+accept: application/json
+
+### With specific medium by tag
+GET http://{{host}}/api/entities?select=id,model&with=medium:icon HTTP/1.1
+accept: application/json
+
 
 ### With any relation
 GET http://{{host}}/api/entities?select=id,model&with=entities_related HTTP/1.1
