@@ -29,7 +29,7 @@ GET http://{{host}}/api/entities?ancestors-of=child_2 HTTP/1.1
 accept: application/json
 
 ### Get descendants of an entity
-GET http://{{host}}/api/entities?descendants-of=home HTTP/1.1
+GET http://{{host}}/api/entities?descendants-of=home&select=id,model HTTP/1.1
 accept: application/json
 
 ### Get siblings of an entity
@@ -67,7 +67,7 @@ GET http://{{host}}/api/entities?select=id,contents HTTP/1.1
 accept: application/json
 
 ### Select all content fields as plucked
-GET http://{{host}}/api/entities?select=id,content&lang=es HTTP/1.1
+GET http://{{host}}/api/entities?select=id,content&lang=en HTTP/1.1
 accept: application/json
 
 ### Select some content fields as raw
@@ -88,5 +88,13 @@ accept: application/json
 ###############
 
 ### Order by a entity column
-GET http://{{host}}/api/entities?select=id,model&order-by=model HTTP/1.1
+GET http://{{host}}/api/entities?select=id,model&order-by=model,id:desc HTTP/1.1
+accept: application/json
+
+### Order by a property attribute
+GET http://{{host}}/api/entities?select=id,model,properties.size&order-by=properties.size:asc HTTP/1.1
+accept: application/json
+
+### Order by a tree relation value
+GET http://{{host}}/api/entities?descendants-of=home&select=id,model&order-by=descendant_depth,descendant_position HTTP/1.1
 accept: application/json

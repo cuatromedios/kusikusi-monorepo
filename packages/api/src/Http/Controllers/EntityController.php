@@ -98,18 +98,26 @@ class EntityController extends BaseController
         $paramItems = explode(',', $params);
         foreach($paramItems as $item) {
             $itemParts = explode(':', $item);
-            $itemField = $itemParts[0];
+            $itemFullField = $itemParts[0];
             $itemOption = $itemParts[1] ?? null;
-            $itemFieldParts = explode('.', $itemField);
+            $itemFieldParts = explode('.', $itemFullField);
             $itemTable = isset($itemFieldParts[1]) ? $itemFieldParts[0] : null;
-            $itemField = isset($itemFieldParts[1]) ? Str::after($itemField, $itemTable.'.') : $itemFieldParts[0];
+            $itemField = isset($itemFieldParts[1]) ? Str::after($itemFullField, $itemTable.'.') : $itemFieldParts[0];
             $result[] = [
                 "table" => $itemTable,
                 "field" => $itemField,
-                "option" => $itemOption
+                "option" => $itemOption,
+                "fullField" => $itemFullField
             ];
         }
         return $result;
+    }
+
+    private function ascOrDesc($option) {
+        return Str::lower($option) === 'desc' ? 'DESC' : 'ASC';
+    }
+    private function dotsToArrows($field) {
+        return str_replace('.', '->', $field);
     }
 
 
@@ -131,7 +139,7 @@ class EntityController extends BaseController
                 $appendContents = [];
                 $appendContent = [];
                 if ($item['table'] === 'properties') {
-                    $q->addSelect($item['table'].'->'.str_replace('.', '->', $item['field']));
+                    $q->addSelect($item['table'].'->'.$this->dotsToArrows($item['field']));
                 } else if ($item['table'] ===  'contents') {
                     $appendContents[] =$item['field'];
                 } else if ($item['table'] ===  'content') {
@@ -202,12 +210,16 @@ class EntityController extends BaseController
     }
     private function addOrders($entities, $request) {
         $entities->when($request->get('order-by'), function ($q) use ($request) {
-            $ordersBy = explode(',', $request->get('order-by'));
-            foreach ($orders as $order) {
-                $selectParts = explode(":", $select)[0];
-                $field = $selectParts[0];
-                $fieldParts = explode(":", $select)[0];
-                $order = $selectParts[1] ?? null;
+            $ordersBy = $this->getParts($request->get('order-by'));
+            foreach ($ordersBy as $order) {
+                switch ($order['table']) {
+                    case 'properties':
+                        $q->orderBy($this->dotsToArrows($order['fullField']), $this->ascOrDesc($order['option']));
+                        break;
+                    default:
+                        $q->orderBy($order['field'], $this->ascOrDesc($order['option']));
+                        break;
+                }
             }
         });
         return $entities;
