@@ -51,8 +51,8 @@ class EntityController extends BaseController
      * @queryParam order-by A comma separated lis of fields to order by. Example: model,properties.price:desc,content.title
      * @queryParam per-page The amount of entities per page the result should be the amount of entities on a single page. Example: 6
      * @queryParam page The number of page to display, 1 by default
-     * 
      * @queryParam where A comma separated list of conditions to met, Example: created_at>2020-01-01,properties.isImage,properties.format:png,model:medium
+     * 
      * @queryParam with A comma separated list of relationships should be included in the result. Example: media,contents,entities_related, entities_related.contents (nested relations)
      * @responseFile responses/entities.index.json
      * @return \Illuminate\Http\JsonResponse
@@ -66,6 +66,7 @@ class EntityController extends BaseController
         $entities = $modelClassName::query();
         $entities = $this->addSelects($entities, $request, $lang, $modelClassName);
         $entities = $this->addScopes($entities, $request, $lang, $modelClassName);
+        $entities = $this->addWheres($entities, $request, $lang);
         $entities = $this->addOrders($entities, $request, $lang);
 
         $entities = $entities
@@ -97,7 +98,9 @@ class EntityController extends BaseController
         $result = [];
         $paramItems = explode(',', $params);
         foreach($paramItems as $item) {
-            $itemParts = explode(':', $item);
+            preg_match('/([:!><][:]?)/', $item, $operator_matches);
+            $operator = $operator_matches[0] ?? null;
+            $itemParts = $operator ? explode($operator, $item) : [$item];
             $itemFullField = $itemParts[0];
             $itemOption = $itemParts[1] ?? null;
             $itemFieldParts = explode('.', $itemFullField);
@@ -106,7 +109,8 @@ class EntityController extends BaseController
             $result[] = [
                 "table" => $itemTable,
                 "field" => $itemField,
-                "option" => $itemOption,
+                "option" => \is_numeric($itemOption) ? (float) $itemOption : $itemOption,
+                "operator" => str_replace(':', '=', $operator),
                 "fullField" => $itemFullField
             ];
         }
@@ -222,6 +226,26 @@ class EntityController extends BaseController
                         break;
                     default:
                         $q->orderBy($order['field'], $this->ascOrDesc($order['option']));
+                        break;
+                }
+            }
+        });
+        return $entities;
+    }
+    private function addWheres($entities, $request, $lang) {
+        $entities->when($request->get('where'), function ($q) use ($request, $lang) {
+            $wheres = $this->getParts($request->get('where'));
+            foreach ($wheres as $where) {
+                switch ($where['table']) {
+                    case 'properties':
+                        $q->orderBy($this->dotsToArrows($order['fullField']), $this->ascOrDesc($order['option']));
+                        break;
+                    case 'content':
+                    case 'contents':
+                        $q->orderByContent($this->dotsToArrows($order['field']), $this->ascOrDesc($order['option']), $lang);
+                        break;
+                    default:
+                        $q->where($where['field'], $where['operator'], $where['option']);
                         break;
                 }
             }
