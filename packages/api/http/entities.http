@@ -184,3 +184,23 @@ accept: application/json
 ### With special relations
 GET http://{{host}}/api/entities/home?select=id,model&with=medium HTTP/1.1
 accept: application/json
+
+###############
+# Creation
+###############
+
+### Create an entity
+POST http://{{host}}/api/entities HTTP/1.1
+content-type: application/json
+accept: application/json
+
+{
+    "model": "Page",
+    "properties": {"a": "b"},
+    "parent_entity_id": "home",
+    "view": "page",
+    "visibility": "private",
+    "published_at": "2020-02-02T12:00:00-06:00"
+}
+
+###
