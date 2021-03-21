@@ -480,15 +480,13 @@ class Entity extends Model
      * @return \Illuminate\Database\Eloquent\Builder
      * @throws \Exception
      */
-    public function scopeWithRoute($query, $lang = null, $kind = null)
+    public function scopeWithRoute($query, $lang = null, $kind = 'main')
     {
         return $query->with(['route' => function($q) use ($lang, $kind) {
             $q->when($lang !== null, function ($q) use ($lang) {
                 return $q->where('lang', $lang);
-            });
-            $q->when($kind !== null, function ($q) use ($kind) {
-                return $q->where('kind', $kind);
-            });
+            })
+            ->where('kind', $kind);
         }]);
     }
 
@@ -664,7 +662,7 @@ class Entity extends Model
         ->where("content_{$field}.text", $operator, $value);
     }
     public function scopeWhereContents($query, $field, $param2, $param3, $param4) {
-        return $this->scopeWithContent($query, $field, $param2, $param3, $param4);
+        return $this->scopeWhereContent($query, $field, $param2, $param3, $param4);
     }
 
     /**

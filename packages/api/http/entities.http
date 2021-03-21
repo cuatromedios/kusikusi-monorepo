@@ -126,9 +126,31 @@ GET http://{{host}}/api/entities?select=id,model,properties.size&where=propertie
 accept: application/json
 
 ### Where with content fields
-GET http://{{host}}/api/entities?select=id,model,content&where=content.title:The medium 4 HTTP/1.1
+GET http://{{host}}/api/entities?select=id,model,content&where=content.title:null&lang=en HTTP/1.1
 accept: application/json
 
 ### Where with nulls
 GET http://{{host}}/api/entities?select=id,model,properties.size&where=properties.size!:null HTTP/1.1
+accept: application/json
+
+
+
+###############
+# WITHS
+###############
+
+### With a defined relation
+GET http://{{host}}/api/entities?select=id,model&with=routes HTTP/1.1
+accept: application/json
+
+### With a defined relation
+GET http://{{host}}/api/entities?select=id,model&with=routes HTTP/1.1
+accept: application/json
+
+### With contents relations
+GET http://{{host}}/api/entities?select=id,model&with=contents HTTP/1.1
+accept: application/json
+
+### With any relation
+GET http://{{host}}/api/entities?select=id,model&with=entities_related HTTP/1.1
 accept: application/json

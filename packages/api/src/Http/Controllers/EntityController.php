@@ -53,15 +53,14 @@ class EntityController extends BaseController
      * @queryParam per-page The amount of entities per page the result should be the amount of entities on a single page. Example: 6
      * @queryParam page The number of page to display, 1 by default
      * @queryParam where A comma separated list of conditions to met, Example: created_at>2020-01-01,content.title:The%20title,properties.format:png,model:medium
-     * 
      * @queryParam with A comma separated list of relationships should be included in the result. Example: media,contents,entities_related, entities_related.contents (nested relations)
-     * @responseFile responses/entities.index.json
      * @return \Illuminate\Http\JsonResponse
      */
     public function index(Request $request)
     {
         $validatedParams = $request->validate($this->queryParamsValidation());
         $lang = $request->get('lang') ?? Config::get('kusikusi_website.langs')[0] ?? '';
+        $receivedLang = $request->get('lang') ?? null;
         $modelClassName = Entity::getEntityClassName($request->get('of-model') ?? 'Entity');
         
         $entities = $modelClassName::query();
@@ -69,6 +68,7 @@ class EntityController extends BaseController
         $entities = $this->addScopes($entities, $request, $lang, $modelClassName);
         $entities = $this->addWheres($entities, $request, $lang);
         $entities = $this->addOrders($entities, $request, $lang);
+        $entities = $this->addWiths($entities, $request, $receivedLang);
 
         $entities = $entities
             ->paginate($request
@@ -248,6 +248,30 @@ class EntityController extends BaseController
                     default:
                         $q->where($where['field'], $where['operator'], $where['option']);
                         break;
+                }
+            }
+        });
+        return $entities;
+    }
+    private function addWiths($entities, $request, $lang) {
+        $entities->when($request->get('with'), function ($q) use ($request, $lang) {
+            $withs = $this->getParts($request->get('with'));
+            foreach ($withs as $with) {
+                switch($with['field']) {
+                    case 'routes':
+                        $q->withRoutes($lang);
+                        break;
+                    case 'route':
+                        $q->withRoute($lang);
+                        break;
+                    case 'contents':
+                        $q->withContents($lang);
+                        break;
+                    case 'content':
+                        $q->withContent($lang);
+                        break;
+                    default:
+                        $q->with($with['field']);
                 }
             }
         });
