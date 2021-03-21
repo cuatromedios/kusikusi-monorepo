@@ -66,7 +66,7 @@ class HtmlController extends Controller
             "ancestors" => Entity::select('id', 'model')
                 ->ancestorsOf($currentEntity->id)
                 ->descendantsOf('website')
-                ->orderBy('ancestor_relation_depth', 'desc')
+                ->orderBy('ancestor_depth', 'desc')
                 /* ->appendContents(['title'], $request->lang)
                 ->appendRoute($request->lang) */
                 ->get(),

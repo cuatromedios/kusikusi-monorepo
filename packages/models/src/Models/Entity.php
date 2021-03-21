@@ -835,7 +835,7 @@ class Entity extends Model
                     "depth" => 1
                 ]);
                 $depth = 2;
-                $ancestors = Entity::select('id')->ancestorsOf($parentEntity->id)->orderBy('ancestor_relation_depth')->get();
+                $ancestors = Entity::select('id')->ancestorsOf($parentEntity->id)->orderBy('ancestor_depth')->get();
                 foreach ($ancestors as $ancestor) {
                     EntityRelation::create([
                         "caller_entity_id" => $entity->id,
