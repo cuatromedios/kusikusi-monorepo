@@ -638,6 +638,36 @@ class Entity extends Model
     }
 
     /**
+     * Scope to filter by a content field.
+     *
+     * @param Builder $query
+     * @return Builder
+     * @throws \Exception
+     */
+    public function scopeWhereContent($query, $field, $param2, $param3, $param4)
+    {
+        if (Str::contains($param2, ['=', '<', '>', 'like'])) {
+            $operator = $param2;
+            $value = $param3;
+            $lang = $param4;
+        } else {
+            $operator = '=';
+            $value = $param2;
+            $lang = $param3;
+        }
+        $query->leftJoin("entities_contents as content_{$field}", function ($join) use ($field, $lang) {
+            $join->on("content_{$field}.entity_id", "entities.id")
+                ->where("content_{$field}.field", $field)
+                ->where("content_{$field}.lang", $lang)
+            ;
+        })
+        ->where("content_{$field}.text", $operator, $value);
+    }
+    public function scopeWhereContents($query, $field, $param2, $param3, $param4) {
+        return $this->scopeWithContent($query, $field, $param2, $param3, $param4);
+    }
+
+    /**
      * AGGREGATES
      */
 

@@ -99,8 +99,8 @@ accept: application/json
 GET http://{{host}}/api/entities?descendants-of=home&select=id,model&order-by=descendant_depth:desc,descendant_position HTTP/1.1
 accept: application/json
 
-### Order by conten fields
-GET http://{{host}}/api/entities?descendants-of=home&select=id,model,content&order-by=content.slug:desc,content.title HTTP/1.1
+### Order by content fields
+GET http://{{host}}/api/entities?descendants-of=home&select=id,model,content&order-by=content.slug:desc,content.title:desc HTTP/1.1
 accept: application/json
 
 
@@ -117,6 +117,18 @@ accept: application/json
 # FILTERS
 ###############
 
-### Where an entity field is equal to
-GET http://{{host}}/api/entities?select=id,model&where=model!:Entity HTTP/1.1
+### Where with entitie field
+GET http://{{host}}/api/entities?select=id,model,version&where=version>1 HTTP/1.1
+accept: application/json
+
+### Where with properties fields
+GET http://{{host}}/api/entities?select=id,model,properties.size&where=properties.size>25000 HTTP/1.1
+accept: application/json
+
+### Where with content fields
+GET http://{{host}}/api/entities?select=id,model,content&where=content.title:The medium 4 HTTP/1.1
+accept: application/json
+
+### Where with nulls
+GET http://{{host}}/api/entities?select=id,model,properties.size&where=properties.size!:null HTTP/1.1
 accept: application/json

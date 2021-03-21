@@ -37,6 +37,7 @@ class EntityController extends BaseController
      *
      * @group Entity
      * @authenticated
+     * @queryParam language The identification of the language to use for select, where and order by content fields, for example en, es, en-US, etc.
      * @queryParam of-model (filter) The name of the model the entities should be, this will also call the query using the given model and not the default Entity model. Example: Medium, Page
      * @queryParam only-published (filter) Get only published, not deleted entities, true if not set. Example: true
      * @queryParam children-of (filter) The id or short id of the entity the result entities should be child of. Example: home
@@ -47,11 +48,11 @@ class EntityController extends BaseController
      * @queryParam related-by (filter) The id or short id of the entity the result entities should have been called by using a relation. Can be added a filter to a kind of relation for example: theShortId:category. The ancestor kind of relations are discarted unless are explicity specified. Example: ElFYpgEvWS
      * @queryParam relating (filter) The id or short id of the entity the result entities should have been a caller of using a relation. Can be added a filder to a kind o relation for example: shortFotoId:medium to know the entities has caller that medium. The ancestor kind of relations are discarted unless are explicity specified. Example: enKSUfUcZN
      * @queryParam media-of (filter) The id or short id of the entity the result entities should have a media relation to. Example: enKSUfUcZN
-     * @queryParam select A comma separated list of fields of the entity to include. It is possible to flat the properties json column using a dot syntax. Example: id,model,properties.price
+     * @queryParam select A comma separated list of fields of the entity to include. It is possible to use a dot syntax the properties and content column. Example: id,model,properties.price,content.title
      * @queryParam order-by A comma separated lis of fields to order by. Example: model,properties.price:desc,content.title
      * @queryParam per-page The amount of entities per page the result should be the amount of entities on a single page. Example: 6
      * @queryParam page The number of page to display, 1 by default
-     * @queryParam where A comma separated list of conditions to met, Example: created_at>2020-01-01,properties.isImage,properties.format:png,model:medium
+     * @queryParam where A comma separated list of conditions to met, Example: created_at>2020-01-01,content.title:The%20title,properties.format:png,model:medium
      * 
      * @queryParam with A comma separated list of relationships should be included in the result. Example: media,contents,entities_related, entities_related.contents (nested relations)
      * @responseFile responses/entities.index.json
@@ -98,7 +99,7 @@ class EntityController extends BaseController
         $result = [];
         $paramItems = explode(',', $params);
         foreach($paramItems as $item) {
-            preg_match('/([:!><][:]?)/', $item, $operator_matches);
+            preg_match('/([:!><][:>]?)/', $item, $operator_matches);
             $operator = $operator_matches[0] ?? null;
             $itemParts = $operator ? explode($operator, $item) : [$item];
             $itemFullField = $itemParts[0];
@@ -109,7 +110,7 @@ class EntityController extends BaseController
             $result[] = [
                 "table" => $itemTable,
                 "field" => $itemField,
-                "option" => \is_numeric($itemOption) ? (float) $itemOption : $itemOption,
+                "option" => is_numeric($itemOption) ? (float) $itemOption : ($itemOption === 'null' ? null : $itemOption),
                 "operator" => str_replace(':', '=', $operator),
                 "fullField" => $itemFullField
             ];
@@ -222,7 +223,7 @@ class EntityController extends BaseController
                         break;
                     case 'content':
                     case 'contents':
-                        $q->orderByContent($this->dotsToArrows($order['field']), $this->ascOrDesc($order['option']), $lang);
+                        $q->orderByContent($order['field'], $this->ascOrDesc($order['option']), $lang);
                         break;
                     default:
                         $q->orderBy($order['field'], $this->ascOrDesc($order['option']));
@@ -238,11 +239,11 @@ class EntityController extends BaseController
             foreach ($wheres as $where) {
                 switch ($where['table']) {
                     case 'properties':
-                        $q->orderBy($this->dotsToArrows($order['fullField']), $this->ascOrDesc($order['option']));
+                        $q->where($this->dotsToArrows($where['fullField']), $where['operator'], $where['option']);
                         break;
                     case 'content':
                     case 'contents':
-                        $q->orderByContent($this->dotsToArrows($order['field']), $this->ascOrDesc($order['option']), $lang);
+                        $q->whereContent($where['field'], $where['operator'], $where['option'], $lang);
                         break;
                     default:
                         $q->where($where['field'], $where['operator'], $where['option']);
