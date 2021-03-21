@@ -156,10 +156,31 @@ GET http://{{host}}/api/entities?select=id,model&with=media:icon HTTP/1.1
 accept: application/json
 
 ### With specific medium by tag
-GET http://{{host}}/api/entities?select=id,model&with=medium:icon HTTP/1.1
+GET http://{{host}}/api/entities?select=id,model&with=medium:slide HTTP/1.1
 accept: application/json
 
 
 ### With any relation
 GET http://{{host}}/api/entities?select=id,model&with=entities_related HTTP/1.1
+accept: application/json
+
+
+###############
+# ONE ENTITY
+###############
+
+### Raw
+GET http://{{host}}/api/entities/home HTTP/1.1
+accept: application/json
+
+### With some fields
+GET http://{{host}}/api/entities/home?select=id,model HTTP/1.1
+accept: application/json
+
+### With contents
+GET http://{{host}}/api/entities/home?select=id,model,content,properties HTTP/1.1
+accept: application/json
+
+### With special relations
+GET http://{{host}}/api/entities/home?select=id,model&with=medium HTTP/1.1
 accept: application/json

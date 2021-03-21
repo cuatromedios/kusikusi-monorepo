@@ -19,3 +19,4 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 });
 Route::get('/entities', [EntityController::class, 'index']);
+Route::get('/entities/{entity_id}', [EntityController::class, 'show']);

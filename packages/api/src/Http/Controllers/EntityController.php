@@ -37,7 +37,7 @@ class EntityController extends BaseController
      *
      * @group Entity
      * @authenticated
-     * @queryParam language The identification of the language to use for select, where and order by content fields, for example en, es, en-US, etc.
+     * @queryParam lang The identification of the language to use for select, where and order by content fields, for example en, es, en-US, etc.
      * @queryParam of-model (filter) The name of the model the entities should be, this will also call the query using the given model and not the default Entity model. Example: Medium, Page
      * @queryParam only-published (filter) Get only published, not deleted entities, true if not set. Example: true
      * @queryParam children-of (filter) The id or short id of the entity the result entities should be child of. Example: home
@@ -53,7 +53,7 @@ class EntityController extends BaseController
      * @queryParam per-page The amount of entities per page the result should be the amount of entities on a single page. Example: 6
      * @queryParam page The number of page to display, 1 by default
      * @queryParam where A comma separated list of conditions to met, Example: created_at>2020-01-01,content.title:The%20title,properties.format:png,model:medium
-     * @queryParam with A comma separated list of relationships should be included in the result. Example: media,contents,entities_related, entities_related.contents (nested relations)
+     * @queryParam with A comma separated list of relationships should be included in the result. Example: media,contents,entities_related,route
      * @return \Illuminate\Http\JsonResponse
      */
     public function index(Request $request)
@@ -76,6 +76,36 @@ class EntityController extends BaseController
             ->withQueryString();
         return $entities;
     }
+/**
+     * Retrieve the entity for the given ID.
+     *
+     * @group Entity
+     * @authenticated
+     * @urlParam entity_id The id of the entity to show.
+     * @queryParam lang The identification of the language to use for select, where and order by content fields, for example en, es, en-US, etc.
+     * @queryParam select select A comma separated list of fields of the entity to include. It is possible to use a dot syntax the properties and content column. Example: id,model,properties.price,content.title
+     * @queryParam @queryParam with A comma separated list of relationships should be included in the result. Example: media,contents,entities_related,route
+     * @responseFile responses/entities.show.json
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function show(Request $request, $entity_id)
+    {
+        $validatedParams = $request->validate($this->queryParamsValidation());
+        $lang = $request->get('lang') ?? Config::get('kusikusi_website.langs')[0] ?? '';
+        $receivedLang = $request->get('lang') ?? null;
+        $entityFound = Entity::select('id', 'model')
+            ->where('id', $entity_id)
+            ->firstOrFail();
+        $modelClassName = Entity::getEntityClassName(Str::singular($entityFound->model));
+        $entity = $modelClassName::select('id');
+        $entity = $this->addSelects($entity, $request, $lang, $modelClassName);
+        $entity = $this->addWiths($entity, $request, $receivedLang);
+        return $entity->findOrFail($entityFound->id);;
+    }
+
+
+
+
     private function queryParamsValidation() {
         return [
             'children-of' => self::ID_RULE,
