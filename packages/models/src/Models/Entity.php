@@ -734,11 +734,11 @@ class Entity extends Model
                 $prefix2 = 'properties.';
                 foreach ($entity->attributes as $key => $value) {
                     if (Str::startsWith($key, $prefix1)) {
-                        Arr::set($props, $prefix2.preg_replace("/[\\\")]/", "", Str::after($key, $prefix1)), $value);
+                        Arr::set($props, $prefix2.preg_replace("/[\\\"\')]/", "", Str::after($key, $prefix1)), Str::startsWith($value, '[') ||  Str::startsWith($value, '{') ? json_decode($value) : (is_numeric($value) ? (float) $value : $value));
                         unset($entity->attributes[$key]);
                     }
                     if (Str::startsWith($key, $prefix2)) {
-                        Arr::set($props, $key, $value);
+                        Arr::set($props, $key, !Str::startsWith($value, '"') ?  json_decode($value) : $value);
                         unset($entity->attributes[$key]);
                     }
                 }

@@ -9,43 +9,39 @@ accept: application/json
 ##############
 
 ### Get only entities of a model
-GET http://{{host}}/api/entities?of-model=Medium-A HTTP/1.1
+GET http://{{host}}/api/entities?of-model=Medium HTTP/1.1
 accept: application/json
 
 ### Get only published entities
-GET http://{{host}}/api/entities?only-published=dd HTTP/1.1
+GET http://{{host}}/api/entities?only-published HTTP/1.1
 accept: application/json
 
 ### Get child of an entity
 GET http://{{host}}/api/entities?children-of=home HTTP/1.1
 accept: application/json
 
-### Get children of an entity
-GET http://{{host}}/api/entities?children-of=home&order-by=children_relation_position HTTP/1.1
-accept: application/json
-
 ### Get parent of an entity
-GET http://{{host}}/api/entities?parent-of=Home HTTP/1.1
+GET http://{{host}}/api/entities?parent-of=child_2 HTTP/1.1
 accept: application/json
 
 ### Get ancestors of an entity
-GET http://{{host}}/api/entities?ancestors-of=M4t4OxBI1C HTTP/1.1
+GET http://{{host}}/api/entities?ancestors-of=child_2 HTTP/1.1
 accept: application/json
 
 ### Get descendants of an entity
-GET http://{{host}}/api/entities?descendants-of=Contact HTTP/1.1
+GET http://{{host}}/api/entities?descendants-of=home HTTP/1.1
 accept: application/json
 
 ### Get siblings of an entity
-GET http://{{host}}/api/entities?siblings-of=Contact HTTP/1.1
+GET http://{{host}}/api/entities?siblings-of=child_2 HTTP/1.1
 accept: application/json
 
 ### Get related-by an entity
-GET http://{{host}}/api/entities?related-by=Contact HTTP/1.1
+GET http://{{host}}/api/entities?related-by=home HTTP/1.1
 accept: application/json
 
 ### Get relating an entity
-GET http://{{host}}/api/entities?relating=Home HTTP/1.1
+GET http://{{host}}/api/entities?relating=home HTTP/1.1
 accept: application/json
 
 ### Get media of an entity
@@ -80,4 +76,17 @@ accept: application/json
 
 ### Select some content fields as plucked
 GET http://{{host}}/api/entities?select=id,content.title HTTP/1.1
+accept: application/json
+
+### Combination
+GET http://{{host}}/api/entities?select=id,properties.format,content.title&lang=en HTTP/1.1
+accept: application/json
+
+
+###############
+# ORDER
+###############
+
+### Order by a entity column
+GET http://{{host}}/api/entities?select=id,model&order-by=model HTTP/1.1
 accept: application/json

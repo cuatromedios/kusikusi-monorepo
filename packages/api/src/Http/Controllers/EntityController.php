@@ -65,6 +65,7 @@ class EntityController extends BaseController
         $entities = $modelClassName::query();
         $entities = $this->addSelects($entities, $request, $lang, $modelClassName);
         $entities = $this->addScopes($entities, $request, $lang, $modelClassName);
+        $entities = $this->addOrders($entities, $request);
         // Filters
         
         $entities = $entities
@@ -88,18 +89,27 @@ class EntityController extends BaseController
         ];
     }
     /**
-     * Get the parts of a item in the query
+     * Get the parts of a param string in the query with the format table.field:option,table.field:option
+     * @param $params String The url string of a param, for example model,content.title,properties.size:desc
+     * @return Array With the parts like [["table"=>"entities", "field"=>"model", "option":"desc"],[...]]
      */
-    private function getParts($item) {
-        $partsParam = explode(':', $item);
-        $partsFields = explode('.', $partsParam[0]);
-        $param = $partsParam[1] ?? null;
-        $object = array_shift($partsFields);
-        return [
-            "relation" => $object,
-            "fields" => $partsFields,
-            "param" => $param
-        ];
+    private function getParts(String $params) {
+        $result = [];
+        $paramItems = explode(',', $params);
+        foreach($paramItems as $item) {
+            $itemParts = explode(':', $item);
+            $itemField = $itemParts[0];
+            $itemOption = $itemParts[1] ?? null;
+            $itemFieldParts = explode('.', $itemField);
+            $itemTable = isset($itemFieldParts[1]) ? $itemFieldParts[0] : null;
+            $itemField = isset($itemFieldParts[1]) ? Str::after($itemField, $itemTable.'.') : $itemFieldParts[0];
+            $result[] = [
+                "table" => $itemTable,
+                "field" => $itemField,
+                "option" => $itemOption
+            ];
+        }
+        return $result;
     }
 
 
@@ -115,43 +125,33 @@ class EntityController extends BaseController
         $query->when(!$request->exists('select'), function ($q) use ($request) {
             return $q->select('entities.*');
         })
-            ->when($request->get('select'), function ($q) use ($request, $lang, $modelClassName) {
-                $selects = explode(',', $request->get('select'));
-                foreach (array_merge($selects) as $select) {
-                    $select = explode(":", $select)[0];
-                    if (!in_array($select, $this->addedSelects)) {
-                        $appendContents = [];
-                        $appendContent = [];
-                        if (Str::startsWith( $select, 'properties.')) {
-                            $q->addSelect(str_replace('.', '->', $select));
-                        } else if (Str::startsWith( $select, 'contents.')) {
-                            $contentsParts = $this->getParts($select);
-                            foreach ($contentsParts['fields'] as $field) {
-                                $appendContents[] = $field;
-                            }
-                        } else if (Str::startsWith( $select, 'content.')) {
-                            $contentsParts = $this->getParts($select);
-                            foreach ($contentsParts['fields'] as $field) {
-                                $appendContent[] = $field;
-                            }
-                        } else if ($select === "contents") {
-                            $q->withContents($lang);
-                        } else if ($select === "content") {
-                            $q->withContent($lang);
-                        } else if ($select) {
-                            $q->addSelect($select);
-                        }
-                        if (count($appendContents) > 0) {
-                            $q->withContents($lang, $appendContents);
-                        }
-                        if (count($appendContent) > 0) {
-                            $q->withContent( $lang, $appendContent);
-                        }
-                        $this->addedSelects[] = $select;
-                    }
+        ->when($request->get('select'), function ($q) use ($request, $lang, $modelClassName) {
+            $items = $this->getParts($request->get('select'));
+            foreach ($items as $item) {
+                $appendContents = [];
+                $appendContent = [];
+                if ($item['table'] === 'properties') {
+                    $q->addSelect($item['table'].'->'.str_replace('.', '->', $item['field']));
+                } else if ($item['table'] ===  'contents') {
+                    $appendContents[] =$item['field'];
+                } else if ($item['table'] ===  'content') {
+                    $appendContent[] = $item['field'];
+                } else if ($item['field'] === "contents") {
+                    $q->withContents($lang);
+                } else if ($item['field'] === "content") {
+                    $q->withContent($lang);
+                } else if ($item['field']) {
+                    $q->addSelect($item['field']);
                 }
-                return $q;
-            });
+                if (count($appendContents) > 0) {
+                    $q->withContents($lang, $appendContents);
+                }
+                if (count($appendContent) > 0) {
+                    $q->withContent( $lang, $appendContent);
+                }
+            }
+            return $q;
+        });
         return $query;
     }
     private function addScopes($entities, $request) {
@@ -197,6 +197,18 @@ class EntityController extends BaseController
         })
         ->when($request->get('media-of'), function ($q) use ($request) {
             return $q->mediaOf($request->get('media-of'));
+        });
+        return $entities;
+    }
+    private function addOrders($entities, $request) {
+        $entities->when($request->get('order-by'), function ($q) use ($request) {
+            $ordersBy = explode(',', $request->get('order-by'));
+            foreach ($orders as $order) {
+                $selectParts = explode(":", $select)[0];
+                $field = $selectParts[0];
+                $fieldParts = explode(":", $select)[0];
+                $order = $selectParts[1] ?? null;
+            }
         });
         return $entities;
     }
