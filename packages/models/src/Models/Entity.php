@@ -616,6 +616,28 @@ class Entity extends Model
     }
 
     /**
+     * Scope to order the result by a content field.
+     *
+     * @param Builder $query
+     * @param number $entity_id The id of the entity calling the media
+     * @return Builder
+     * @throws \Exception
+     */
+    public function scopeOrderByContent($query, $field, $order = 'ASC', $lang)
+    {
+        $query->leftJoin("entities_contents as content_{$field}", function ($join) use ($field, $lang, $order) {
+            $join->on("content_{$field}.entity_id", "entities.id")
+                ->where("content_{$field}.field", $field)
+                ->where("content_{$field}.lang", $lang)
+            ;
+        })
+        ->orderBy("content_{$field}.text", $order);
+    }
+    public function scopeOrderByContents($query, $field, $order, $lang = null) {
+        return $this->scopeOrderByContent($query, $field, $order, $lang);
+    }
+
+    /**
      * AGGREGATES
      */
 

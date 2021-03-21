@@ -96,5 +96,9 @@ GET http://{{host}}/api/entities?select=id,model,properties.size&order-by=proper
 accept: application/json
 
 ### Order by a tree relation value
-GET http://{{host}}/api/entities?descendants-of=home&select=id,model&order-by=descendant_depth,descendant_position HTTP/1.1
+GET http://{{host}}/api/entities?descendants-of=home&select=id,model&order-by=descendant_depth:desc,descendant_position HTTP/1.1
+accept: application/json
+
+### Order by conten fields
+GET http://{{host}}/api/entities?descendants-of=home&select=id,model,content&order-by=content.slug:desc,content.title HTTP/1.1
 accept: application/json

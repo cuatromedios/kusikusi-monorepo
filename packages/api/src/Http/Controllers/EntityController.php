@@ -49,7 +49,7 @@ class EntityController extends BaseController
      * @queryParam media-of (filter) The id or short id of the entity the result entities should have a media relation to. Example: enKSUfUcZN
      * @queryParam select A comma separated list of fields of the entity to include. It is possible to flat the properties json column using a dot syntax. Example: id,model,properties.price
      * 
-     * @queryParam order-by A comma separated lis of fields to order by. Example: model,properties.price:desc,contents.title
+     * @queryParam order-by A comma separated lis of fields to order by. Example: model,properties.price:desc,content.title
      * @queryParam where A comma separated list of cond∫itions to met, Example: created_at>2020-01-01,properties.isImage,properties.format:png,model:medium
      * @queryParam with A comma separated list of relationships should be included in the result. Example: media,contents,entities_related, entities_related.contents (nested relations)
      * @queryParam per-page The amount of entities per page the result should be the amount of entities on a single page. Example: 6
@@ -65,9 +65,8 @@ class EntityController extends BaseController
         $entities = $modelClassName::query();
         $entities = $this->addSelects($entities, $request, $lang, $modelClassName);
         $entities = $this->addScopes($entities, $request, $lang, $modelClassName);
-        $entities = $this->addOrders($entities, $request);
-        // Filters
-        
+        $entities = $this->addOrders($entities, $request, $lang);
+
         $entities = $entities
             ->paginate($request
             ->get('per-page') ? intval($request->get('per-page')) : Config::get('kusikusi_api.page_size', 100))
@@ -208,13 +207,17 @@ class EntityController extends BaseController
         });
         return $entities;
     }
-    private function addOrders($entities, $request) {
-        $entities->when($request->get('order-by'), function ($q) use ($request) {
+    private function addOrders($entities, $request, $lang) {
+        $entities->when($request->get('order-by'), function ($q) use ($request, $lang) {
             $ordersBy = $this->getParts($request->get('order-by'));
             foreach ($ordersBy as $order) {
                 switch ($order['table']) {
                     case 'properties':
                         $q->orderBy($this->dotsToArrows($order['fullField']), $this->ascOrDesc($order['option']));
+                        break;
+                    case 'content':
+                    case 'contents':
+                        $q->orderByContent($this->dotsToArrows($order['field']), $this->ascOrDesc($order['option']), $lang);
                         break;
                     default:
                         $q->orderBy($order['field'], $this->ascOrDesc($order['option']));
