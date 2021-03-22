@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Illuminate\Routing\Controller as BaseController;
 use Kusikusi\Models\Entity;
+use Kusikusi\Models\EntityContent;
+use Kusikusi\Models\EntityRoute;
+use Kusikusi\Models\EntityRelation;
 
 class EntityController extends BaseController
 {
@@ -124,26 +127,20 @@ class EntityController extends BaseController
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'model' => 'required|string|max:32',
-            'view' => 'string|max:32',
-            'id' => self::ID_RULE,
-            'parent_entity_id' => self::ID_RULE,
-            'published_at' => self::TIMEZONED_DATE,
-            'unpublished_at' => self::TIMEZONED_DATE,
-            'is_active' => 'boolean'
-        ]);
+        $request->validate($this->entityPlayloadValidation());
         $payload = $request->only('id', 'model', 'properties', 'view', 'langs', 'parent_entity_id', 'visibility', 'published_at', 'unpublished_at');
         $modelClassName = Entity::getEntityClassName(Str::singular($request->model));
-
         $entity = new $modelClassName($payload);
         $entity->save();
-        $createdEntity = $modelClassName::withContents()->withRoutes()->find($entity->id);
+        EntityContent::createFromArray($entity->id, $request->contents);
+        EntityRoute::createFromArray($entity->id, $request->routes, $entity->model);
+        EntityRelation::createFromArray($entity->id, $request->entities_related);
+        $createdEntity = $modelClassName::withContents()->withRoutes()->with('entities_related')->find($entity->id);
         return($createdEntity);
     }
 
 
-
+    // Validations
     private function queryParamsValidation() {
         return [
             'children-of' => self::ID_RULE,
@@ -156,6 +153,25 @@ class EntityController extends BaseController
             'media-of' => self::ID_RULE,
             'of-model' => self::MODEL_RULE,
             'only-published' => Rule::in(['true', 'false', '']),
+        ];
+    }
+    private function entityPlayloadValidation() {
+        return [
+            'model' => 'string|max:32',
+            'view' => 'string|max:32',
+            'id' => self::ID_RULE,
+            'parent_entity_id' => self::ID_RULE,
+            'published_at' => self::TIMEZONED_DATE,
+            'unpublished_at' => self::TIMEZONED_DATE,
+            'is_active' => 'boolean',
+            'contents.*.lang' => 'required_with:contents|string',
+            'contents.*.field' => 'required_with:contents|string',
+            'contents.*.text' => 'required_with:contents|string',
+            'routes.*.path' => 'required_with:routes|string',
+            'routes.*.lang' => 'required_with:routes|string',
+            'routes.*.kind' => 'required_with:routes|string',
+            'relations.*.called_entity_id' => 'required_with:relations|'.self::ID_RULE,
+            'relations.*.kind' => 'required_with:relations|string'
         ];
     }
     /**

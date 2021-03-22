@@ -28,7 +28,29 @@ class EntityRoute extends Model
 
     }
 
-    // Create the automatic created routes
+    /**
+     * Create multiple contents from an array
+     */
+    public static function createFromArray($entity_id, $routes, $model = null) 
+    {
+        if (!$model) {
+            $entity = Entity::find($entity_id);
+            $model = $entity->model ?? 'Entity'; 
+        }
+        foreach($routes as $route){
+            EntityRoute::create([
+                "entity_id" => $entity_id,
+                "lang" => $route['lang'],
+                "kind" => $route['kind'],
+                "entity_model" => $model,
+                "path" => $route['path']
+            ]);
+        }
+    }
+
+     /**
+      *  Create the automatic created routes
+      */
     public static function createFromSlug($entity_id, $lang, $slug) {
         $entity = Entity::withRoute($lang, 'main')->find($entity_id);
         if (!$entity) return;

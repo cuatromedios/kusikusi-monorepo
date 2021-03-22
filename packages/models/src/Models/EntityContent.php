@@ -32,6 +32,22 @@ class EntityContent extends Model
     public function entity($lang = null) {
         return $this->belongsTo('Kusikusi\Models\Entity', 'entity_id', 'id');
     }
+    protected $touches = ['entity'];
+
+    /**
+     * Create multiple contents from an array
+     */
+    public static function createFromArray($entity_id, $contents) 
+    {
+        foreach($contents as $content){
+            EntityContent::create([
+                "entity_id" => $entity_id,
+                "lang" => $content['lang'],
+                "field" => $content['field'],
+                "text" => $content['text'],
+            ]);
+        }
+    }
 
     protected static function boot()
     {

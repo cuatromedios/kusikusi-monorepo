@@ -42,6 +42,25 @@ class EntityRelation extends Pivot
     }
 
     /**
+     * Create multiple contents from an array
+     */
+    public static function createFromArray($entity_id, $relations) 
+    {
+        foreach($relations as $relation){
+            $tags = $relation['tags'] ?? [];
+            if (is_string($tags)) $tags = [$tags];
+            EntityRelation::create([
+                "caller_entity_id" => $entity_id,
+                "called_entity_id" => $relation['called_entity_id'],
+                "kind" => $relation['kind'],
+                "position" => $relation['position'] ?? 0,
+                "depth" => $relation['depth'] ?? 0,
+                "tags" => $tags
+            ]);
+        }
+    }
+
+    /**
      * BOOT
      */
     protected static function boot(){
