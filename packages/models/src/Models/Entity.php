@@ -18,7 +18,6 @@ use Kusikusi\Models\Traits\UsesShortId;
 use Kusikusi\Models\EntityRelation;
 use Kusikusi\Models\EntityArchive;
 use Kusikusi\Models\EntityRoute;
-use Kusikusi\Exceptions\DuplicatedEntityIdException;
 use Kusikusi\Casts\Json;
 use Illuminate\Support\Carbon;
 
@@ -804,7 +803,7 @@ class Entity extends Model
                 $entity->setAttribute($entity->getKeyName(), self::createId());
             } else {
                 if (self::find($entity[$entity->getKeyName()])) {
-                   throw new DuplicatedEntityIdException();
+                   abort(403, 'Duplicated Entity ID '.$entity[$entity->getKeyName()]);
                 }
                 $entity->setAttribute($entity->getKeyName(), substr($entity[$entity->getKeyName()], 0, 32));
             }
