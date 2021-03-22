@@ -216,4 +216,29 @@ accept: application/json
     ]
 }
 
-###
+###############
+# Update
+###############
+
+### Update an entity
+PATCH http://{{host}}/api/entities/tRav5Qqz3L HTTP/1.1
+content-type: application/json
+accept: application/json
+
+{
+    "properties": {"x": "y"},
+    "view": "page-2",
+    "visibility": "public",
+    "contents": [
+        { "lang": "en", "field": "slug",  "text": "updated page" },
+        { "lang": "en", "field": "title", "text": "The updated page" },
+        { "lang": "es", "field": "title", "text": "La página actualizada" }
+    ],
+    "routes": [
+        { "path": "/en-2", "lang": "en",  "kind": "alias" },
+        { "path": "/es-2", "lang": "es", "kind": "alias" }
+    ],
+    "entities_related": [
+        { "called_entity_id": "home", "kind": "rel"}
+    ]
+}

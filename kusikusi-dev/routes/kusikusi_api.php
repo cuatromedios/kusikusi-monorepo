@@ -21,3 +21,4 @@ Route::get('/user', function (Request $request) {
 Route::get('/entities', [EntityController::class, 'index']);
 Route::get('/entities/{entity_id}', [EntityController::class, 'show']);
 Route::post('/entities', [EntityController::class, 'store']);
+Route::patch('/entities/{entity_id}', [EntityController::class, 'update']);

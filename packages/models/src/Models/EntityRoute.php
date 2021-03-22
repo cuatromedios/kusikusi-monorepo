@@ -76,4 +76,12 @@ class EntityRoute extends Model
         ]);
     }
 
+    protected static function boot()
+    {
+        parent::boot();
+        static::creating(function (Model $entityRoute) {
+            self::where('entity_id', $entityRoute->entity_id)->where('path', $entityRoute->path)->delete();
+        });
+    }
+
 }

@@ -139,6 +139,41 @@ class EntityController extends BaseController
         return($createdEntity);
     }
 
+    /**
+     * Updates an entity.
+     *
+     * @group Entity
+     * @authenticated
+     * @urlParam entity_id The id of the entity to update. Example: home
+     * @bodyParam model string required The model name, studly case. Example: Page.
+     * @bodyParam properties string An object with properties. Example: {"price": 200, "format": "jpg"}
+     * @bodyParam view string The name of the view to use. Default: the same name of the model. Example: page
+     * @bodyParam langs array An array of languages the entity has active. Example: ["en", "es"]
+     * @bodyParam parent_entity_id The id of the parent entity. Example: home
+     * @bodyParam visibility A visibility status of an entity. Example: public, draft, private
+     * @bodyParam published_at date A timezoned date time the entity should be published. Default: current date time. Example: 2020-02-02T12:00:00-00:00.
+     * @bodyParam unpublished_at date A timezoned date time the entity should be published. Default: 9999-12-31 23:59:59. Example: 2020-02-02T12:00:00-06:00.
+     * @bodyParam contents array An array of contents to be created for the entity. Example: [{ "lang": "en", "field": "slug",  "text": "page" }]
+     * @bodyParam routes array An array of routes to be created for the entity. Example: [{ "path": "/en", "lang": "en",  "kind": "alias" }]
+     * @bodyParam relations array An array of relations to be created for the entity. Example: "relations": [{"called_entity_id": "mf4gWE45pm","kind": "category","position": 2, "tags":["main"]}]
+     * @responseFile responses/entities.create.json
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(Request $request, $entity_id)
+    {
+        $request->validate($this->entityPlayloadValidation());
+        $payload = $request->only('id', 'model', 'properties', 'view', 'langs', 'parent_entity_id', 'visibility', 'published_at', 'unpublished_at');
+        $modelClassName = Entity::getEntityClassName(Str::singular($request->model ?? 'Entity'));
+        $entity = $modelClassName::findOrFail($entity_id);
+        $entity->fill($payload);
+        $entity->save();
+        EntityContent::createFromArray($entity->id, $request->contents);
+        EntityRoute::createFromArray($entity->id, $request->routes, $entity->model);
+        EntityRelation::createFromArray($entity->id, $request->entities_related);
+        $updatedEntity = $modelClassName::withContents()->withRoutes()->with('entities_related')->find($entity->id);
+        return($updatedEntity);
+    }
+
 
     // Validations
     private function queryParamsValidation() {

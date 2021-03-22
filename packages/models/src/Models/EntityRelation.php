@@ -3,6 +3,7 @@
 namespace Kusikusi\Models;
 
 use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Database\Eloquent\Model;
 
 class EntityRelation extends Pivot
 {
@@ -65,6 +66,12 @@ class EntityRelation extends Pivot
      */
     protected static function boot(){
         parent::boot();
+        static::creating(function (Model $entityRelation) {
+            self::where('caller_entity_id', $entityRelation->caller_entity_id)
+            ->where('called_entity_id', $entityRelation->called_entity_id)
+            ->where('kind', $entityRelation->kind)
+            ->delete();
+        });
         static::saved(function (Pivot $entityRelation) {
             Entity::incrementEntityVersion($entityRelation['caller_entity_id']);
             Entity::incrementRelationsVersion($entityRelation['called_entity_id']);
