@@ -189,16 +189,28 @@ accept: application/json
 # Creation
 ###############
 
-### Create an entity
+### Create an entity simplest mode
+POST http://{{host}}/api/entities HTTP/1.1
+content-type: application/json
+accept: application/json
+
+{
+    "id": "home",
+    "model": "Home"
+}
+
+### Create an entity with relations
 POST http://{{host}}/api/entities HTTP/1.1
 content-type: application/json
 accept: application/json
 
 {
     "model": "Page",
+    "id": "page_1",
     "properties": {"a": "b"},
     "parent_entity_id": "home",
     "view": "page",
+    "parent_entity_id": "home",
     "visibility": "private",
     "published_at": "2020-02-02T12:00:00-06:00",
     "contents": [
@@ -221,7 +233,7 @@ accept: application/json
 ###############
 
 ### Update an entity
-PATCH http://{{host}}/api/entities/tRav5Qqz3L HTTP/1.1
+PATCH http://{{host}}/api/entities/page_1 HTTP/1.1
 content-type: application/json
 accept: application/json
 
@@ -242,3 +254,20 @@ accept: application/json
         { "called_entity_id": "home", "kind": "rel"}
     ]
 }
+
+###############
+# Delete
+###############
+
+### Delete an entity
+DELETE http://{{host}}/api/entities/page_1 HTTP/1.1
+accept: application/json
+
+### Hard Delete an entity
+DELETE http://{{host}}/api/entities/page_1?hard=true HTTP/1.1
+accept: application/json
+
+### Restore an entity
+PATCH http://{{host}}/api/entities/page_1/restore HTTP/1.1
+content-type: application/json
+accept: application/json

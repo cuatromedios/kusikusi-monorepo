@@ -16,7 +16,7 @@ use Kusikusi\Models\EntityRelation;
 class EntityController extends BaseController
 {
 
-    const ID_RULE = 'string|min:1|max:32|regex:/^[A-Za-z0-9_-]+$/';
+    const ID_RULE = 'string|min:1|max:32|regex:/^[A-Za-z0-9_-]{1,32}$/';
     const ID_RULE_WITH_FILTER = 'string|min:1|max:64|regex:/^[A-Za-z0-9_-]+:?[a-z0-9]*$/';
     const MODEL_RULE = 'string|min:1|max:32|regex:/^[A-Z][A-Za-z0-9]+$/';
     const TIMEZONED_DATE = 'nullable|date_format:Y-m-d\TH:i:sP|after_or_equal:1000-01-01T00:00:00-12:00|before_or_equal:9999-12-31T23:59:59-12:00';
@@ -132,9 +132,9 @@ class EntityController extends BaseController
         $modelClassName = Entity::getEntityClassName(Str::singular($request->model));
         $entity = new $modelClassName($payload);
         $entity->save();
-        EntityContent::createFromArray($entity->id, $request->contents);
-        EntityRoute::createFromArray($entity->id, $request->routes, $entity->model);
-        EntityRelation::createFromArray($entity->id, $request->entities_related);
+        if (isset($request->contents)) EntityContent::createFromArray($entity->id, $request->contents);
+        if (isset($request->routes)) EntityRoute::createFromArray($entity->id, $request->routes, $entity->model);
+        if (isset($request->entities_related)) EntityRelation::createFromArray($entity->id, $request->entities_related);
         $createdEntity = $modelClassName::withContents()->withRoutes()->with('entities_related')->find($entity->id);
         return($createdEntity);
     }
@@ -164,14 +164,56 @@ class EntityController extends BaseController
         $request->validate($this->entityPlayloadValidation());
         $payload = $request->only('id', 'model', 'properties', 'view', 'langs', 'parent_entity_id', 'visibility', 'published_at', 'unpublished_at');
         $modelClassName = Entity::getEntityClassName(Str::singular($request->model ?? 'Entity'));
-        $entity = $modelClassName::findOrFail($entity_id);
+        $entity = $modelClassName::withTrashed()->findOrFail($entity_id);
         $entity->fill($payload);
         $entity->save();
-        EntityContent::createFromArray($entity->id, $request->contents);
-        EntityRoute::createFromArray($entity->id, $request->routes, $entity->model);
-        EntityRelation::createFromArray($entity->id, $request->entities_related);
+        if (isset($request->contents)) EntityContent::createFromArray($entity->id, $request->contents);
+        if (isset($request->routes)) EntityRoute::createFromArray($entity->id, $request->routes, $entity->model);
+        if (isset($request->entities_related)) EntityRelation::createFromArray($entity->id, $request->entities_related);
         $updatedEntity = $modelClassName::withContents()->withRoutes()->with('entities_related')->find($entity->id);
         return($updatedEntity);
+    }
+
+    /**
+     * Deletes an entity.
+     *
+     * @group Entity
+     * @authenticated
+     * @urlParam entity_id The id of the entity to delete
+     * @queryParam hard boolean If the deletion should be a hard delete
+     * @responseFile responses/entities.delete.json
+     */
+    public function destroy(Request $request, $entity_id)
+    {
+        $request->validate(['hard' => Rule::in(['true', 'false', ''])]);
+        if ($request->get('hard') && ($request->get('hard') === 'true' || $request->get('hard') === '')) {
+            Entity::where('id', $entity_id)->forceDelete();
+            return (["message" => "Entity ${entity_id} was hard deleted"]);
+            
+        } else {
+            Entity::where('id', $entity_id)->delete();
+            $entity = Entity::select('id', 'deleted_at')->withTrashed()->findOrFail($entity_id);
+            if ( $entity) $entity->makeVisible('deleted_at');
+            return($entity);
+        }
+    }
+
+    /**
+     * Restores a soft deleted entity.
+     *
+     * @group Entity
+     * @authenticated
+     * @urlParam entity_id The id of the entity to delete
+     * @responseFile responses/entities.delete.json
+     */
+    public function restore(Request $request, $entity_id)
+    {
+        Entity::where('id', $entity_id)->restore();
+        $entity = Entity::select('id', 'deleted_at')->withTrashed()->findOrFail($entity_id);
+        if ( $entity) {
+            $entity->makeVisible('deleted_at');
+        }
+        return($entity);
     }
 
 

@@ -17,8 +17,9 @@ class EntityArchive extends Model
 
     public static function archive(string $entity_id, string $kind) {
         $entityToArchive = Entity::with('contents')
-        /* ->with('routes') */
+        ->with('routes')
         ->with('entities_related')
+        ->withTrashed()
         ->find($entity_id);
         $archive = EntityArchive::create([
             "entity_id" => $entity_id,
