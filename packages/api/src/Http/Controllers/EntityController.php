@@ -54,6 +54,7 @@ class EntityController extends BaseController
      * @queryParam order-by A comma separated lis of fields to order by. Example: model,properties.price:desc,content.title
      * @queryParam per-page The amount of entities per page the result should be the amount of entities on a single page. Example: 6
      * @queryParam page The number of page to display, 1 by default
+     * @queryParam first Get only one entity, not an array, not paginated
      * @queryParam where A comma separated list of conditions to met, Example: created_at>2020-01-01,content.title:The%20title,properties.format:png,model:medium
      * @queryParam with A comma separated list of relationships should be included in the result. Example: media,contents,entities_related,route
      * @return \Illuminate\Http\JsonResponse
@@ -72,10 +73,14 @@ class EntityController extends BaseController
         $entities = $this->addOrders($entities, $request, $lang);
         $entities = $this->addWiths($entities, $request, $receivedLang);
 
-        $entities = $entities
-            ->paginate($request
-            ->get('per-page') ? intval($request->get('per-page')) : Config::get('kusikusi_api.page_size', 100))
+        if ($request->get('first')) {
+            $entities = $entities->first();
+        } else {
+            $entities = $entities
+            ->paginate($request->get('per-page') ? intval($request->get('per-page')) : Config::get('kusikusi_api.page_size', 100))
             ->withQueryString();
+        }
+        
         return $entities;
     }
 /**
