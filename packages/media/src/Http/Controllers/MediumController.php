@@ -143,14 +143,16 @@ class MediumController extends Controller
         }
         if ($request->hasFile('file') && $request->file('file')->isValid()) {
             $properties = processFile($entity_id, 'file', $request->file('file'));
-            if (isset($properties['exif'])) {
+            // TODO: For some reason the exit properties freezes the process once is returned as json
+            /* if (isset($properties['exif'])) {
                 foreach ($properties['exif'] as $prop => $value) {
                     if (Str::startsWith($prop, "UndefinedTag")) {
                         unset($properties['exif'][$prop]);
                     }
                 }
-            }
-            if (empty($medium['properties']) || $medium['properties']->count() === 0) {
+            } */
+            unset($properties['exif']);
+            if (empty($medium['properties']) || (is_array($medium['properties'] && count($medium['properties']) === 0))) {
                 $medium['properties'] = $properties;
             } else {
                 $medium['properties'] = array_merge($medium['properties'], $properties);

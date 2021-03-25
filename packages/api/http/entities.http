@@ -318,7 +318,6 @@ accept: application/json
     "tags": ["main", "secondary"]
 }
 
-
 ### Deletes a relation by id
 DELETE http://{{host}}/api/entities/home/relations/31 HTTP/1.1
 content-type: application/json
@@ -337,3 +336,21 @@ accept: application/json
 {
     "relation_ids": [33, 32, 30]
 }
+
+
+
+##############
+# MEDIA
+##############
+
+### Upload a file
+POST http://{{host}}/api/media/3H-QQ4E0Yt/upload HTTP/1.1
+accept: application/json
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="file"; filename="pan.jpg"
+Content-Type: image/jpeg
+
+< ./parts/pan.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
