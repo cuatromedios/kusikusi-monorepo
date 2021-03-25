@@ -18,6 +18,7 @@ class EntityController extends BaseController
 
     const ID_RULE = 'string|min:1|max:32|regex:/^[A-Za-z0-9_-]{1,32}$/';
     const ID_RULE_WITH_FILTER = 'string|min:1|max:64|regex:/^[A-Za-z0-9_-]+:?[a-z0-9]*$/';
+    const ENTITY_EXISTS = 'string|min:1|max:32|regex:/^[A-Za-z0-9_-]{1,32}$/|exists:entities,id';
     const MODEL_RULE = 'string|min:1|max:32|regex:/^[A-Z][A-Za-z0-9]+$/';
     const TIMEZONED_DATE = 'nullable|date_format:Y-m-d\TH:i:sP|after_or_equal:1000-01-01T00:00:00-12:00|before_or_equal:9999-12-31T23:59:59-12:00';
 
@@ -59,7 +60,7 @@ class EntityController extends BaseController
      */
     public function index(Request $request)
     {
-        $validatedParams = $request->validate($this->queryParamsValidation());
+        $validatedParams = $request->validate($this->queryParamsValidation(), $this->queryParamsMessages());
         $lang = $request->get('lang') ?? Config::get('kusikusi_website.langs')[0] ?? '';
         $receivedLang = $request->get('lang') ?? null;
         $modelClassName = Entity::getEntityClassName($request->get('of-model') ?? 'Entity');
@@ -91,7 +92,6 @@ class EntityController extends BaseController
      */
     public function show(Request $request, $entity_id)
     {
-        $validatedParams = $request->validate($this->queryParamsValidation());
         $lang = $request->get('lang') ?? Config::get('kusikusi_website.langs')[0] ?? '';
         $receivedLang = $request->get('lang') ?? null;
         $entityFound = Entity::select('id', 'model')
@@ -218,16 +218,29 @@ class EntityController extends BaseController
     // Validations
     private function queryParamsValidation() {
         return [
-            'children-of' => self::ID_RULE,
-            'parent-of' => self::ID_RULE,
-            'ancestors-of' => self::ID_RULE,
-            'descendants-of' => self::ID_RULE,
-            'siblings-of' => self::ID_RULE,
-            'related-by' => self::ID_RULE_WITH_FILTER,
-            'relating' => self::ID_RULE_WITH_FILTER,
-            'media-of' => self::ID_RULE,
+            'children-of' => self::ENTITY_EXISTS,
+            'parent-of' => self::ENTITY_EXISTS,
+            'ancestors-of' => self::ENTITY_EXISTS,
+            'descendants-of' => self::ENTITY_EXISTS,
+            'siblings-of' => self::ENTITY_EXISTS,
+            'related-by' => self::ENTITY_EXISTS,
+            'relating' => self::ENTITY_EXISTS,
+            'media-of' => self::ENTITY_EXISTS,
             'of-model' => self::MODEL_RULE,
             'only-published' => Rule::in(['true', 'false', '']),
+        ];
+    }
+    private function queryParamsMessages() {
+        $must_exist = 'The entity must exist';
+        return [
+            'children-of.exists' => $must_exist,
+            'parent-of.exists' => $must_exist,
+            'ancestors-of.exists' => $must_exist,
+            'descendants-of.exists' => $must_exist,
+            'siblings-of.exists' => $must_exist,
+            'related-by.exists' => $must_exist,
+            'relating.exists' => $must_exist,
+            'media-of.exists' => $must_exist,
         ];
     }
     private function entityPlayloadValidation() {
