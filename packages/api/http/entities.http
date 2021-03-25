@@ -268,6 +268,51 @@ DELETE http://{{host}}/api/entities/page_1?hard=true HTTP/1.1
 accept: application/json
 
 ### Restore an entity
-PATCH http://{{host}}/api/entities/page_1/restore HTTP/1.1
+PATCH http://{{host}}/api/entities/home/restore HTTP/1.1
 content-type: application/json
 accept: application/json
+
+
+###############
+# Relations
+###############
+
+### Index relations of an entity
+GET http://{{host}}/api/entities/home/relations?select=id HTTP/1.1
+accept: application/json
+
+### Creates or updates a new relation with minimal params
+POST http://{{host}}/api/entities/home/relations/page_3/category HTTP/1.1
+content-type: application/json
+accept: application/json
+
+### Creates or updates a new relation with minimal params
+POST http://{{host}}/api/entities/home/relations/page_2/category HTTP/1.1
+content-type: application/json
+accept: application/json
+
+{
+    "position": 1,
+    "depth": 2,
+    "tags": ["main", "secondary"]
+}
+
+
+### Deletes a relation by id
+DELETE http://{{host}}/api/entities/home/relations/31 HTTP/1.1
+content-type: application/json
+accept: application/json
+
+### Deletes a relation by its properties
+DELETE http://{{host}}/api/entities/home/relations/page_1/category HTTP/1.1
+content-type: application/json
+accept: application/json
+
+### Reorder relations
+PATCH http://{{host}}/api/entities/home/relations/reorder HTTP/1.1
+content-type: application/json
+accept: application/json
+
+{
+    "relation_ids": [33, 32, 30]
+}
