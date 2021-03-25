@@ -16,16 +16,16 @@ accept: application/json
 GET http://{{host}}/api/entities?only-published HTTP/1.1
 accept: application/json
 
-### Get child of an entity
+### Get children of an entity
 GET http://{{host}}/api/entities?children-of=home HTTP/1.1
 accept: application/json
 
 ### Get parent of an entity
-GET http://{{host}}/api/entities?parent-of=child_2 HTTP/1.1
+GET http://{{host}}/api/entities?parent-of=page_1 HTTP/1.1
 accept: application/json
 
 ### Get ancestors of an entity
-GET http://{{host}}/api/entities?ancestors-of=child_2 HTTP/1.1
+GET http://{{host}}/api/entities?ancestors-of=page_1 HTTP/1.1
 accept: application/json
 
 ### Get descendants of an entity
@@ -33,7 +33,7 @@ GET http://{{host}}/api/entities?descendants-of=home&select=id,model HTTP/1.1
 accept: application/json
 
 ### Get siblings of an entity
-GET http://{{host}}/api/entities?siblings-of=child_2 HTTP/1.1
+GET http://{{host}}/api/entities?siblings-of=page_1 HTTP/1.1
 accept: application/json
 
 ### Get related-by an entity
@@ -45,7 +45,7 @@ GET http://{{host}}/api/entities?relating=home HTTP/1.1
 accept: application/json
 
 ### Get media of an entity
-GET http://{{host}}/api/entities?media-of=child_1 HTTP/1.1
+GET http://{{host}}/api/entities?media-of=home HTTP/1.1
 accept: application/json
 
 
@@ -59,7 +59,7 @@ GET http://{{host}}/api/entities?select=id,model,properties HTTP/1.1
 accept: application/json
 
 ### Select properties fields
-GET http://{{host}}/api/entities?select=id,properties.format,properties.size,properties.exif.COMPUTED HTTP/1.1
+GET http://{{host}}/api/entities?select=id,properties.a,properties.format,properties.size,properties.exif.COMPUTED HTTP/1.1
 accept: application/json
 
 ### Select all content fields as raw
@@ -96,7 +96,7 @@ GET http://{{host}}/api/entities?select=id,model,properties.size&order-by=proper
 accept: application/json
 
 ### Order by a tree relation value
-GET http://{{host}}/api/entities?descendants-of=home&select=id,model&order-by=descendant_depth:desc,descendant_position HTTP/1.1
+GET http://{{host}}/api/entities?descendants-of=home&select=id,model&order-by=descendant.depth:desc,descendant.position HTTP/1.1
 accept: application/json
 
 ### Order by content fields
@@ -287,7 +287,7 @@ content-type: application/json
 accept: application/json
 
 ### Creates or updates a new relation with minimal params
-POST http://{{host}}/api/entities/home/relations/page_2/category HTTP/1.1
+POST http://{{host}}/api/entities/home/relations/page_2/medium HTTP/1.1
 content-type: application/json
 accept: application/json
 

@@ -35,7 +35,7 @@ class EntityRelationController extends BaseController
     {
         $request->merge([
             'related-by' => $entity_id,
-            'order-by' => "relation_position"
+            'order-by' => "relation.position"
         ]);
         $entityController = new EntityController();
         return $entityController->index($request);

@@ -53,12 +53,6 @@ class Entity extends Model
     */
     protected $casts = [
         'properties' => Json::class,
-        'tags' => 'array',
-        'child_relation_tags' => 'array',
-        'descendant_relation_tags' => 'array',
-        'siblings_relation_tags' => 'array',
-        'media_tags' => 'array',
-        'relation_tags' => 'array',
         'published_at' => 'datetime',
         'unpublished_at' => 'datetime',
         'langs' => 'array'
@@ -278,9 +272,10 @@ class Entity extends Model
             ;
         })
             ->addSelect('id')
-            ->addSelect('relation_children.position as child_position')
-            ->addSelect('relation_children.depth as child_depth')
-            ->addSelect('relation_children.tags as child_tags');
+            ->addSelect('relation_children.relation_id as child.relation_id')
+            ->addSelect('relation_children.position as child.position')
+            ->addSelect('relation_children.depth as child.depth')
+            ->addSelect('relation_children.tags as child.tags');
     }
 
     /**
@@ -301,9 +296,10 @@ class Entity extends Model
             ;
         })
             ->addSelect('id')
-            ->addSelect('relation_parent.position as parent_position')
-            ->addSelect('relation_parent.depth as parent_depth')
-            ->addSelect('relation_parent.tags as parent_tags');
+            ->addSelect('relation_parent.relation_id as parent.relation_id')
+            ->addSelect('relation_parent.position as parent.position')
+            ->addSelect('relation_parent.depth as parent.depth')
+            ->addSelect('relation_parent.tags as parent.tags');
     }
 
     /**
@@ -323,9 +319,10 @@ class Entity extends Model
             ;
         })
             ->addSelect('id')
-            ->addSelect('relation_ancestor.position as ancestor_position')
-            ->addSelect('relation_ancestor.depth as ancestor_depth')
-            ->addSelect('relation_ancestor.tags as ancestor_tags');
+            ->addSelect('relation_ancestor.relation_id as ancestor.relation_id')
+            ->addSelect('relation_ancestor.position as ancestor.position')
+            ->addSelect('relation_ancestor.depth as ancestor.depth')
+            ->addSelect('relation_ancestor.tags as ancestor.tags');
     }
 
     /**
@@ -345,9 +342,10 @@ class Entity extends Model
                 ->where('relation_descendants.depth', '<=', $depth);
         })
             ->addSelect('id')
-            ->addSelect('relation_descendants.position as descendant_position')
-            ->addSelect('relation_descendants.depth as descendant_depth')
-            ->addSelect('relation_descendants.tags as descendant_tags');
+            ->addSelect('relation_descendants.relation_id as descendant.relation_id')
+            ->addSelect('relation_descendants.position as descendant.position')
+            ->addSelect('relation_descendants.depth as descendant.depth')
+            ->addSelect('relation_descendants.tags as descendant.tags');
     }
 
     /**
@@ -374,9 +372,10 @@ class Entity extends Model
         })
             ->addSelect('id')
             ->where('entities.id', '!=', $entity_id)
-            ->addSelect('relation_siblings.position as sibling_position')
-            ->addSelect('relation_siblings.depth as sibling_depth')
-            ->addSelect('relation_siblings.tags as sibling_tags');
+            ->addSelect('relation_siblings.relation_id as sibling.relation_id')
+            ->addSelect('relation_siblings.position as sibling.position')
+            ->addSelect('relation_siblings.depth as sibling.depth')
+            ->addSelect('relation_siblings.tags as sibling.tags');
     }
 
     /**
@@ -403,7 +402,7 @@ class Entity extends Model
             }
         })
         ->addSelect('id')
-        ->addSelect('related_by.relation_id as relation_id', 'related_by.kind as relation_kind', 'related_by.position as relation_position', 'related_by.depth as relation_depth', 'related_by.tags as relation_tags');
+        ->addSelect('related_by.relation_id as relation.relation_id', 'related_by.kind as relation.kind', 'related_by.position as relation.position', 'related_by.depth as relation.depth', 'related_by.tags as relation.tags');
     }
 
     /**
@@ -431,7 +430,7 @@ class Entity extends Model
             }
         })
         ->addSelect('id')
-        ->addSelect('relating.kind as relation_kind', 'relating.position as relation_position', 'relating.depth as relation_depth', 'relating.tags as relation_tags');
+        ->addSelect('relating.relation_id as relation.relation_id', 'relating.kind as relation.kind', 'relating.position as relation.position', 'relating.depth as relation.depth', 'relating.tags as relation.tags');
     }
 
     /**
@@ -611,7 +610,7 @@ class Entity extends Model
                     return $q->whereJsonContains('relation_media.tags', $tag);
                 });
         })
-            ->addSelect( 'relation_media.position as media_position', 'relation_media.depth as media_depth', 'relation_media.tags as media_tags');
+            ->addSelect( 'relation_media.relation_id as medium.relation_id', 'relation_media.position as medium.position', 'relation_media.depth as medium.depth', 'relation_media.tags as medium.tags');
     }
 
     /**
@@ -779,21 +778,25 @@ class Entity extends Model
         parent::boot();
 
         static::retrieved(function (Model $entity) {
-            if (!$entity->properties) {
-                $props = [];
-                $prefix1 = "json_unquote(json_extract(`properties`, '$.\"";
-                $prefix2 = 'properties.';
-                foreach ($entity->attributes as $key => $value) {
-                    if (Str::startsWith($key, $prefix1)) {
-                        Arr::set($props, $prefix2.preg_replace("/[\\\"\')]/", "", Str::after($key, $prefix1)), Str::startsWith($value, '[') ||  Str::startsWith($value, '{') ? json_decode($value) : (is_numeric($value) ? (float) $value : $value));
-                        unset($entity->attributes[$key]);
-                    }
-                    if (Str::startsWith($key, $prefix2)) {
-                        Arr::set($props, $key, !Str::startsWith($value, '"') ?  json_decode($value) : $value);
-                        unset($entity->attributes[$key]);
-                    }
+            $explodedAttributes = [];
+            $propertiesPrefix1 = "json_unquote(json_extract(`properties`, '$.\"";
+            $propertiesPrefix2 = 'properties.';
+            foreach ($entity->attributes as $key => $value) {
+                if (Str::startsWith($key, $propertiesPrefix1)) {
+                    Arr::set($explodedAttributes, $propertiesPrefix2.preg_replace("/[\\\"\')]/", "", Str::after($key, $propertiesPrefix1)), Str::startsWith($value, '[') ||  Str::startsWith($value, '{') ? json_decode($value) : (is_numeric($value) ? (float) $value : $value));
+                    unset($entity->attributes[$key]);
+                } else if (Str::startsWith($key, $propertiesPrefix2)) {
+                    Arr::set($explodedAttributes, $key, !Str::startsWith($value, '"') ?  json_decode($value) : $value);
+                    unset($entity->attributes[$key]);
+                } else if (Str::contains($key, '.')) {
+                    $prop = Str::after($key, '.');
+                    if ($prop === 'tags') $value = \json_decode($value);
+                    $explodedAttributes[Str::before($key, '.')][$prop] = $value;
+                    unset($entity->attributes[$key]);
                 }
-                if (!empty($props)) $entity->properties = $props['properties'];
+            }
+            foreach($explodedAttributes as $att => $explodedAttribute) {
+                $entity->$att = $explodedAttribute;
             }
         });
         static::creating(function (Model $entity) {

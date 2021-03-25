@@ -73,7 +73,7 @@ class HtmlController extends Controller
             "mainMenu" => Entity::select('id', 'model')
                 ->relatedBy('main-menu', 'menu')
                 /* ->appendContents(['title'], $request->lang) */
-                ->orderBy('relation_position', 'asc')
+                ->orderBy('relation.position', 'asc')
                 /* ->appendRoute($request->lang) */
                 ->isPublished()
                 ->get()
