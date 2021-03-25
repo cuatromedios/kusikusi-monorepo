@@ -20,8 +20,6 @@ class EntityController extends BaseController
     const ID_RULE_WITH_FILTER = 'string|min:1|max:64|regex:/^[A-Za-z0-9_-]+:?[a-z0-9]*$/';
     const MODEL_RULE = 'string|min:1|max:32|regex:/^[A-Z][A-Za-z0-9]+$/';
     const TIMEZONED_DATE = 'nullable|date_format:Y-m-d\TH:i:sP|after_or_equal:1000-01-01T00:00:00-12:00|before_or_equal:9999-12-31T23:59:59-12:00';
-    private $calledRelations = [];
-    private $addedSelects = [];
 
     /**
      * Create a new controller instance.
@@ -43,14 +41,14 @@ class EntityController extends BaseController
      * @queryParam lang The identification of the language to use for select, where and order by content fields, for example en, es, en-US, etc.
      * @queryParam of-model (filter) The name of the model the entities should be, this will also call the query using the given model and not the default Entity model. Example: Medium, Page
      * @queryParam only-published (filter) Get only published, not deleted entities, true if not set. Example: true
-     * @queryParam children-of (filter) The id or short id of the entity the result entities should be child of. Example: home
-     * @queryParam parent-of (filter) The id or short id of the entity the result entities should be parent of (will return only one). Example: 8fguTpt5SB
-     * @queryParam ancestor-of (filter) The id or short id of the entity the result entities should be ancestor of. Example: enKSUfUcZN
-     * @queryParam descendant-of (filter) The id or short id of the entity the result entities should be descendant of. Example: xAaqz2RPyf
-     * @queryParam siblings-of (filter) The id or short id of the entity the result entities should be siblings of. Example: _tuKwVy8Aa
-     * @queryParam related-by (filter) The id or short id of the entity the result entities should have been called by using a relation. Can be added a filter to a kind of relation for example: theShortId:category. The ancestor kind of relations are discarted unless are explicity specified. Example: ElFYpgEvWS
-     * @queryParam relating (filter) The id or short id of the entity the result entities should have been a caller of using a relation. Can be added a filder to a kind o relation for example: shortFotoId:medium to know the entities has caller that medium. The ancestor kind of relations are discarted unless are explicity specified. Example: enKSUfUcZN
-     * @queryParam media-of (filter) The id or short id of the entity the result entities should have a media relation to. Example: enKSUfUcZN
+     * @queryParam children-of (filter) The id of the entity the result entities should be child of. Example: home
+     * @queryParam parent-of (filter) The id of the entity the result entities should be parent of (will return only one). Example: 8fguTpt5SB
+     * @queryParam ancestor-of (filter) The id of the entity the result entities should be ancestor of. Example: enKSUfUcZN
+     * @queryParam descendant-of (filter) The id of the entity the result entities should be descendant of. Example: xAaqz2RPyf
+     * @queryParam siblings-of (filter) The id of the entity the result entities should be siblings of. Example: _tuKwVy8Aa
+     * @queryParam related-by (filter) The id of the entity the result entities should have been called by using a relation. Can be added a filter to a kind of relation for example: theShortId:category. The ancestor kind of relations are discarted unless are explicity specified. Example: ElFYpgEvWS
+     * @queryParam relating (filter) The id of the entity the result entities should have been a caller of using a relation. Can be added a filder to a kind o relation for example: shortFotoId:medium to know the entities has caller that medium. The ancestor kind of relations are discarted unless are explicity specified. Example: enKSUfUcZN
+     * @queryParam media-of (filter) The id of the entity the result entities should have a media relation to. Example: enKSUfUcZN
      * @queryParam select A comma separated list of fields of the entity to include. It is possible to use a dot syntax the properties and content column. Example: id,model,properties.price,content.title
      * @queryParam order-by A comma separated lis of fields to order by. Example: model,properties.price:desc,content.title
      * @queryParam per-page The amount of entities per page the result should be the amount of entities on a single page. Example: 6
