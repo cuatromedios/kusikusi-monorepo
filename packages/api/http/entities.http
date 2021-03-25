@@ -41,7 +41,7 @@ GET http://{{host}}/api/entities?related-by=home HTTP/1.1
 accept: application/json
 
 ### Get relating an entity
-GET http://{{host}}/api/entities?relating=home HTTP/1.1
+GET http://{{host}}/api/entities?select=id&relating=home HTTP/1.1
 accept: application/json
 
 ### Get media of an entity
@@ -108,7 +108,12 @@ accept: application/json
 # PAGINATION
 ###############
 
-GET http://{{host}}/api/entities?select=id&per-page=5&page=2 HTTP/1.1
+### Per page
+GET http://{{host}}/api/entities?select=id,model&per-page=5&page=1 HTTP/1.1
+accept: application/json
+
+### Only one
+GET http://{{host}}/api/entities?children-of=home&select=id,model,contents,properties&first=true HTTP/1.1
 accept: application/json
 
 
@@ -206,7 +211,7 @@ accept: application/json
 
 {
     "model": "Page",
-    "id": "page_1",
+    "id": "page_12",
     "properties": {"a": "b"},
     "parent_entity_id": "home",
     "view": "page",
@@ -226,6 +231,22 @@ accept: application/json
         { "called_entity_id": "home", "kind": "medium"},
         { "called_entity_id": "home", "kind": "category", "position": 1, "depth": 0, "tags": ["primary"] }
     ]
+}
+
+### Create an entity and relate to other
+POST http://{{host}}/api/entities HTTP/1.1
+content-type: application/json
+accept: application/json
+
+{
+    "model": "Medium",
+    "relate_to": {
+        "caller_entity_id": "home",
+        "kind": "medium",
+        "position": 1,
+        "depth": 0,
+        "tags": ["icon"]
+    }
 }
 
 ###############

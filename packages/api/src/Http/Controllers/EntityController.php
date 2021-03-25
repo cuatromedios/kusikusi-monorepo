@@ -139,6 +139,10 @@ class EntityController extends BaseController
         if (isset($request->routes)) EntityRoute::createFromArray($entity->id, $request->routes, $entity->model);
         if (isset($request->entities_related)) EntityRelation::createFromArray($entity->id, $request->entities_related);
         $createdEntity = $modelClassName::withContents()->withRoutes()->with('entities_related')->find($entity->id);
+        if ($createdEntity && isset($request->relate_to)) {
+            $request->validate($this->entityRelationValidation());
+            EntityRelation::create(array_merge($request->relate_to, ['called_entity_id' => $createdEntity->id]));
+        }
         return($createdEntity);
     }
 
@@ -246,6 +250,15 @@ class EntityController extends BaseController
             'related-by.exists' => $must_exist,
             'relating.exists' => $must_exist,
             'media-of.exists' => $must_exist,
+        ];
+    }
+    private function entityRelationValidation() {
+        return [
+            'relate_to.caller_entity_id' => self::ENTITY_EXISTS,
+            'relate_to.kind' => 'required',
+            'relate_to.position' => 'integer',
+            'relate_to.depth' => 'integer',
+            'relate_to.tags.*' => 'string'
         ];
     }
     private function entityPlayloadValidation() {
