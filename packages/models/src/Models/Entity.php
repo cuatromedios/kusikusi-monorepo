@@ -261,21 +261,21 @@ class Entity extends Model
      */
     public function scopeChildrenOf($query, $entity_id, $tag = null)
     {
-        $query->join('entities_relations as relation_children', function ($join) use ($entity_id, $tag) {
-            $join->on('relation_children.caller_entity_id', '=', 'entities.id')
-                ->where('relation_children.called_entity_id', '=', $entity_id)
-                ->where('relation_children.depth', '=', 1)
-                ->where('relation_children.kind', '=', EntityRelation::RELATION_ANCESTOR)
+        $query->join('entities_relations as child', function ($join) use ($entity_id, $tag) {
+            $join->on('child.caller_entity_id', '=', 'entities.id')
+                ->where('child.called_entity_id', '=', $entity_id)
+                ->where('child.depth', '=', 1)
+                ->where('child.kind', '=', EntityRelation::RELATION_ANCESTOR)
                 ->when($tag, function ($q) use ($tag) {
-                    return $q->whereJsonContains('relation_children.tags', $tag);
+                    return $q->whereJsonContains('child.tags', $tag);
                 });
             ;
         })
             ->addSelect('id')
-            ->addSelect('relation_children.relation_id as child.relation_id')
-            ->addSelect('relation_children.position as child.position')
-            ->addSelect('relation_children.depth as child.depth')
-            ->addSelect('relation_children.tags as child.tags');
+            ->addSelect('child.relation_id as child.relation_id')
+            ->addSelect('child.position as child.position')
+            ->addSelect('child.depth as child.depth')
+            ->addSelect('child.tags as child.tags');
     }
 
     /**
@@ -288,18 +288,18 @@ class Entity extends Model
      */
     public function scopeParentOf($query, $entity_id)
     {
-        $query->join('entities_relations as relation_parent', function ($join) use ($entity_id) {
-            $join->on('relation_parent.called_entity_id', '=', 'entities.id')
-                ->where('relation_parent.caller_entity_id', '=', $entity_id)
-                ->where('relation_parent.depth', '=', 1)
-                ->where('relation_parent.kind', '=', EntityRelation::RELATION_ANCESTOR)
+        $query->join('entities_relations as parent', function ($join) use ($entity_id) {
+            $join->on('parent.called_entity_id', '=', 'entities.id')
+                ->where('parent.caller_entity_id', '=', $entity_id)
+                ->where('parent.depth', '=', 1)
+                ->where('parent.kind', '=', EntityRelation::RELATION_ANCESTOR)
             ;
         })
             ->addSelect('id')
-            ->addSelect('relation_parent.relation_id as parent.relation_id')
-            ->addSelect('relation_parent.position as parent.position')
-            ->addSelect('relation_parent.depth as parent.depth')
-            ->addSelect('relation_parent.tags as parent.tags');
+            ->addSelect('parent.relation_id as parent.relation_id')
+            ->addSelect('parent.position as parent.position')
+            ->addSelect('parent.depth as parent.depth')
+            ->addSelect('parent.tags as parent.tags');
     }
 
     /**
@@ -312,17 +312,17 @@ class Entity extends Model
      */
     public function scopeAncestorsOf($query, $entity_id)
     {
-        $query->join('entities_relations as relation_ancestor', function ($join) use ($entity_id) {
-            $join->on('relation_ancestor.called_entity_id', '=', 'entities.id')
-                ->where('relation_ancestor.caller_entity_id', '=', $entity_id)
-                ->where('relation_ancestor.kind', '=', EntityRelation::RELATION_ANCESTOR)
+        $query->join('entities_relations as ancestor', function ($join) use ($entity_id) {
+            $join->on('ancestor.called_entity_id', '=', 'entities.id')
+                ->where('ancestor.caller_entity_id', '=', $entity_id)
+                ->where('ancestor.kind', '=', EntityRelation::RELATION_ANCESTOR)
             ;
         })
             ->addSelect('id')
-            ->addSelect('relation_ancestor.relation_id as ancestor.relation_id')
-            ->addSelect('relation_ancestor.position as ancestor.position')
-            ->addSelect('relation_ancestor.depth as ancestor.depth')
-            ->addSelect('relation_ancestor.tags as ancestor.tags');
+            ->addSelect('ancestor.relation_id as ancestor.relation_id')
+            ->addSelect('ancestor.position as ancestor.position')
+            ->addSelect('ancestor.depth as ancestor.depth')
+            ->addSelect('ancestor.tags as ancestor.tags');
     }
 
     /**
@@ -335,17 +335,17 @@ class Entity extends Model
      */
     public function scopeDescendantsOf($query, $entity_id, $depth = 99)
     {
-        $query->join('entities_relations as relation_descendants', function ($join) use ($entity_id, $depth) {
-            $join->on('relation_descendants.caller_entity_id', '=', 'entities.id')
-                ->where('relation_descendants.called_entity_id', '=', $entity_id)
-                ->where('relation_descendants.kind', '=', EntityRelation::RELATION_ANCESTOR)
-                ->where('relation_descendants.depth', '<=', $depth);
+        $query->join('entities_relations as descendant', function ($join) use ($entity_id, $depth) {
+            $join->on('descendant.caller_entity_id', '=', 'entities.id')
+                ->where('descendant.called_entity_id', '=', $entity_id)
+                ->where('descendant.kind', '=', EntityRelation::RELATION_ANCESTOR)
+                ->where('descendant.depth', '<=', $depth);
         })
             ->addSelect('id')
-            ->addSelect('relation_descendants.relation_id as descendant.relation_id')
-            ->addSelect('relation_descendants.position as descendant.position')
-            ->addSelect('relation_descendants.depth as descendant.depth')
-            ->addSelect('relation_descendants.tags as descendant.tags');
+            ->addSelect('descendant.relation_id as descendant.relation_id')
+            ->addSelect('descendant.position as descendant.position')
+            ->addSelect('descendant.depth as descendant.depth')
+            ->addSelect('descendant.tags as descendant.tags');
     }
 
     /**
@@ -360,22 +360,22 @@ class Entity extends Model
     public function scopeSiblingsOf($query, $entity_id, $tag = null)
     {
         $parent_entity = Entity::find($entity_id);
-        $query->join('entities_relations as relation_siblings', function ($join) use ($parent_entity, $tag) {
-            $join->on('relation_siblings.caller_entity_id', '=', 'entities.id')
-                ->where('relation_siblings.called_entity_id', '=', $parent_entity->parent_entity_id)
-                ->where('relation_siblings.depth', '=', 1)
-                ->where('relation_siblings.kind', '=', EntityRelation::RELATION_ANCESTOR)
+        $query->join('entities_relations as sibling', function ($join) use ($parent_entity, $tag) {
+            $join->on('sibling.caller_entity_id', '=', 'entities.id')
+                ->where('sibling.called_entity_id', '=', $parent_entity->parent_entity_id)
+                ->where('sibling.depth', '=', 1)
+                ->where('sibling.kind', '=', EntityRelation::RELATION_ANCESTOR)
                 ->when($tag, function ($q) use ($tag) {
-                    return $q->whereJsonContains('relation_siblings.tags', $tag);
+                    return $q->whereJsonContains('sibling.tags', $tag);
                 });
             ;
         })
             ->addSelect('id')
             ->where('entities.id', '!=', $entity_id)
-            ->addSelect('relation_siblings.relation_id as sibling.relation_id')
-            ->addSelect('relation_siblings.position as sibling.position')
-            ->addSelect('relation_siblings.depth as sibling.depth')
-            ->addSelect('relation_siblings.tags as sibling.tags');
+            ->addSelect('sibling.relation_id as sibling.relation_id')
+            ->addSelect('sibling.position as sibling.position')
+            ->addSelect('sibling.depth as sibling.depth')
+            ->addSelect('sibling.tags as sibling.tags');
     }
 
     /**
@@ -402,7 +402,11 @@ class Entity extends Model
             }
         })
         ->addSelect('id')
-        ->addSelect('related_by.relation_id as relation.relation_id', 'related_by.kind as relation.kind', 'related_by.position as relation.position', 'related_by.depth as relation.depth', 'related_by.tags as relation.tags');
+        ->addSelect('related_by.relation_id as related_by.relation_id',
+        'related_by.kind as related_by.kind',
+        'related_by.position as related_by.position',
+        'related_by.depth as related_by.depth',
+        'related_by.tags as related_by.tags');
     }
 
     /**
@@ -430,7 +434,11 @@ class Entity extends Model
             }
         })
         ->addSelect('id')
-        ->addSelect('relating.relation_id as relation.relation_id', 'relating.kind as relation.kind', 'relating.position as relation.position', 'relating.depth as relation.depth', 'relating.tags as relation.tags');
+        ->addSelect('relating.relation_id as relating.relation_id',
+        'relating.kind as relating.kind', 
+        'relating.position as relating.position', 
+        'relating.depth as relating.depth', 
+        'relating.tags as relating.tags');
     }
 
     /**
@@ -837,7 +845,7 @@ class Entity extends Model
                     "depth" => 1
                 ]);
                 $depth = 2;
-                $ancestors = Entity::select('id')->ancestorsOf($parentEntity->id)->orderBy('ancestor_depth')->get();
+                $ancestors = Entity::select('id')->ancestorsOf($parentEntity->id)->orderBy('ancestor.depth')->get();
                 foreach ($ancestors as $ancestor) {
                     EntityRelation::create([
                         "caller_entity_id" => $entity->id,
