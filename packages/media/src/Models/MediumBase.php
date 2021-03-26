@@ -17,7 +17,7 @@ class MediumBase extends Entity
     protected $propertiesFields = [ "size", "lang", "format", "length", "exif", "width", "height" ];
 
     protected function getTitleAsSlug($preset) {
-        $filename = isset($this['content']['title']) ? Str::slug($this['content']['title']) : 'media';
+        $filename = isset($this['content']['title']) ? Str::slug($this['content']['title']) : 'file';
         $fileformat = Arr::get(Config::get('kusikusi_media.presets', []), "{$preset}.format", Str::slug($this->properties['format'] ?? 'bin'));
         return "{$filename}.{$fileformat}";
     }

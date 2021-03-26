@@ -37,7 +37,7 @@ class MediumController extends Controller
         $entity = Entity::isPublished()->findOrFail($entity_id);
         // Paths
         $originalFilePath =  Config::get('kusikusi_media.original_storage.folder') .'/'. $entity_id . '/file.' . (isset($entity->properties['format']) ? $entity->properties['format'] : 'bin');
-        $presetSettings = Config::get('kusikusi_media.presets', null);
+        $presetSettings = Config::get('kusikusi_media.presets.'.$preset, null);
         $publicFilePath = Config::get('kusikusi_media.original_storage.folder') .'/'. $entity_id .'/'. $preset .'/'. $friendly;
         if ($exists = Storage::disk(Config::get('kusikusi_media.static_storage.drive'))->exists($publicFilePath)) {
             return $this->getStaticMedium($publicFilePath);
@@ -152,6 +152,7 @@ class MediumController extends Controller
                 }
             } */
             unset($properties['exif']);
+            $medium['properties'] = (array) $medium['properties'];
             if (empty($medium['properties']) || (is_array($medium['properties'] && count($medium['properties']) === 0))) {
                 $medium['properties'] = $properties;
             } else {

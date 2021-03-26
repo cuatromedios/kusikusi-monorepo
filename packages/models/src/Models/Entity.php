@@ -52,7 +52,7 @@ class Entity extends Model
     * @var array A list of columns from the entities tables and other joins needs to be casted
     */
     protected $casts = [
-        'properties' => Json::class,
+        'properties' => 'array',
         'published_at' => 'datetime',
         'unpublished_at' => 'datetime',
         'langs' => 'array'
