@@ -1,0 +1,361 @@
+### Get all entities
+GET http://{{host}}/api/entities HTTP/1.1
+accept: application/json
+
+
+
+##############
+# SCOPES
+##############
+
+### Get only entities of a model
+GET http://{{host}}/api/entities?of-model=Medium HTTP/1.1
+accept: application/json
+
+### Get only published entities
+GET http://{{host}}/api/entities?only-published HTTP/1.1
+accept: application/json
+
+### Get children of an entity
+GET http://{{host}}/api/entities?children-of=home HTTP/1.1
+accept: application/json
+
+### Get parent of an entity
+GET http://{{host}}/api/entities?parent-of=page_1 HTTP/1.1
+accept: application/json
+
+### Get ancestors of an entity
+GET http://{{host}}/api/entities?ancestors-of=page_1 HTTP/1.1
+accept: application/json
+
+### Get descendants of an entity
+GET http://{{host}}/api/entities?descendants-of=home&select=id,model HTTP/1.1
+accept: application/json
+
+### Get siblings of an entity
+GET http://{{host}}/api/entities?siblings-of=page_1 HTTP/1.1
+accept: application/json
+
+### Get related-by an entity
+GET http://{{host}}/api/entities?related-by=home HTTP/1.1
+accept: application/json
+
+### Get relating an entity
+GET http://{{host}}/api/entities?select=id&relating=home HTTP/1.1
+accept: application/json
+
+### Get media of an entity
+GET http://{{host}}/api/entities?media-of=home HTTP/1.1
+accept: application/json
+
+
+
+##############
+# SELECTS
+##############
+
+### Select entity fields
+GET http://{{host}}/api/entities?select=id,model,properties HTTP/1.1
+accept: application/json
+
+### Select properties fields
+GET http://{{host}}/api/entities?select=id,properties.a,properties.format,properties.size,properties.exif.COMPUTED HTTP/1.1
+accept: application/json
+
+### Select all content fields as raw
+GET http://{{host}}/api/entities?select=id,contents HTTP/1.1
+accept: application/json
+
+### Select all content fields as plucked
+GET http://{{host}}/api/entities?select=id,content&lang=en HTTP/1.1
+accept: application/json
+
+### Select some content fields as raw
+GET http://{{host}}/api/entities?select=id,contents.title HTTP/1.1
+accept: application/json
+
+### Select some content fields as plucked
+GET http://{{host}}/api/entities?select=id,content.title HTTP/1.1
+accept: application/json
+
+### Combination
+GET http://{{host}}/api/entities?select=id,properties.format,content.title&lang=en HTTP/1.1
+accept: application/json
+
+
+###############
+# ORDER
+###############
+
+### Order by a entity column
+GET http://{{host}}/api/entities?select=id,model&order-by=model,id:desc HTTP/1.1
+accept: application/json
+
+### Order by a property attribute
+GET http://{{host}}/api/entities?select=id,model,properties.size&order-by=properties.size:asc HTTP/1.1
+accept: application/json
+
+### Order by a tree relation value
+GET http://{{host}}/api/entities?descendants-of=home&select=id,model&order-by=descendant.depth:desc,descendant.position HTTP/1.1
+accept: application/json
+
+### Order by content fields
+GET http://{{host}}/api/entities?descendants-of=home&select=id,model,content&order-by=content.slug:desc,content.title:desc HTTP/1.1
+accept: application/json
+
+
+###############
+# PAGINATION
+###############
+
+### Per page
+GET http://{{host}}/api/entities?select=id,model&per-page=5&page=1 HTTP/1.1
+accept: application/json
+
+### Only one
+GET http://{{host}}/api/entities?children-of=home&select=id,model,contents,properties&first=true HTTP/1.1
+accept: application/json
+
+
+
+###############
+# FILTERS
+###############
+
+### Where with entitie field
+GET http://{{host}}/api/entities?select=id,model,version&where=version>1 HTTP/1.1
+accept: application/json
+
+### Where with properties fields
+GET http://{{host}}/api/entities?select=id,model,properties.size&where=properties.size>25000 HTTP/1.1
+accept: application/json
+
+### Where with content fields
+GET http://{{host}}/api/entities?select=id,model,content&where=content.title:null&lang=en HTTP/1.1
+accept: application/json
+
+### Where with nulls
+GET http://{{host}}/api/entities?select=id,model,properties.size&where=properties.size!:null HTTP/1.1
+accept: application/json
+
+
+
+###############
+# WITHS
+###############
+
+### With a defined relation
+GET http://{{host}}/api/entities?select=id,model&with=routes HTTP/1.1
+accept: application/json
+
+### With a defined relation
+GET http://{{host}}/api/entities?select=id,model&with=routes,contents&lang=en HTTP/1.1
+accept: application/json
+
+### With contents relations
+GET http://{{host}}/api/entities?select=id,model&with=contents HTTP/1.1
+accept: application/json
+
+### With media relations
+GET http://{{host}}/api/entities?select=id,model&with=media:icon HTTP/1.1
+accept: application/json
+
+### With specific medium by tag
+GET http://{{host}}/api/entities?select=id,model&with=medium:slide HTTP/1.1
+accept: application/json
+
+
+### With any relation
+GET http://{{host}}/api/entities?select=id,model&with=entities_related HTTP/1.1
+accept: application/json
+
+
+###############
+# ONE ENTITY
+###############
+
+### Raw
+GET http://{{host}}/api/entities/home HTTP/1.1
+accept: application/json
+
+### With some fields
+GET http://{{host}}/api/entities/home?select=id,model HTTP/1.1
+accept: application/json
+
+### With contents
+GET http://{{host}}/api/entities/home?select=id,model,content,properties&with=contents HTTP/1.1
+accept: application/json
+
+### With special relations
+GET http://{{host}}/api/entities/home?select=id,model&with=medium HTTP/1.1
+accept: application/json
+
+###############
+# Creation
+###############
+
+### Create an entity simplest mode
+POST http://{{host}}/api/entities HTTP/1.1
+content-type: application/json
+accept: application/json
+
+{
+    "id": "home",
+    "model": "Home"
+}
+
+### Create an entity with relations
+POST http://{{host}}/api/entities HTTP/1.1
+content-type: application/json
+accept: application/json
+
+{
+    "model": "Page",
+    "id": "page_12",
+    "properties": {"a": "b"},
+    "parent_entity_id": "home",
+    "view": "page",
+    "parent_entity_id": "home",
+    "visibility": "private",
+    "published_at": "2020-02-02T12:00:00-06:00",
+    "contents": [
+        { "lang": "en", "field": "slug",  "text": "page" },
+        { "lang": "en", "field": "title", "text": "The pge" },
+        { "lang": "es", "field": "title", "text": "La página" }
+    ],
+    "routes": [
+        { "path": "/en", "lang": "en",  "kind": "alias" },
+        { "path": "/es", "lang": "es", "kind": "alias" }
+    ],
+    "entities_related": [
+        { "called_entity_id": "home", "kind": "medium"},
+        { "called_entity_id": "home", "kind": "category", "position": 1, "depth": 0, "tags": ["primary"] }
+    ]
+}
+
+### Create an entity and relate to other
+POST http://{{host}}/api/entities HTTP/1.1
+content-type: application/json
+accept: application/json
+
+{
+    "model": "Medium",
+    "relate_to": {
+        "caller_entity_id": "home",
+        "kind": "medium",
+        "position": 1,
+        "depth": 0,
+        "tags": ["icon"]
+    }
+}
+
+###############
+# Update
+###############
+
+### Update an entity
+PATCH http://{{host}}/api/entities/page_1 HTTP/1.1
+content-type: application/json
+accept: application/json
+
+{
+    "properties": {"x": "y"},
+    "view": "page-2",
+    "visibility": "public",
+    "contents": [
+        { "lang": "en", "field": "slug",  "text": "updated page" },
+        { "lang": "en", "field": "title", "text": "The updated page" },
+        { "lang": "es", "field": "title", "text": "La página actualizada" }
+    ],
+    "routes": [
+        { "path": "/en-2", "lang": "en",  "kind": "alias" },
+        { "path": "/es-2", "lang": "es", "kind": "alias" }
+    ],
+    "entities_related": [
+        { "called_entity_id": "home", "kind": "rel"}
+    ]
+}
+
+###############
+# Delete
+###############
+
+### Delete an entity
+DELETE http://{{host}}/api/entities/page_1 HTTP/1.1
+accept: application/json
+
+### Hard Delete an entity
+DELETE http://{{host}}/api/entities/page_1?hard=true HTTP/1.1
+accept: application/json
+
+### Restore an entity
+PATCH http://{{host}}/api/entities/home/restore HTTP/1.1
+content-type: application/json
+accept: application/json
+
+
+###############
+# Relations
+###############
+
+### Index relations of an entity
+GET http://{{host}}/api/entities/home/relations?select=id HTTP/1.1
+accept: application/json
+
+### Creates or updates a new relation with minimal params
+POST http://{{host}}/api/entities/home/relations/page_3/category HTTP/1.1
+content-type: application/json
+accept: application/json
+
+### Creates or updates a new relation with minimal params
+POST http://{{host}}/api/entities/home/relations/page_2/medium HTTP/1.1
+content-type: application/json
+accept: application/json
+
+{
+    "position": 1,
+    "depth": 2,
+    "tags": ["main", "secondary"]
+}
+
+### Deletes a relation by id
+DELETE http://{{host}}/api/entities/home/relations/31 HTTP/1.1
+content-type: application/json
+accept: application/json
+
+### Deletes a relation by its properties
+DELETE http://{{host}}/api/entities/home/relations/page_1/category HTTP/1.1
+content-type: application/json
+accept: application/json
+
+### Reorder relations
+PATCH http://{{host}}/api/entities/home/relations/reorder HTTP/1.1
+content-type: application/json
+accept: application/json
+
+{
+    "relation_ids": [33, 32, 30]
+}
+
+
+
+##############
+# MEDIA
+##############
+
+### Upload a file
+POST http://{{host}}/api/media/3H-QQ4E0Yt/upload HTTP/1.1
+accept: application/json
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="file"; filename="pan.jpg"
+Content-Type: image/jpeg
+
+< ./parts/pan.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+### Clear cache
+DELETE http://{{host}}/api/media/3H-QQ4E0Yt/cache HTTP/1.1
+content-type: application/json
+accept: application/json
