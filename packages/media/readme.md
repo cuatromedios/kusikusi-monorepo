@@ -6,7 +6,9 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/kusikusi/media.svg?style=flat-square)](https://packagist.org/packages/kusikusi/media)
 
 ## Install
-`composer require kusikusi/media`
+```
+composer require kusikusi/media:dev-master
+```
 
 ## Usage
 ### Publish the assets

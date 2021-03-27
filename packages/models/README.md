@@ -9,7 +9,7 @@
 ## Install
 
 ```shell
-composer require kusikusi/models
+composer require kusikusi/models:dev-master
 ```
 
 ## Usage

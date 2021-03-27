@@ -6,7 +6,9 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/kusikusi/website.svg?style=flat-square)](https://packagist.org/packages/kusikusi/website)
 
 ## Install
-`composer require kusikusi/website`
+```
+composer require kusikusi/website:dev-master
+```
 
 ## Usage
 ### Publish the assets
