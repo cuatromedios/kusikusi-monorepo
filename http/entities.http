@@ -284,7 +284,7 @@ DELETE http://{{host}}/api/entities/3H-QQ4E0Yt HTTP/1.1
 accept: application/json
 
 ### Hard Delete an entity
-DELETE http://{{host}}/api/entities/jSjF0QUI3t?hard=true HTTP/1.1
+DELETE http://{{host}}/api/entities/mmPj7K4ruL?hard=true HTTP/1.1
 accept: application/json
 
 ### Restore an entity
@@ -356,7 +356,7 @@ GET http://{{host}}/api/entities?select=id,model&of-model=Medium HTTP/1.1
 accept: application/json
 
 ### Upload a file
-POST http://{{host}}/api/media/3H-QQ4E0Yt/upload HTTP/1.1
+POST http://{{host}}/api/media/8jlPk7wG2j/upload HTTP/1.1
 accept: application/json
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 
@@ -380,6 +380,10 @@ accept: application/json
 ### Clear cache of all media all presets
 DELETE http://{{host}}/api/media/*/static HTTP/1.1
 content-type: application/json
+accept: application/json
+
+### Hard Delete an entity
+DELETE http://{{host}}/api/entities/vmU4YzozuA?hard=true HTTP/1.1
 accept: application/json
 
 
