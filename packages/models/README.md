@@ -15,7 +15,6 @@ composer require kusikusi/models
 ## Usage
 ### Publish the assets
 - ##### Publish all the assets ...
-  Export the config file
   ```shell
   php artisan vendor:publish --provider="Kusikusi\ModelsServiceProvider"
   ```
@@ -39,7 +38,7 @@ composer require kusikusi/models
 
 ### Include the routes
 
-If you need then, include the api routes in your `RouteServiceProvider.php` file, in the boot method:
+If you need them, include the api routes in your `RouteServiceProvider.php` file, in the boot method:
 > Don't forget to secure the routes!
 
 ```php
