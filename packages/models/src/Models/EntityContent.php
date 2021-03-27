@@ -32,7 +32,7 @@ class EntityContent extends Model
     public function entity($lang = null) {
         return $this->belongsTo('Kusikusi\Models\Entity', 'entity_id', 'id');
     }
-    protected $touches = ['entity'];
+    // protected $touches = ['entity'];
 
     /**
      * Create multiple contents from an array
@@ -51,16 +51,29 @@ class EntityContent extends Model
 
     /**
      * Create content for specific entity
+     * @
      */
-    public static function createTo($entity_id, $field, $text, $lang = null) 
+    public static function createFor() 
     {
+        $args = func_get_args();
+        $contents = [];
+        $entity_id = $args[0];
+        if (is_array($args[1])) {
+            foreach ($args[1] as $field => $text) $contents[] = ["field" => $field, "text" => $text];
+            $lang = $args[2] ?? null;
+        } else if (is_string($args[1])) {
+            $contents[] = ["field" => $args[1], "text" => $args[2]];
+            $lang = $args[3] ?? null;
+        }
         if (!$lang) $lang = Config::get('kusikusi_website.langs', [''])[0];
-        EntityContent::create([
-            "entity_id" => $entity_id,
-            "field" => $field,
-            "text" => $text,
-            "lang" => $lang
-        ]);
+        foreach ($contents as $content) {
+            EntityContent::create([
+                "entity_id" => $entity_id,
+                "field" => $content['field'],
+                "text" => $content['text'],
+                "lang" => $lang
+            ]);
+        }
     }
 
     protected static function boot()
