@@ -37,7 +37,7 @@ class MediaServiceProvider extends ServiceProvider
 
             // Publish Laravel route
             $this->publishes([
-            __DIR__.'/../routes/media-laravel.php' => base_path('routes/media.php'),
+            __DIR__.'/../routes/media.php' => base_path('routes/kusikusi_media.php'),
             ], 'route');
             
             // Publish Lumen route

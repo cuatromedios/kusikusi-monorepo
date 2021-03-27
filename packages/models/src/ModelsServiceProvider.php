@@ -38,6 +38,10 @@ class ModelsServiceProvider extends ServiceProvider
                 __DIR__ . '/../database/migrations/create_entities_routes_table.php.stub' => database_path('migrations/' . date('Y_m_d_His', time()+4) . '_create_entities_routes_table.php'),
                 ], 'migrations');
             }
+            // Publish Laravel route
+            $this->publishes([
+                __DIR__.'/../routes/models.php' => base_path('routes/kusikusi_models.php'),
+                ], 'route');
         }
     }
 }
