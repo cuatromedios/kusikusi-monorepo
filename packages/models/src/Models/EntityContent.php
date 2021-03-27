@@ -49,6 +49,20 @@ class EntityContent extends Model
         }
     }
 
+    /**
+     * Create multiple contents from an array
+     */
+    public static function createTo($entity_id, $field, $text, $lang = null) 
+    {
+        if (!$lang) $lang = Config::get('kusikusi_website.langs', [''])[0];
+        EntityContent::create([
+            "entity_id" => $entity_id,
+            "field" => $field,
+            "text" => $text,
+            "lang" => $lang
+        ]);
+    }
+
     protected static function boot()
     {
         parent::boot();
