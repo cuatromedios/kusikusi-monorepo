@@ -143,6 +143,7 @@ class EntityController extends BaseController
             $request->validate($this->entityRelationValidation());
             EntityRelation::create(array_merge($request->relate_to, ['called_entity_id' => $createdEntity->id]));
         }
+        $entity->touch();
         return($createdEntity);
     }
 
@@ -177,6 +178,7 @@ class EntityController extends BaseController
         if (isset($request->contents)) EntityContent::createFromArray($entity->id, $request->contents);
         if (isset($request->routes)) EntityRoute::createFromArray($entity->id, $request->routes, $entity->model);
         if (isset($request->entities_related)) EntityRelation::createFromArray($entity->id, $request->entities_related);
+        $entity->touch();
         $updatedEntity = $modelClassName::withContents()->withRoutes()->with('entities_related')->find($entity->id);
         return($updatedEntity);
     }

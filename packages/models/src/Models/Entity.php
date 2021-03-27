@@ -35,7 +35,7 @@ class Entity extends Model
     protected $fillable = ['id', 'model', 'view', 'properties', 'visibility', 'parent_entity_id', 'created_at', 'published_at', 'unpublished_at'];
     protected $contentFields = [];
     protected $propertiesFields = [];
-    protected $touches = ['entities_relating'];
+    // protected $touches = ['entities_relating'];
     protected $ancestorsRelations = true;
 
     /**
