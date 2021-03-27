@@ -50,13 +50,15 @@ class EntityRouteTest extends TestCase
   function a_redirect_route_can_be_created()
   {
     $id = 'EntityOne';      
-    $lang = 'en';       $slug = 'title';       
+    $lang = 'en';
+    $slug = 'title';
+    $newSlug = 'new-title';     
     Entity::create(['id' => $id]);
     EntityContent::create(['entity_id' => $id, 'lang' => $lang, 'field' => 'slug', 'text' => $slug]);        
-    EntityContent::create(['entity_id' => $id, 'lang' => $lang, 'field' => 'slug', 'text' => $slug]);        
-    $routes = EntityRoute::select()->where('entity_id', $id)->get();   
+    EntityContent::create(['entity_id' => $id, 'lang' => $lang, 'field' => 'slug', 'text' => $newSlug]);        
+    $routes = EntityRoute::select()->where('entity_id', $id)->orderBy('route_id')->get();   
     $this->assertEquals($routes[0]->path, "/$slug");
-    $this->assertEquals($routes[1]->path, "/$slug");
+    $this->assertEquals($routes[1]->path, "/$newSlug");
     $this->assertEquals($routes[0]->lang, $lang);
     $this->assertEquals($routes[1]->lang, $lang);
     $this->assertEquals($routes[0]->kind, 'permanent_redirect');

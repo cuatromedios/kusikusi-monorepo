@@ -55,12 +55,13 @@ class EntityRelationshipTest extends TestCase
   /** @test */
   function entity_relationships_with_same_index_does_not_duplicate()
   {
-    $this->expectException(\Illuminate\Database\QueryException::class);
-    $entityData = Entity::factory()->create();
-    $entityData2 = Entity::factory()->create();
-    $entityData3 = Entity::factory()->create();
-    EntityRelation::create(['caller_entity_id' => $entityData->id, 'called_entity_id' => $entityData2->id, 'kind' => 'Relationship', 'position' => 1, 'depth' => 1, 'tags' => null, 'created_at' => '2021-03-10 10:00:00', 'updated_at' => null]);
-    $repeat1 = EntityRelation::create(['caller_entity_id' => $entityData->id, 'called_entity_id' => $entityData2->id, 'kind' => 'Relationship', 'position' => 1, 'depth' => 1, 'tags' => null, 'created_at' => '2021-03-10 10:00:00', 'updated_at' => null]);
+    $entity1 = Entity::factory()->create();
+    $entity2 = Entity::factory()->create();
+    $entity3 = Entity::factory()->create();
+    EntityRelation::create(['caller_entity_id' => $entity1->id, 'called_entity_id' => $entity2->id, 'kind' => 'Relationship', 'position' => 1, 'depth' => 1, 'tags' => null]);
+    EntityRelation::create(['caller_entity_id' => $entity1->id, 'called_entity_id' => $entity2->id, 'kind' => 'Relationship', 'position' => 2, 'depth' => 1, 'tags' => null]);
+    EntityRelation::create(['caller_entity_id' => $entity1->id, 'called_entity_id' => $entity3->id, 'kind' => 'Relationship2', 'position' => 1, 'depth' => 1, 'tags' => null]);
+    EntityRelation::create(['caller_entity_id' => $entity1->id, 'called_entity_id' => $entity3->id, 'kind' => 'Relationship2', 'position' => 1, 'depth' => 2, 'tags' => null]);
     $this->assertDatabaseCount((new EntityRelation())->getTable(), 2);
   }
 

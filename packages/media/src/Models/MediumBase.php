@@ -166,7 +166,7 @@ class MediumBase extends Entity
            if (empty($this['properties']) || (is_array($this['properties'] && count($this['properties']) === 0))) {
                $this['properties'] = $fileProperties;
            } else {
-               $this['properties'] = array_merge($this['properties'], $fileProperties);
+               $this['properties'] = array_merge((array) $this['properties'], $fileProperties);
            }
            $this->save();
        }
