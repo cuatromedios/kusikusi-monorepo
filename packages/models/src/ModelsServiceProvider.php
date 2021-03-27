@@ -40,7 +40,7 @@ class ModelsServiceProvider extends ServiceProvider
             }
             // Publish Laravel route
             $this->publishes([
-                __DIR__.'/../routes/models.php' => base_path('routes/kusikusi_models.php'),
+                __DIR__.'/../routes/models.php' => base_path('routes/kusikusi_models_api.php'),
                 ], 'route');
         }
     }

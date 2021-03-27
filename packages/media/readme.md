@@ -15,7 +15,7 @@ composer require kusikusi/media:dev-master
 - ##### Publish all the assets
 
   ```shell
-  php artisan vendor:publish --provider="Kusikusi\MediaServiceProvider" --tag="config"
+  php artisan vendor:publish --provider="Kusikusi\MediaServiceProvider"
   ```
 
 - ##### Or publish individual assets
