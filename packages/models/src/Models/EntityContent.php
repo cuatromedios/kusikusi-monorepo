@@ -50,7 +50,7 @@ class EntityContent extends Model
     }
 
     /**
-     * Create multiple contents from an array
+     * Create content for specific entity
      */
     public static function createTo($entity_id, $field, $text, $lang = null) 
     {
