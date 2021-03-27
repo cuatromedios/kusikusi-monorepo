@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6a972888f1afb45b2a42f47a51ca143d",
+    "content-hash": "543925362ac20aa26b6f3e61951c3763",
     "packages": [
         {
             "name": "ankurk91/laravel-eloquent-relationships",
@@ -946,6 +946,80 @@
             "time": "2021-03-21T16:25:00+00:00"
         },
         {
+            "name": "intervention/image",
+            "version": "2.5.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Intervention/image.git",
+                "reference": "abbf18d5ab8367f96b3205ca3c89fb2fa598c69e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Intervention/image/zipball/abbf18d5ab8367f96b3205ca3c89fb2fa598c69e",
+                "reference": "abbf18d5ab8367f96b3205ca3c89fb2fa598c69e",
+                "shasum": ""
+            },
+            "require": {
+                "ext-fileinfo": "*",
+                "guzzlehttp/psr7": "~1.1",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "~0.9.2",
+                "phpunit/phpunit": "^4.8 || ^5.7"
+            },
+            "suggest": {
+                "ext-gd": "to use GD library based image processing.",
+                "ext-imagick": "to use Imagick based image processing.",
+                "intervention/imagecache": "Caching extension for the Intervention Image library"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.4-dev"
+                },
+                "laravel": {
+                    "providers": [
+                        "Intervention\\Image\\ImageServiceProvider"
+                    ],
+                    "aliases": {
+                        "Image": "Intervention\\Image\\Facades\\Image"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Intervention\\Image\\": "src/Intervention/Image"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Oliver Vogel",
+                    "email": "oliver@olivervogel.com",
+                    "homepage": "http://olivervogel.com/"
+                }
+            ],
+            "description": "Image handling and manipulation library with support for Laravel integration",
+            "homepage": "http://image.intervention.io/",
+            "keywords": [
+                "gd",
+                "image",
+                "imagick",
+                "laravel",
+                "thumbnail",
+                "watermark"
+            ],
+            "support": {
+                "issues": "https://github.com/Intervention/image/issues",
+                "source": "https://github.com/Intervention/image/tree/master"
+            },
+            "time": "2019-11-02T09:15:47+00:00"
+        },
+        {
             "name": "ircmaxell/security-lib",
             "version": "v1.1.0",
             "source": {
@@ -996,17 +1070,73 @@
             "time": "2015-03-20T14:31:23+00:00"
         },
         {
+            "name": "kusikusi/media",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cuatromedios/kusikusi-media.git",
+                "reference": "87fee7162c69bf61670c45cf4dad20f46a241c74"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cuatromedios/kusikusi-media/zipball/87fee7162c69bf61670c45cf4dad20f46a241c74",
+                "reference": "87fee7162c69bf61670c45cf4dad20f46a241c74",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "^7.0|^8.0",
+                "intervention/image": "^2.5",
+                "kusikusi/models": "dev-master"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^6.0"
+            },
+            "default-branch": true,
+            "type": "package",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Kusikusi\\MediaServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Kusikusi\\": "./src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Cuatromedios",
+                    "email": "dev@cuatromedios.com"
+                }
+            ],
+            "description": "A description for media.",
+            "keywords": [
+                "laravel"
+            ],
+            "support": {
+                "issues": "https://github.com/cuatromedios/kusikusi-media/issues",
+                "source": "https://github.com/cuatromedios/kusikusi-media/tree/master"
+            },
+            "time": "2021-03-27T07:09:58+00:00"
+        },
+        {
             "name": "kusikusi/models",
             "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cuatromedios/kusikusi-models.git",
-                "reference": "64c630400933f4d682cb87e8985000223254d6c0"
+                "reference": "09939a01b58236dceb209e2694716234008f0e30"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cuatromedios/kusikusi-models/zipball/64c630400933f4d682cb87e8985000223254d6c0",
-                "reference": "64c630400933f4d682cb87e8985000223254d6c0",
+                "url": "https://api.github.com/repos/cuatromedios/kusikusi-models/zipball/09939a01b58236dceb209e2694716234008f0e30",
+                "reference": "09939a01b58236dceb209e2694716234008f0e30",
                 "shasum": ""
             },
             "require": {
@@ -1050,7 +1180,62 @@
             "support": {
                 "source": "https://github.com/cuatromedios/kusikusi-models/tree/master"
             },
-            "time": "2021-03-25T16:17:17+00:00"
+            "time": "2021-03-27T07:06:29+00:00"
+        },
+        {
+            "name": "kusikusi/website",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cuatromedios/kusikusi-website.git",
+                "reference": "6bc5e9c5b6d8053e73b299ca80dbaa5bf9fc2d25"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cuatromedios/kusikusi-website/zipball/6bc5e9c5b6d8053e73b299ca80dbaa5bf9fc2d25",
+                "reference": "6bc5e9c5b6d8053e73b299ca80dbaa5bf9fc2d25",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "^7.0|^8.0",
+                "kusikusi/models": "dev-master"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^6.0"
+            },
+            "default-branch": true,
+            "type": "package",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Kusikusi\\WebsiteServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Kusikusi\\": "./src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Cuatromedios",
+                    "email": "dev@cuatromedios.com"
+                }
+            ],
+            "description": "A description for website.",
+            "keywords": [
+                "laravel"
+            ],
+            "support": {
+                "issues": "https://github.com/cuatromedios/kusikusi-website/issues",
+                "source": "https://github.com/cuatromedios/kusikusi-website/tree/master"
+            },
+            "time": "2021-03-27T07:09:58+00:00"
         },
         {
             "name": "laravel/framework",
@@ -7783,7 +7968,9 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "kusikusi/models": 20
+        "kusikusi/media": 20,
+        "kusikusi/models": 20,
+        "kusikusi/website": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
