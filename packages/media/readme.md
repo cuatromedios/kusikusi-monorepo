@@ -44,7 +44,8 @@ Route::middleware('web')
 ```
 
 ```php
-Route::middleware('api')
+Route::prefix('api')
+    ->middleware('api')
     ->group(base_path('routes/kusikusi_media_api.php'));
 ```
 

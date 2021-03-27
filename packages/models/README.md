@@ -42,7 +42,8 @@ If you need them, include the api routes in your `RouteServiceProvider.php` file
 > Don't forget to secure the routes!
 
 ```php
-Route::middleware('api')
+Route::prefix('api')
+    ->middleware('api')
     ->group(base_path('routes/kusikusi_models_api.php'));
 ```
 
