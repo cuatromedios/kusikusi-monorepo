@@ -1,4 +1,4 @@
-# Kusikusi Models
+# Kusikusi Models for Laravel
 > This is a read-only repository, splitted from the monorepo at github.com/cuatromedios/kusikusi
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)

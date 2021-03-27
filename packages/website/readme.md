@@ -1,4 +1,5 @@
-# website
+# Kusikusi Website Controllers for Laravel
+> This is a read-only repository, splitted from the monorepo at github.com/cuatromedios/kusikusi
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
 [![Travis](https://img.shields.io/travis/kusikusi/website.svg?style=flat-square)]()
