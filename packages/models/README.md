@@ -6,21 +6,46 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/cuatromedios/kusikusi-models.svg?style=flat-square)](https://packagist.org/packages/kusikusi/models)
 
 <a name="usage"></a>
-## Usage
-##### Require
+## Install
+
 ```shell
 composer require kusikusi/models
 ```
 
-##### Export the config file
-```shell
-php artisan vendor:publish --provider="Kusikusi\ModelsServiceProvider" --tag="config"
+## Usage
+### Publish the assets
+- ##### Publish all the assets ...
+  Export the config file
+  ```shell
+  php artisan vendor:publish --provider="Kusikusi\ModelsServiceProvider"
+  ```
+- ##### Or publish individual assets
+
+  Config
+  ```shell
+  php artisan vendor:publish --provider="Kusikusi\ModelsServiceProvider" --tag="config"
+  ```
+  
+  Migrations
+  ```shell
+  php artisan vendor:publish --provider="Kusikusi\ModelsServiceProvider" --tag="migrations"
+  ```
+  > Please note the migrations have commented lines you could use to define foreing keys to user tables
+
+  Api routes
+  ```shell
+  php artisan vendor:publish --provider="Kusikusi\ModelsServiceProvider" --tag="api_routes"
+  ```
+
+### Include the routes
+
+If you need then, include the api routes in your `RouteServiceProvider.php` file, in the boot method:
+> Don't forget to secure the routes!
+
+```php
+Route::middleware('api')
+    ->group(base_path('routes/kusikusi_models_api.php'));
 ```
-##### Export the migrations
-```shell
-php artisan vendor:publish --provider="Kusikusi\ModelsServiceProvider" --tag="migrations"
-```
-> Please note the migrations have commented lines you could use to define foreing keys to user tables
 
 ##### Run the migrations
 ```shell

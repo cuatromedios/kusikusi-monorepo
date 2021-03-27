@@ -37,7 +37,7 @@ class WebsiteServiceProvider extends ServiceProvider
             // Publish Laravel route
             $this->publishes([
             __DIR__.'/../routes/website.php' => base_path('routes/kusikusi_website.php'),
-            ], 'route');
+            ], 'routes');
             
             // Publish Lumen route
             /* $this->publishes([

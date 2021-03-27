@@ -8,36 +8,35 @@
 `composer require kusikusi/website`
 
 ## Usage
+### Publish the assets
+- ##### Publish all the assets ...
+  ```shell
+  php artisan vendor:publish --provider="Kusikusi\WebsiteServiceProvider"
+  ```
 
-#### Export all the assets ...
-```shell
-php artisan vendor:publish --provider="Kusikusi\WebsiteServiceProvider"
-```
+- ##### Or Publish individual Assets
+  Configuration
+  ```shell
+  php artisan vendor:publish --provider="Kusikusi\WebsiteServiceProvider" --tag="config"
+  ```
 
+  HtmlController
+  ```shell
+  php artisan vendor:publish --provider="Kusikusi\WebsiteServiceProvider" --tag="controller"
+  ```
 
-#### Or Export individual Assets
+  Routes
+  ```shell
+  php artisan vendor:publish --provider="Kusikusi\WebsiteServiceProvider" --tag="routes"
+  ```
 
-Configuration
-```shell
-php artisan vendor:publish --provider="Kusikusi\WebsiteServiceProvider" --tag="config"
-```
+### Include the routes
 
-HtmlController
-```shell
-php artisan vendor:publish --provider="Kusikusi\WebsiteServiceProvider" --tag="controller"
-```
-
-Route file for Laravel
-
-```shell
-php artisan vendor:publish --provider="Kusikusi\WebsiteServiceProvider" --tag="route"
-```
-
-Include the route in your `RouteServiceProvider.php` file, in the boot method, as the last routes:
+Include the routes in your `RouteServiceProvider.php` file, in the boot method, as the last routes:
 
 ```php
 Route::middleware('web')
-    ->group(base_path('routes/website.php'));
+    ->group(base_path('routes/kusikusi_website.php'));
 ```
 
 

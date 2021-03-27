@@ -8,22 +8,44 @@
 `composer require kusikusi/media`
 
 ## Usage
+### Publish the assets
+- ##### Publish all the assets
 
-##### Export the website route file for Laravel
-```shell
-php artisan vendor:publish --provider="Kusikusi\MediaServiceProvider" --tag="config"
-```
+  ```shell
+  php artisan vendor:publish --provider="Kusikusi\MediaServiceProvider" --tag="config"
+  ```
 
-##### Export the website route file for Laravel
-```shell
-php artisan vendor:publish --provider="Kusikusi\MediaServiceProvider" --tag="route"
-```
-Include the route in your RouteServiceProvider.php file, in the boot method, please remember the website routes should be ketp as the last ones:
+- ##### Or publish individual assets
+
+  Config files
+  ```shell
+  php artisan vendor:publish --provider="Kusikusi\MediaServiceProvider" --tag="config"
+  ```
+
+  Route file
+  ```shell
+  php artisan vendor:publish --provider="Kusikusi\MediaServiceProvider" --tag="routes"
+  ```
+
+  Api Route file
+  ```shell
+  php artisan vendor:publish --provider="Kusikusi\MediaServiceProvider" --tag="api_routes"
+  ```
+
+### Include the routes
+Include the needed route files in your `RouteServiceProvider.php` file, in the boot method:
 
 ```php
 Route::middleware('web')
-    ->group(base_path('routes/media.php'));
+    ->group(base_path('routes/kusikusi_media.php'));
 ```
+
+```php
+Route::middleware('api')
+    ->group(base_path('routes/kusikusi_media_api.php'));
+```
+
+> Don't forget to secure the routes!
 
 ## Testing
 Run the tests with:
