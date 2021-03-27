@@ -12,7 +12,6 @@
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
-        "kusikusi/api": "*",
         "kusikusi/models": "*",
         "kusikusi/website": "*",
         "kusikusi/media": "*",
@@ -80,10 +79,6 @@
         "media": {
             "type": "path",
             "url": "../packages/media"
-        },
-        "api": {
-            "type": "path",
-            "url": "../packages/api"
         }
     }
 }

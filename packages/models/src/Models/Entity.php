@@ -777,7 +777,7 @@ class Entity extends Model
      */
     protected static function boot()
     {
-        $modelName = Str::studly(Str::afterLast(get_called_class(), '\\'));
+        $modelName = Str::before(Str::studly(Str::afterLast(get_called_class(), '\\')), 'Base');
         if ($modelName !== 'Entity') {
             static::addGlobalScope($modelName, function (Builder $builder) use ($modelName) {
                 $builder->where('model', $modelName);

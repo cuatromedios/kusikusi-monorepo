@@ -200,7 +200,6 @@ content-type: application/json
 accept: application/json
 
 {
-    "id": "home",
     "model": "Home"
 }
 
@@ -281,15 +280,15 @@ accept: application/json
 ###############
 
 ### Delete an entity
-DELETE http://{{host}}/api/entities/page_1 HTTP/1.1
+DELETE http://{{host}}/api/entities/3H-QQ4E0Yt HTTP/1.1
 accept: application/json
 
 ### Hard Delete an entity
-DELETE http://{{host}}/api/entities/page_1?hard=true HTTP/1.1
+DELETE http://{{host}}/api/entities/jSjF0QUI3t?hard=true HTTP/1.1
 accept: application/json
 
 ### Restore an entity
-PATCH http://{{host}}/api/entities/home/restore HTTP/1.1
+PATCH http://{{host}}/api/entities/3H-QQ4E0Yt/restore HTTP/1.1
 content-type: application/json
 accept: application/json
 
@@ -343,6 +342,19 @@ accept: application/json
 # MEDIA
 ##############
 
+### Create a Medium entity simplest mode
+POST http://{{host}}/api/entities HTTP/1.1
+content-type: application/json
+accept: application/json
+
+{
+    "model": "Medium"
+}
+
+### List all media
+GET http://{{host}}/api/entities?select=id,model&of-model=Medium HTTP/1.1
+accept: application/json
+
 ### Upload a file
 POST http://{{host}}/api/media/3H-QQ4E0Yt/upload HTTP/1.1
 accept: application/json
@@ -355,7 +367,19 @@ Content-Type: image/jpeg
 < ./parts/pan.jpg
 ------WebKitFormBoundary7MA4YWxkTrZu0gW--
 
-### Clear cache
-DELETE http://{{host}}/api/media/3H-QQ4E0Yt/cache HTTP/1.1
+### Clear cache of a medium
+DELETE http://{{host}}/api/media/3H-QQ4E0Yt/static/icon HTTP/1.1
 content-type: application/json
 accept: application/json
+
+### Clear cache of all media
+DELETE http://{{host}}/api/media/*/static/icon HTTP/1.1
+content-type: application/json
+accept: application/json
+
+### Clear cache of all media all presets
+DELETE http://{{host}}/api/media/*/static HTTP/1.1
+content-type: application/json
+accept: application/json
+
+

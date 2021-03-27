@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use Illuminate\Http\UploadedFile;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Config;
 use Kusikusi\Models\EntityRelation;
@@ -13,8 +14,7 @@ use Kusikusi\Models\Entity;
 
 class MediumBase extends Entity
 {
-    protected $contentFields = [ "title", "description", "transcript", "caption" ];
-    protected $propertiesFields = [ "size", "lang", "format", "length", "exif", "width", "height" ];
+    const MODEL_NAME = "Medium";
 
     protected function getTitleAsSlug($preset) {
         $filename = isset($this['content']['title']) ? Str::slug($this['content']['title']) : 'file';
@@ -84,17 +84,141 @@ class MediumBase extends Entity
         }
         return $properties;
     }
-    public static function clearStatic($entity_id = null) {
+    public function processPreset($preset, $friendly) {
+        $originalFilePath =  Config::get('kusikusi_media.original_storage.folder') .'/'. $this->id . '/file.' . (isset($this->properties['format']) ? $this->properties['format'] : 'bin');
+        $publicFilePath = Config::get('kusikusi_media.original_storage.folder') .'/'. $this->id .'/'. $preset .'/'. $friendly;
+        $presetSettings = Config::get('kusikusi_media.presets.'.$preset, null);
+        if (NULL === $presetSettings && $preset !== 'original') {
+            abort(404, "No media preset '$preset' found");
+        }
+
+        if (!self::originalDisk()->exists($originalFilePath)) {
+            abort(404, 'File for medium ' . $originalFilePath . ' not found');
+        }
+
+        if (array_search($this->properties['format'], ['jpg', 'png', 'gif']) === FALSE || $preset === 'original') {
+            $headers = [];
+            if ($this->properties['format'] === 'svg') {
+                $headers = ['Content-Type' => 'image/svg+xml'];
+            }
+            if (Config::get('kusikusi_media.copy_original_to_static', false)) {
+                self::staticDisk()
+                    ->put($publicFilePath, self::originalDisk()
+                    ->get($originalFilePath));
+            }
+            return self::originalDisk()
+                ->response($originalFilePath, null, $headers);
+        }
+
+        // Set default values if not set
+        data_fill($presetSettings, 'width', 256);  // int
+        data_fill($presetSettings, 'height', 256); // int
+        data_fill($presetSettings, 'scale', 'cover'); // contain | cover | fill
+        data_fill($presetSettings, 'alignment', 'center'); // only if scale is 'cover' or 'contain' with background: top-left | top | top-right | left | center | right | bottom-left | bottom | bottom-right
+        data_fill($presetSettings, 'background', null); // only if scale is 'contain': crop | #HEXCODE
+        data_fill($presetSettings, 'crop', false); // only if scale is 'contain': true | false
+        data_fill($presetSettings, 'quality', 80); // 0 - 100 for jpg | 1 - 8, (bits) for gif | 1 - 8, 24 (bits) for png
+        data_fill($presetSettings, 'format', 'jpg'); // jpg | gif | png
+        data_fill($presetSettings, 'effects', []); // ['colorize' => [50, 0, 0], 'greyscale' => [] ]
+
+
+        // The fun
+        $filedata = self::originalDisk()->get($originalFilePath);
+        $image = Image::make($filedata);
+        if ($presetSettings['background'] !== null) {
+            $canvas = Image::canvas($image->width(), $image->height(), $presetSettings['background']);
+            $image = $canvas->insert($image);
+        }
+        if ($presetSettings['scale'] === 'cover') {
+            $image->fit($presetSettings['width'], $presetSettings['height'], NULL, $presetSettings['alignment']);
+        } elseif ($presetSettings['scale'] === 'fill') {
+            $image->resize($presetSettings['width'], $presetSettings['height']);
+        } elseif ($presetSettings['scale'] === 'contain') {
+            $image->resize($presetSettings['width'], $presetSettings['height'], function ($constraint) {
+                $constraint->aspectRatio();
+            });
+            if ($presetSettings['crop']) {
+                $image->resizeCanvas($presetSettings['width'], $presetSettings['height'], $presetSettings['alignment'], false, $presetSettings['background']);
+            }
+        }
+
+        foreach ($presetSettings['effects'] as $key => $value) {
+            $image->$key(...$value);
+        }
+
+        $image->encode($presetSettings['format'], $presetSettings['quality']);
+        self::staticDisk()->put($publicFilePath, $image);
+    }
+    public function processUpload($role, UploadedFile $file)
+    {
+        $fileProperties = self::processUploadById($this->id, $role, $file);
+        if ($role === 'file') {
+            // TODO: For some reason the exit properties freezes the process once is returned as json
+           /* if (isset($fileProperties['exif'])) {
+               foreach ($fileProperties['exif'] as $prop => $value) {
+                   if (Str::startsWith($prop, "UndefinedTag")) {
+                       unset($fileProperties['exif'][$prop]);
+                   }
+               }
+           } */
+           unset($fileProperties['exif']);
+           $this['properties'] = (array) $this['properties'] ?? [];
+           if (empty($this['properties']) || (is_array($this['properties'] && count($this['properties']) === 0))) {
+               $this['properties'] = $fileProperties;
+           } else {
+               $this['properties'] = array_merge($this['properties'], $fileProperties);
+           }
+           $this->save();
+       }
+       return $fileProperties;
+    }
+    public static function processUploadById($entity_id, $role, UploadedFile $file) {
+        $properties = self::getProperties($file);
+        $storageFileName = $role . '.' . $properties['format'];
+        self::deleteOriginal($entity_id);
+        self::clearStatic($entity_id);
+        self::originalDisk()->putFileAs(Config::get('kusikusi_media.original_storage.folder').'/'.$entity_id, $file, $storageFileName);
+        return $properties;
+    }
+    public static function deleteOriginal($entity_id) {
+        if (!$entity_id) abort(400);
+        $files = self::originalDisk()->files(Config::get('kusikusi_media.original_storage.folder').'/'.$entity_id);
+        return self::originalDisk()->delete($files, true);
+    }
+    public static function clearStatic($entity_id = null, $preset = null) {
+        if (!$entity_id) abort(400);
         $cleared = [];
         if ($entity_id === '*') {
-            $directories = Storage::disk(Config::get('kusikusi_media.static_storage.drive'))->directories(null, false);
-            foreach ($directories as $directory) {
-                $deleted = Storage::disk(Config::get('kusikusi_media.static_storage.drive'))->deleteDirectory($directory, true);
-                if ($deleted) $cleared[] = $directory;
+            $entitiesDirectories = self::originalDisk()->directories(Config::get('kusikusi_media.static_storage.folder'));
+        } else {
+            $entitiesDirectories = [Config::get('kusikusi_media.static_storage.folder').'/'.$entity_id];
+        }
+        foreach ($entitiesDirectories as $entityDirectory) {
+            if (!$preset) {
+                $presetDirectories = self::originalDisk()->directories($entityDirectory);
+            } else {
+                $presetDirectories = [$entityDirectory.'/'.$preset];
             }
-        } else if ($entity_id) {
-            if (Storage::disk(Config::get('kusikusi_media.static_storage.drive'))->deleteDirectory($entity_id, true)) $cleared[] = $entity_id;
+            foreach ($presetDirectories as $presetDirectory) {
+                $cleared[$presetDirectory] = self::staticDisk()->deleteDirectory($presetDirectory, true);
+            }
         }
         return $cleared;
+    }
+    private static function originalDisk() {
+        return Storage::disk(Config::get('kusikusi_media.original_storage.drive'));
+    }
+    private static function staticDisk() {
+        return Storage::disk(Config::get('kusikusi_media.static_storage.drive'));
+    }
+    protected static function boot()
+    {
+        static::deleted(function (Model $medium) {
+            if ($medium->isForceDeleting()) {
+                $medium->clearStatic($medium->id);
+                $medium->deleteOriginal($medium->id);
+            }
+        });
+        parent::boot();
     }
 }

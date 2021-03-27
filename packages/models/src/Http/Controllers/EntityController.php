@@ -193,13 +193,18 @@ class EntityController extends BaseController
     public function destroy(Request $request, $entity_id)
     {
         $request->validate(['hard' => Rule::in(['true', 'false', ''])]);
+        $entityFound = Entity::select('id', 'model')
+            ->where('id', $entity_id)
+            ->firstOrFail();
+        $modelClassName = Entity::getEntityClassName(Str::singular($entityFound->model));
+        $entity = $modelClassName::select('id', 'deleted_at')->withTrashed()->findOrFail($entity_id);
+        $entity->delete();
         if ($request->get('hard') && ($request->get('hard') === 'true' || $request->get('hard') === '')) {
-            Entity::where('id', $entity_id)->forceDelete();
+            $relating = Entity::select('id')->relating('entity_id');
+            if ($relating->count() > 0) abort(403, 'The entity is beign related by other entities');
+            $entity->forceDelete();
             return (["message" => "Entity ${entity_id} was hard deleted"]);
-            
         } else {
-            Entity::where('id', $entity_id)->delete();
-            $entity = Entity::select('id', 'deleted_at')->withTrashed()->findOrFail($entity_id);
             if ( $entity) $entity->makeVisible('deleted_at');
             return($entity);
         }

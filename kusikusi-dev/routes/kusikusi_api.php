@@ -31,4 +31,6 @@ Route::post('/entities/{entity_id}/relations/{called_entity_id}/{kind}', [Entity
 Route::delete('/entities/{entity_id}/relations/{called_entity_id}/{kind}', [EntityRelationController::class, 'destroy']);
 Route::delete('/entities/{entity_id}/relations/{relation_id}', [EntityRelationController::class, 'destroy']);
 Route::patch('/entities/{entity_id}/relations/reorder', [EntityRelationController::class, 'reorder']);
+
 Route::post('/media/{entity_id}/upload', [MediumController::class, 'upload']);
+Route::delete('/media/{entity_id}/static/{preset?}', [MediumController::class, 'clearStatic']);
