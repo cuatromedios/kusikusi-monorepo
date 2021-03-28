@@ -15,6 +15,9 @@ class EmptyWebsiteSeeder extends Seeder
      */
     public function run()
     {
+        $this->call([
+            AdminSeeder::class,
+        ]);
         $home = Entity::create(['id' => 'home', 'model' => 'Home', 'view' => 'home']);
         EntityContent::createFor('home', [
             'title', 'Kusikusi',

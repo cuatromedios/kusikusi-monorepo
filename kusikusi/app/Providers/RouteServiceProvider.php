@@ -47,17 +47,6 @@ class RouteServiceProvider extends ServiceProvider
                 ->namespace($this->namespace)
                 ->group(base_path('routes/web.php'));
             
-            Route::middleware('api')
-                ->group(base_path('routes/kusikusi_models_api.php'));
-
-            Route::middleware('web')
-                ->group(base_path('routes/kusikusi_media.php'));
-
-            Route::middleware('api')
-                ->group(base_path('routes/kusikusi_media_api.php'));
-
-            Route::middleware('web')
-                ->group(base_path('routes/kusikusi_website.php'));
         });
     }
 
