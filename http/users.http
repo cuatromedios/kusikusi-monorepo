@@ -3,7 +3,7 @@ GET http://{{host}}/sanctum/csrf-cookie
 
 ###
 
-@csrfToken = eyJpdiI6IjY0RlB2NjVWU3dvZ2NqVEdFN0Nka3c9PSIsInZhbHVlIjoiUFFiUTRGL2ZzVkdqMFp6SjlFdHlBWmd3WmF1cEUzMXhWSWZodERJRnBqME9ZOGcvVk1aZHVhaG1WbDhma1JHYmlEcW94QW1iMTJDc1dOTWkzZWJUb0prR2RvUklRY21wYjRQZ0kzR0g3SlIrd1liMUdEeUJwdUNvQ0FrT0x2dEIiLCJtYWMiOiJhZGM5ZjI0ZmYyZWRiNzdlOTRlNzg0ZmQ2MmM1ZWQ3MDYwYzQyZmJjOGFhOGM0NWY4MzUyYjRhODBkM2JkYmE5In0
+@csrfToken = eyJpdiI6IlFtMkVWVk5zZFh2K3EwOEQxNDE4TGc9PSIsInZhbHVlIjoiUXhITmt2dnBpbFlUcnVHNldJTlZPOUtvREIveFQvQXM0WWxKNE9NQ3o5bXRybGhWOCtvQzZOMVZiZERNbEwyQjB2SHd2N2lpVkJ5NENWSFIyZXFIOUprc0cxOElJNzBtMFZZTUd6QTN0VDBydzJmK2VpS01WYWh4Ui9ncFVuNWQiLCJtYWMiOiI3ZTNjMWQyMTI1MDMyMDM2YjM0ZGI1YzMwZWY1NDJjNTM3NGE5MGNkMWY2ZWFjZDIxZjBmNzZhYTVhYTYyNzM4In0
 
 ### Login
 POST http://{{host}}/api/auth/login HTTP/1.1
@@ -12,6 +12,6 @@ content-type: application/json
 accept: application/json
 
 {
-    "email": "admin@example.comx",
+    "email": "admin@example.com",
     "password": "605fc6b3c8d9c5.19302828"
 }
