@@ -14,7 +14,9 @@
     ],
     "require": {
         "illuminate/support": "^7.0|^8.0",
-        "kusikusi/models": "dev-master"
+    },
+    "suggest": {
+        "kusikusi/models": "Please be sure to install kusikusi/models in this project also"
     },
     "autoload": {
         "psr-4": {
