@@ -20,6 +20,11 @@ composer require kusikusi/media:dev-master
 
 - ##### Or publish individual assets
 
+  Model files
+  ```shell
+  php artisan vendor:publish --provider="Kusikusi\MediaServiceProvider" --tag="model"
+  ```
+ 
   Config files
   ```shell
   php artisan vendor:publish --provider="Kusikusi\MediaServiceProvider" --tag="config"
