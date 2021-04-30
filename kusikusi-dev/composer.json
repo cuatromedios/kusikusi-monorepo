@@ -12,10 +12,12 @@
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
+        "kusikusi/media": "*",
         "kusikusi/models": "*",
         "kusikusi/website": "*",
-        "kusikusi/media": "*",
+        "laravel/fortify": "^1.7",
         "laravel/framework": "^8.12",
+        "laravel/sanctum": "^2.10",
         "laravel/tinker": "^2.5",
         "scrivo/highlight.php": "v9.18.1.6"
     },
