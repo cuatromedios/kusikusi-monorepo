@@ -1,5 +1,7 @@
-import enUS from './en-US'
+import enUS from './en-us'
+import esMx from './es-mx'
 
 export default {
-  'en-US': enUS
+  'en-us': enUS,
+  'es-mx': esMx
 }

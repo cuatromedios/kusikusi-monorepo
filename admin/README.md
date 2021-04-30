@@ -1,6 +1,6 @@
-# Kusikusi admin (kusikusi-admin)
+# Kusikusi Admin Frontend (kusikusi-admin)
 
-Kusikusi Admin Interface
+The generic Vue based front end for Kusikusi based projects
 
 ## Install the dependencies
 ```bash
@@ -23,4 +23,4 @@ quasar build
 ```
 
 ### Customize the configuration
-See [Configuring quasar.conf.js](https://v2.quasar.dev/quasar-cli/quasar-conf-js).
+See [Configuring quasar.conf.js](https://quasar.dev/quasar-cli/quasar-conf-js).

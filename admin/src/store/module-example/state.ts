@@ -1,11 +1,3 @@
-export interface ExampleStateInterface {
-  prop: boolean;
+export default {
+  // your code
 }
-
-function state (): ExampleStateInterface {
-  return {
-    prop: false
-  }
-}
-
-export default state

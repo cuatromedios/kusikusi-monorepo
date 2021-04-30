@@ -1,16 +1,12 @@
-import { Module } from 'vuex'
-import { StateInterface } from '../index'
-import state, { ExampleStateInterface } from './state'
-import actions from './actions'
-import getters from './getters'
-import mutations from './mutations'
+import * as actions from './actions'
+import * as getters from './getters'
+import * as mutations from './mutations'
+import state from './state'
 
-const exampleModule: Module<ExampleStateInterface, StateInterface> = {
+export default {
   namespaced: true,
-  actions,
   getters,
   mutations,
+  actions,
   state
 }
-
-export default exampleModule
