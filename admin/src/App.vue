@@ -20,7 +20,7 @@ export default {
     this.$api.baseURL = process.env.API_URL
     const config = await this.$api.get('/cms/config')
     if (config.success) {
-      this.$store.commit('setConfig', config.data)
+      // this.$store.commit('setConfig', config.data)
     }
     await this.$store.dispatch('getLocalSession')
     if (this.$store.getters.hasAuthtoken) {

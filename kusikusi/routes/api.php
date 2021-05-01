@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 use Kusikusi\Http\Controllers\MediumController;
 use Kusikusi\Http\Controllers\EntityController;
 use Kusikusi\Http\Controllers\EntityRelationController;
@@ -16,7 +17,10 @@ use Kusikusi\Http\Controllers\EntityRelationController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/tokens/create', function (Request $request) {
+    return ['token' => 'dd'];
+});
 // Authenticated
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {

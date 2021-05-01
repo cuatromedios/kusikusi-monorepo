@@ -1,0 +1,21 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "run front admin (local)",
+			"type": "shell",
+			"command": "quasar",
+			"options": {
+					"cwd": "${workspaceFolder}/admin",
+					"env": {
+							"API_URL": "http://local.kusikusi.com/api",
+							"MEDIA_URL": "http://local.kusikusi.com"
+					}
+			},
+			"args": [
+				"dev"
+			],
+			"problemMatcher": []
+		}
+	]
+}

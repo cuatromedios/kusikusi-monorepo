@@ -15,7 +15,8 @@
         "laravel/fortify": "^1.7",
         "laravel/framework": "^8.12",
         "laravel/sanctum": "^2.9",
-        "laravel/tinker": "^2.5"
+        "laravel/tinker": "^2.5",
+        "wulfheart/pretty_routes": "^0.2.0"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

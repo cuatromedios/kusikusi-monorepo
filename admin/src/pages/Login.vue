@@ -5,7 +5,7 @@
       <p class="text-h3 text-center col-12">{{ $store.getters.title() }}</p>
       <nq-input :autofocus="true"
                 class="col-12"
-                v-model="form.email"
+                v-model="form.login"
                 :label="$t('login.email')"
                 :rules="[
                   $rules.required($t('login.invalidEmail')),
@@ -43,7 +43,7 @@ export default {
   data () {
     return {
       form: {
-        email: '',
+        login: '',
         password: ''
       },
       message: '',
@@ -52,11 +52,17 @@ export default {
   },
   methods: {
     handleLogin: async function () {
-      const loginResult = await this.$api.post('/user/login', this.form)
+      this.$axios.get('http://local.kusikusi.com/sanctum/csrf-cookie').then(response => {
+        console.log(response)
+      });
+      const auth = await this.$api.get('/sanctum/csrf-cookie',)
+      console.log(auth)
+      const loginResult = await this.$api.post('/login', this.form)
+      console.log(loginResult)
       if (loginResult.success) {
         this.$store.commit('setAuthtoken', loginResult.data.token)
-        this.$store.commit('setUser', loginResult.data.user)
-        this.$router.push({ name: 'content', params: { entity_id: 'home' } })
+        // this.$store.commit('setUser', loginResult.data.user)
+        // this.$router.push({ name: 'content', params: { entity_id: 'home' } })
       } else {
         if (loginResult.status === 401) {
           this.$q.notify({

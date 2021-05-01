@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Fortify\Fortify;
+use App\Models\User;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -31,6 +32,14 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Fortify::authenticateUsing(function (Request $request) {
+            $validate = $request->validate([
+                "login" => "required|string",
+                "password" => "required|string"
+            ]);
+            $auth =  User::authenticate($request->input('login'), $request->input('password'), 'login');
+            return $auth;
+        });
         Fortify::createUsersUsing(CreateNewUser::class);
         Fortify::updateUserProfileInformationUsing(UpdateUserProfileInformation::class);
         Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);
