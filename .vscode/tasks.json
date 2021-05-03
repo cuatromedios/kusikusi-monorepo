@@ -8,8 +8,10 @@
 			"options": {
 					"cwd": "${workspaceFolder}/admin",
 					"env": {
-							"API_URL": "http://local.kusikusi.com/api",
-							"MEDIA_URL": "http://local.kusikusi.com"
+							// "API_URL": "http://local.kusikusi.com/api",
+							// "MEDIA_URL": "http://local.kusikusi.com"
+							"API_URL": "http://localhost:8000/api",
+							"MEDIA_URL": "http://localhost:8000"
 					}
 			},
 			"args": [

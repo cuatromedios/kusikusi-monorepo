@@ -18,9 +18,6 @@ use Kusikusi\Http\Controllers\EntityRelationController;
 |
 */
 Route::post('/login', [AuthController::class, 'login']);
-Route::post('/tokens/create', function (Request $request) {
-    return ['token' => 'dd'];
-});
 // Authenticated
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {

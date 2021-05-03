@@ -43,8 +43,8 @@ export default {
   data () {
     return {
       form: {
-        login: '',
-        password: ''
+        login: 'admin@kusiksui.com',
+        password: 'admin'
       },
       message: '',
       isPwd: true
@@ -52,15 +52,20 @@ export default {
   },
   methods: {
     handleLogin: async function () {
-      this.$axios.get('http://local.kusikusi.com/sanctum/csrf-cookie').then(response => {
-        console.log(response)
-      });
-      const auth = await this.$api.get('/sanctum/csrf-cookie',)
-      console.log(auth)
+      const sessionResult = await this.$axios.get('http://local.kusikusi.com/sanctum/csrf-cookie')
+      const xsrfToken = sessionResult.config.headers['X-XSRF-TOKEN']
+      
+      this.$api.axiosInstance.defaults.headers.common['X-XSRF-TOKEN'] = xsrfToken;
       const loginResult = await this.$api.post('/login', this.form)
       console.log(loginResult)
+      // const loginResult2 = await this.$axios.post('http://localhost:8000/api/login', this.form)
+      // console.log(loginResult2)
       if (loginResult.success) {
-        this.$store.commit('setAuthtoken', loginResult.data.token)
+        let user = await this.$api.get('/user', this.form)
+        console.log(user)
+        await this.$store.commit('setAuthtoken', loginResult.data.token)
+        user = await this.$api.get('/user', this.form)
+        console.log(user)
         // this.$store.commit('setUser', loginResult.data.user)
         // this.$router.push({ name: 'content', params: { entity_id: 'home' } })
       } else {
