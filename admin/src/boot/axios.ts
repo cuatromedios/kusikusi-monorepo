@@ -8,7 +8,5 @@ declare module 'vue/types/vue' {
 }
 
 export default boot(({ Vue }) => {
-  axios.defaults.withCredentials = true
-  axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
   Vue.prototype.$axios = axios
 })

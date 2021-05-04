@@ -12,17 +12,12 @@
 </template>
 
 <script>
-import draggable from 'vuedraggable'
 import MediaLibrary from '../components/MediaLibrary'
 export default {
   name: 'Media',
   components: { MediaLibrary },
   data () {
     return {}
-  },
-  async created () {
-  },
-  async beforeRouteUpdate (to, from, next) {
   },
   methods: {
   }

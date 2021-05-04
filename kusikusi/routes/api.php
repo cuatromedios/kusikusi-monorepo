@@ -17,7 +17,7 @@ use Kusikusi\Http\Controllers\EntityRelationController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::post('/login', [AuthController::class, 'login']);
+// Route::post('/login', [AuthController::class, 'login']);
 // Authenticated
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {
