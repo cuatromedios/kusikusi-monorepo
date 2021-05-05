@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use Kusikusi\Http\Controllers\MediumController;
 use Kusikusi\Http\Controllers\EntityController;
 use Kusikusi\Http\Controllers\EntityRelationController;
+use Illuminate\Support\Facades\Config;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +19,10 @@ use Kusikusi\Http\Controllers\EntityRelationController;
 |
 */
 // Route::post('/login', [AuthController::class, 'login']);
+Route::get('/cms/config', function() {
+    $cms = config('kusikusi_admin');
+    return $cms;
+});
 // Authenticated
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {

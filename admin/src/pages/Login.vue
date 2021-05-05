@@ -61,7 +61,7 @@ export default {
         const user = await this.$api.get('/user', this.form)
         // await this.$store.commit('setAuthtoken', loginResult.data.token)
         this.$store.commit('setUser', user.data)
-        // this.$router.push({ name: 'content', params: { entity_id: 'home' } })
+        this.$router.push({ name: 'content', params: { entity_id: 'home' } })
       } else {
         if (loginResult.status === 401) {
           this.$q.notify({

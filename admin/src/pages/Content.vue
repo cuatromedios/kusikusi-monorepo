@@ -172,7 +172,7 @@ export default {
       this.$store.commit('setSaveButton', false)
       this.entity.id = entity_id || 'home'
       if (entity_id !== 'new') {
-        const contentResult = await this.$api.get(`/entity/${this.entity.id}?with=contents,entities_related`)
+        const contentResult = await this.$api.get(`/entities/${this.entity.id}?with=contents,entities_related`)
         this.loading = false
         if (contentResult.success) {
           this.entity = contentResult.data
