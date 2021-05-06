@@ -176,7 +176,8 @@ export default {
         this.loading = false
         if (contentResult.success) {
           this.entity = contentResult.data
-          const ancestorsResult = await this.$api.get(`/entities?ancestor-of=${this.entity.id}&descendant-of=website&select=id,contents.title,properties&order-by=ancestor_relation_depth:desc`)
+          const ancestorsResult = await this.$api.get(`/entities?ancestor-of=${this.entity.id}&descendant-of=website&select=id,contents.title,properties`)
+          // const ancestorsResult = await this.$api.get(`/entities?ancestor-of=${this.entity.id}&descendant-of=website&select=id,contents.title,properties&order-by=ancestor_relation_depth:desc`)
           if (ancestorsResult.success) {
             this.ancestors = ancestorsResult.data.data
           } else {
@@ -278,9 +279,9 @@ export default {
       let saveResult
       if (this.isNew) {
         if (this.entity.id === 'new') delete this.entity.id
-        saveResult = await this.$api.post('/entity', this.entity)
+        saveResult = await this.$api.post('/entities', this.entity)
       } else {
-        saveResult = await this.$api.patch(`/entity/${this.entity.id}`, this.entity)
+        saveResult = await this.$api.patch(`/entities/${this.entity.id}`, this.entity)
       }
       this.saving = false
       if (saveResult.success) {
@@ -316,7 +317,7 @@ export default {
         },
         message: this.$t('general.sure')
       }).onOk(async () => {
-        await this.$api.delete(`/entity/${this.entity.id}`)
+        await this.$api.delete(`/entities/${this.entity.id}`)
         this.$router.back()
       })
     },

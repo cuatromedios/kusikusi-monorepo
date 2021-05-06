@@ -168,17 +168,21 @@ export default {
   methods: {
     async getMedia () {
       this.loading = true
-      const mediaResult = await this.$api.get(`/entities/medium?media-of=${this.entity.id}&select=contents.title,properties,is_active,model,id,relation_media.relation_id&only-published=false&order-by=relation_media.position&per-page=100`)
-      this.loading = false
-      if (mediaResult.success) {
-        this.media = mediaResult.data.data
-      } else {
-        this.$q.notify({
-          position: 'top',
-          color: 'negative',
-          message: this.$t('general.serverError')
-        })
+      if (this.entity.id !== 'new') {
+        const mediaResult = await this.$api.get(`/entities?media-of=${this.entity.id}&select=contents.title,properties,model,id,relation_media.relation_id&only-published=false&order-by=relation_media.position&per-page=100`)
+        // const mediaResult = await this.$api.get(`/entities?media-of=${this.entity.id}&select=contents.title,properties,is_active,model,id,relation_media.relation_id&only-published=false&order-by=relation_media.position&per-page=100`)
+        this.loading = false
+        if (mediaResult.success) {
+          this.media = mediaResult.data.data
+        } else {
+          this.$q.notify({
+            position: 'top',
+            color: 'negative',
+            message: this.$t('general.serverError')
+          })
+        }
       }
+      this.loading = false
     },
     add (model) {
       this.$router.push({ name: 'content', params: { entity_id: 'new', model: model, conector: 'in', parent_entity_id: this.entity.id } })
@@ -253,12 +257,22 @@ export default {
           for (const l in this.$store.state.ui.config.langs) {
             titles[this.$store.state.ui.config.langs[l]] = this.uploadProgress[f].name
           }
-          createAndRelateResult = await this.$api.post(`/entity/${this.entity.id}/create_and_relate`, {
+          createAndRelateResult = await this.$api.post(`/entities`, {
             model: 'medium',
-            kind: 'medium',
-            position: Number(this.media.length) + Number(f),
-            tags: this.uploadProgress[f].tags,
-            contents: { title: titles }
+            // contents: { title: titles },
+            contents: [
+              {
+                lang: 'en',
+                field: 'title',
+                text: this.uploadProgress[f].name
+              }
+            ],
+            relate_to: {
+              caller_entity_id: this.entity.id,
+              kind: 'medium',
+              position: Number(this.media.length) + Number(f),
+              tags: this.uploadProgress[f].tags,
+            }
           })
           this.uploadProgress[f].creating = false
           this.uploadProgress[f].id = createAndRelateResult.data.id
@@ -275,7 +289,7 @@ export default {
             this.uploadProgress[f].percent = 0
             const data = new FormData()
             data.append('file', this.uploadProgress[f].file)
-            uploadResult = await this.$api.post(`/medium/${this.uploadProgress[f].id}/upload`, data, { 'Content-Type': 'multipart/form-data' })
+            uploadResult = await this.$api.post(`/media/${this.uploadProgress[f].id}/upload`, data, { 'Content-Type': 'multipart/form-data' })
           } else {
             uploadResult.success = true
           }

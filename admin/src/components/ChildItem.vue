@@ -62,9 +62,7 @@ export default {
       this.$refs.tagSelector.hidePopup()
       this.saving = true
       this.storedTags = _.clone(this.editingTags)
-      await this.$api.post(`/entity/${this.child.id}/relation`, {
-        called_entity_id: this.entity_id,
-        kind: 'ancestor',
+      await this.$api.post(`/entities/${this.child.id}/relations/${this.entity_id}/ancestor`, {
         tags: this.storedTags,
         position: this.child.child_relation_position,
         depth: 1

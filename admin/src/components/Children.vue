@@ -109,7 +109,7 @@ export default {
     },
     async getChildren () {
       this.loading = true
-      const childrenResult = await this.$api.get(`/entities?child-of=${this.entity.id}&select=contents.title,properties,published_at,unpublished_at,is_active,model,id,relation_children.relation_id&only-published=false&order-by=${this.orderBy}&page=${this.currentPage}`)
+      const childrenResult = await this.$api.get(`/entities?children-of=${this.entity.id}&select=contents.title,properties,published_at,unpublished_at,model,id&only-published=false&order-by=${this.orderBy}&page=${this.currentPage}`)
       this.loading = false
       if (childrenResult.success) {
         this.children = childrenResult.data.data
@@ -143,8 +143,10 @@ export default {
     },
     async reorder () {
       this.reordering = true
-      const relation_ids = _.flatMap(this.children, (c) => c.relation_id)
-      const reorderResult = await this.$api.patch('/entities/relations/reorder', { relation_ids })
+      const relation_ids = _.flatMap(this.children, (c) => {
+        return c.child.relation_id
+      })
+      const reorderResult = await this.$api.patch(`/entities/${this.entity.id}/relations/reorder`, { relation_ids })
       this.reordering = false
       if (reorderResult.success) {
         this.reorderMode = false

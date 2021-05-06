@@ -146,7 +146,7 @@ export default {
         },
         message: this.$t('media.unlinkConfirm')
       }).onOk(async () => {
-        await this.$api.delete(`/entity/${this.entity_id}/relation/${this.medium.id}/medium`)
+        await this.$api.delete(`/entities/${this.entity_id}/relations/${this.medium.id}/medium`)
         this.$emit('getMedia')
       })
     },
@@ -154,7 +154,7 @@ export default {
       const data = new FormData()
       data.append('file', file)
       this.uploading = true
-      await this.$api.post(`/medium/${this.medium.id}/upload`, data, { 'Content-Type': 'multipart/form-data' })
+      await this.$api.post(`/media/${this.medium.id}/upload`, data, { 'Content-Type': 'multipart/form-data' })
       this.uploading = false
     },
     rejectedFile (files) {

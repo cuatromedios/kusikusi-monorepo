@@ -87,7 +87,7 @@ return [
                 [
                     "label" => "contents.media",
                     "components" => [
-                        ["component" => "media", "props" => ["allowed" => [ "webImages", "webVideos", 'xhr' ], "tags" => ["icon", "social", "gallery"]]]
+                        ["component" => "media", "props" => ["allowed" => [ "webImages", "webVideos", 'xhr', 'jpg' ], "tags" => ["icon", "social", "gallery"]]]
                     ],
                 ]
             ]

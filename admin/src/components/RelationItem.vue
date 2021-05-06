@@ -96,7 +96,7 @@ export default {
     async onSubmenu (option) {
       switch (option.value) {
         case 'unlink':
-          await this.$api.delete(`/entity/${this.entity_id}/relation/${this.relation.id}/${this.relation.relation_kind}`)
+          await this.$api.delete(`/entities/${this.entity_id}/relation/${this.relation.id}/${this.relation.relation_kind}`)
           this.$emit('getRelations')
           break
       }
