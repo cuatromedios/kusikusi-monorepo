@@ -257,7 +257,7 @@ export default {
           for (const l in this.$store.state.ui.config.langs) {
             titles[this.$store.state.ui.config.langs[l]] = this.uploadProgress[f].name
           }
-          createAndRelateResult = await this.$api.post(`/entities`, {
+          createAndRelateResult = await this.$api.post('/entities', {
             model: 'medium',
             // contents: { title: titles },
             contents: [
@@ -271,7 +271,7 @@ export default {
               caller_entity_id: this.entity.id,
               kind: 'medium',
               position: Number(this.media.length) + Number(f),
-              tags: this.uploadProgress[f].tags,
+              tags: this.uploadProgress[f].tags
             }
           })
           this.uploadProgress[f].creating = false
