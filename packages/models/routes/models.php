@@ -27,6 +27,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/entities', [EntityController::class, 'index']);
     Route::get('/entities/{entity_id}', [EntityController::class, 'show']);
     Route::post('/entities', [EntityController::class, 'store']);
+    Route::post('/import', [AuthController::class, 'import']);
     Route::patch('/entities/{entity_id}', [EntityController::class, 'update']);
     Route::delete('/entities/{entity_id}', [EntityController::class, 'destroy']);
     Route::patch('/entities/{entity_id}/restore', [EntityController::class, 'restore']);

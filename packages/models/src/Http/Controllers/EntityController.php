@@ -230,6 +230,73 @@ class EntityController extends BaseController
         return($entity);
     }
 
+    /**
+     * Stores a batch of new entities imported from a json or a CSV file.
+     *
+     * @group Entity
+     * @authenticated
+     * @bodyParam entities array Optional. See update or store.
+     * @bodyParam entities file Optional. 
+     * @responseFile responses/entities.create.json
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function import(Request $request)
+    {
+        $body = ["entities" => []];
+        if ($request->hasFile('entities') && $request->file('entities')->isValid()) {
+            // $file = $request->file('entities');
+            $path = $request->entities->getRealPath();
+            $CSVdata = array_map('str_getcsv', file($path));
+            $headers = $CSVdata[0];
+            array_shift($CSVdata);
+            for ($i = 0; $i < sizeof($CSVdata); $i++) {
+                for ($j = 0; $j < sizeof($headers); $j++) {
+                    if ($headers[$j] && $CSVdata[$i][$j]) {
+                        if (json_decode($CSVdata[$i][$j], true) && !is_numeric(json_decode($CSVdata[$i][$j], true))) {
+                            $body['entities'][$i][$headers[$j]] = json_decode($CSVdata[$i][$j], true);
+                        } else {
+                            $body['entities'][$i][$headers[$j]] = $CSVdata[$i][$j];
+                        }
+                    }
+                }
+            }
+        } else {
+            $body = $request->all();
+        }
+        $entities = [];
+        foreach ($body['entities'] as $payload) {
+            Validator::make($payload, $this->entityPlayloadValidation());
+            // $payload = $request->only('id', 'model', 'properties', 'view', 'langs', 'parent_entity_id', 'visibility', 'published_at', 'unpublished_at');
+            // TODO: filter each entity fields.
+            $filteredPayload = $payload;
+            $modelClassName = Entity::getEntityClassName(Str::singular($payload['model'] ?? 'Entity'));
+            if (isset($filteredPayload['id']) && $entity = $modelClassName::withTrashed()->find($filteredPayload['id'])) {
+                $entity->fill($filteredPayload);
+                $entity->save();
+            } else {
+                $entity = new $modelClassName($filteredPayload);
+                $entity->save();
+            }
+            if (isset($payload['contents'])) EntityContent::createFromArray($entity->id, $payload['contents']);
+            if (isset($payload['routes'])) EntityRoute::createFromArray($entity->id, $payload['routes'], $entity->model);
+            if (isset($payload['entities_related'])) EntityRelation::createFromArray($entity->id, $payload['entities_related']);
+            if (isset($filteredPayload['id'])) {
+                $entity->touch();
+                $updatedEntity = $modelClassName::withContents()->withRoutes()->with('entities_related')->find($entity->id);
+                array_push($entities, $updatedEntity);
+            } else {
+                $createdEntity = $modelClassName::withContents()->withRoutes()->with('entities_related')->find($entity->id);
+                if ($createdEntity && isset($payload['relate_to'])) {
+                    Validator::make($payload, $this->entityRelationValidation());
+                    EntityRelation::create(array_merge($payload['relate_to'], ['called_entity_id' => $createdEntity->id]));
+                }
+                $entity->touch();
+                array_push($entities, $createdEntity);
+            }
+        }
+        return($entities);
+    }
+
 
     // Validations
     private function queryParamsValidation() {
