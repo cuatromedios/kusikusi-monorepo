@@ -336,3 +336,136 @@ accept: application/json
     "relation_ids": [33, 32, 30]
 }
 
+#############
+# Import
+#############
+
+### Create a batch of entities from a json
+POST http://{{host}}/api/entities/import HTTP/1.1
+content-type: application/json
+accept: application/json
+
+{
+    "entities": [
+       {
+            "model": "home"
+       },
+       {
+            "model": "page"
+       }
+    ]
+}
+
+### Create or update a batch of entities from a json
+POST http://{{host}}/api/entities/import HTTP/1.1
+content-type: application/json
+accept: application/json
+
+{
+    "entities": [
+       {
+            "model": "home"
+       },
+       {
+            "model": "page"
+       }
+    ]
+}
+
+### Create or update a batch entity from a json with contents and relations
+POST http://{{host}}/api/entities/import HTTP/1.1
+content-type: application/json
+accept: application/json
+
+{
+    "entities": [
+        {
+            "model": "Page",
+            "id": "page_14",
+            "properties": {"a": "b"},
+            "parent_entity_id": "home",
+            "view": "page",
+            "parent_entity_id": "home",
+            "visibility": "private",
+            "published_at": "2020-02-02T12:00:00-06:00",
+            "contents": [
+                { "lang": "en", "field": "slug",  "text": "page" },
+                { "lang": "en", "field": "title", "text": "The pge" },
+                { "lang": "es", "field": "title", "text": "La página" }
+            ],
+            "routes": [
+                { "path": "/en", "lang": "en",  "kind": "alias" },
+                { "path": "/es", "lang": "es", "kind": "alias" }
+            ],
+            "entities_related": [
+                { "called_entity_id": "home", "kind": "medium"},
+                { "called_entity_id": "home", "kind": "category", "position": 1, "depth": 0, "tags": ["primary"] }
+            ]
+        },
+        {
+            "model": "Page",
+            "id": "page_15",
+            "properties": {"c": "d"},
+            "parent_entity_id": "home",
+            "view": "page",
+            "parent_entity_id": "home",
+            "visibility": "private",
+            "published_at": "2020-02-02T12:00:00-06:00",
+            "contents": [
+                { "lang": "en", "field": "slug",  "text": "seoncd page" },
+                { "lang": "en", "field": "title", "text": "The second pge" },
+                { "lang": "es", "field": "title", "text": "La segunda página" }
+            ],
+            "routes": [
+                { "path": "/en", "lang": "en",  "kind": "alias" },
+                { "path": "/es", "lang": "es", "kind": "alias" }
+            ],
+            "entities_related": [
+                { "called_entity_id": "home", "kind": "medium"},
+                { "called_entity_id": "home", "kind": "category", "position": 1, "depth": 0, "tags": ["primary"] }
+            ]
+        }
+    ]
+}
+
+### Create or update a batch entity from a json and relates them to other
+POST http://{{host}}/api/entities/import HTTP/1.1
+content-type: application/json
+accept: application/json
+
+{
+    "entities": [
+        {
+            "model": "Medium",
+            "relate_to": {
+                "caller_entity_id": "home",
+                "kind": "medium",
+                "position": 1,
+                "depth": 0,
+                "tags": ["icon"]
+            }
+        },
+        {
+            "model": "page",
+            "relate_to": {
+                "caller_entity_id": "home",
+                "kind": "children",
+                "position": 1,
+                "depth": 0,
+                "tags": ["main"]
+            }
+        }
+    ]
+}
+
+### Create or update a batch entity from a csv file with contents and relations
+POST http://{{host}}/api/entities/import HTTP/1.1
+accept: application/json
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="entities"; filename="entities.csv"
+Content-Type: text/csv
+
+< ./parts/entities.csv
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
