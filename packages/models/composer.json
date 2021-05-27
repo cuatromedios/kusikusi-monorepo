@@ -15,7 +15,8 @@
     "require": {
         "illuminate/support": "^7.0|^8.0",
         "pugx/shortid-php": "^0.7.0",
-        "ankurk91/laravel-eloquent-relationships": "^1.1"
+        "ankurk91/laravel-eloquent-relationships": "^1.1",
+        "league/csv": "^9.7"
     },
     "autoload": {
         "psr-4": {

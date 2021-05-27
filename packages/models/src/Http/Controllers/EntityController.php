@@ -12,6 +12,7 @@ use Kusikusi\Models\Entity;
 use Kusikusi\Models\EntityContent;
 use Kusikusi\Models\EntityRoute;
 use Kusikusi\Models\EntityRelation;
+use League\Csv\Reader;
 
 class EntityController extends BaseController
 {
@@ -244,18 +245,66 @@ class EntityController extends BaseController
     {
         $body = ["entities" => []];
         if ($request->hasFile('entities') && $request->file('entities')->isValid()) {
-            // $file = $request->file('entities');
             $path = $request->entities->getRealPath();
-            $CSVdata = array_map('str_getcsv', file($path));
-            $headers = $CSVdata[0];
-            array_shift($CSVdata);
-            for ($i = 0; $i < sizeof($CSVdata); $i++) {
-                for ($j = 0; $j < sizeof($headers); $j++) {
-                    if ($headers[$j] && $CSVdata[$i][$j]) {
-                        if (json_decode($CSVdata[$i][$j], true) && !is_numeric(json_decode($CSVdata[$i][$j], true))) {
-                            $body['entities'][$i][$headers[$j]] = json_decode($CSVdata[$i][$j], true);
+            // $CSVcontent = array_map('str_getcsv', file($path));
+            $csv = Reader::createFromString(file_get_contents($path));
+            $csv->isEmptyRecordsIncluded();
+            $CSVcontent = iterator_to_array($csv, true);
+            $headers = $CSVcontent[0];
+            array_shift($CSVcontent);
+            for ($i = 0; $i < sizeof($CSVcontent); $i++) {
+                for ($j = 0; $j < sizeof($CSVcontent[$i]); $j++) {
+                    $label = $headers[$j];
+                    $col_val = $CSVcontent[$i][$j];
+                    $json_value = json_decode($col_val, true);
+                    if ($label && $col_val) {
+                        if (str_contains($label, '.')) {
+                            $sublabels = explode('.',$label);
+                            switch ($sublabels[0]) {
+                                case 'contents':
+                                    if (!isset($body['entities'][$i][$sublabels[0]])) $body['entities'][$i][$sublabels[0]] = [];
+                                    array_push($body['entities'][$i][$sublabels[0]], [
+                                        "lang" => isset($sublabels[2]) ? $sublabels[1] : Config::get('kusikusi_website.langs', [''])[0],
+                                        "field" => isset($sublabels[2]) ? $sublabels[2] : $sublabels[1],
+                                        "text" => $col_val
+                                    ]);
+                                    break;
+                                case 'routes':
+                                    if (!isset($body['entities'][$i][$sublabels[0]])) $body['entities'][$i][$sublabels[0]] = [];
+                                    array_push($body['entities'][$i][$sublabels[0]], [
+                                        "lang" => isset($sublabels[2]) ? $sublabels[1] : Config::get('kusikusi_website.langs', [''])[0],
+                                        "kind" => isset($sublabels[2]) ? $sublabels[2] : $sublabels[1],
+                                        "path" => $col_val
+                                    ]);
+                                    break;
+                                default:
+                                    if ($json_value && !is_numeric($json_value)) {
+                                        $body['entities'][$i][$sublabels[0]][$sublabels[1]] =  $json_value;
+                                    } else {
+                                        $body['entities'][$i][$sublabels[0]][$sublabels[1]] =  $col_val;
+                                    }
+                            }
                         } else {
-                            $body['entities'][$i][$headers[$j]] = $CSVdata[$i][$j];
+                            if ($json_value && !is_numeric($json_value)) {
+                                $body['entities'][$i][$label] = $json_value;
+                            } else {
+                                if ($label === 'entities_related' || $label === 'relate_to') {
+                                    $relation = [];
+                                    $vals_array = explode('_',$col_val);
+                                    $relation['kind'] = $vals_array[0];
+                                    $vals_array = explode(';',$vals_array[1]);
+                                    if (isset($vals_array[0])) $relation['called_entity_id'] = $vals_array[0];
+                                    if (isset($vals_array[1])) $relation['position'] = $vals_array[1];
+                                    if (isset($vals_array[2])) $relation['depth'] = $vals_array[2];
+                                    if (isset($vals_array[3])) {
+                                        $relation['tags'] = str_contains($vals_array[3],'|') ? explode('|',$vals_array[3]) : [$vals_array[3]];
+                                    }
+                                    if (!isset($body['entities'][$i][$label])) $body['entities'][$i][$label] = [];
+                                    array_push($body['entities'][$i][$label], $relation);
+                                } else {
+                                    $body['entities'][$i][$label] = $col_val;
+                                }
+                            }
                         }
                     }
                 }
