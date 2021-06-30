@@ -138,6 +138,10 @@ accept: application/json
 GET http://{{host}}/api/entities?select=id,model,properties.size&where=properties.size!:null HTTP/1.1
 accept: application/json
 
+### Fulltext search
+GET http://{{host}}/api/entities?select=id,model&search-content=title,slug:page HTTP/1.1
+accept: application/json
+
 
 
 ###############
@@ -382,11 +386,11 @@ accept: application/json
         {
             "model": "Page",
             "id": "page_14",
-            "properties": {"a": "b"},
+            "properties": {"a": "a"},
             "parent_entity_id": "home",
             "view": "page",
             "parent_entity_id": "home",
-            "visibility": "private",
+            "visibility": "public",
             "published_at": "2020-02-02T12:00:00-06:00",
             "contents": [
                 { "lang": "en", "field": "slug",  "text": "page" },

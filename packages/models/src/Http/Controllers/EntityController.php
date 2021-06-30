@@ -480,7 +480,7 @@ class EntityController extends BaseController
         });
         return $query;
     }
-    private function addScopes($entities, $request) {
+    private function addScopes($entities, $request, $lang) {
         $entities
         ->when($request->get('of-model'), function ($q) use ($request) {
             return $q->ofModel($request->get('of-model'));
@@ -523,6 +523,14 @@ class EntityController extends BaseController
         })
         ->when($request->get('media-of'), function ($q) use ($request) {
             return $q->mediaOf($request->get('media-of'));
+        })
+        ->when($request->get('search-content'), function ($q) use ($request, $lang) {
+            $values = explode(":", $request->get('search-content'));
+            if (isset($values[1])) {
+                return $q->searchContent($values[1], explode(',',$values[0]), $lang);
+            } else {
+                return $q->searchContent($values[0], null, $lang);
+            }
         });
         return $entities;
     }
