@@ -674,6 +674,32 @@ class Entity extends Model
     }
 
     /**
+     * Scope for full text search.
+     *
+     * @param Builder $query
+     * @return Builder
+     * @throws \Exception
+     */
+    public function scopeSearchContent($query, $textToSearch, $fields, $lang)
+    {
+        switch (env('DB_CONNECTION')) {
+            case 'mysql':
+                $fulltextSearchQuery = 'MATCH (content.text) AGAINST ("'.$textToSearch.'" IN NATURAL LANGUAGE MODE)';
+                break;
+        }
+        $query->join("entities_contents as content", function ($join) use ($textToSearch, $fields, $lang, $fulltextSearchQuery) {
+            $join->on("content.entity_id", "entities.id")
+            ->where("content.lang", $lang)
+            ->whereRaw($fulltextSearchQuery); //mysql
+            if ($fields) {
+                if (is_array($fields)) return $join->whereIn('content.field', $fields);
+                if (is_string($fields)) return $join->where('content.field', $fields);
+            }
+        })
+        ->addSelect(DB::raw($fulltextSearchQuery.' as score')); //mysql
+    }
+
+    /**
      * AGGREGATES
      */
 

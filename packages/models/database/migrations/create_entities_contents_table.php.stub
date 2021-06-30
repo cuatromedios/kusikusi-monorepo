@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 class CreateEntitiesContentsTable extends Migration
 {
@@ -25,6 +26,11 @@ class CreateEntitiesContentsTable extends Migration
                 ->references('id')->on('entities')
                 ->onDelete('cascade')->onUpdate('cascade');
         });
+        switch(env('DB_CONNECTION')) {
+            case 'mysql':
+                DB::statement('create fulltext index entities_contents_value_fulltext on entities_contents(text);');
+                break;
+        }
     }
 
     /**
@@ -34,6 +40,13 @@ class CreateEntitiesContentsTable extends Migration
      */
     public function down()
     {
+        Schema::table('entities_contents', function (Blueprint $table) {
+            $sm = Schema::getConnection()->getDoctrineSchemaManager();
+            $doctrineTable = $sm->listTableDetails('entities_contents');
+            if ($doctrineTable->hasIndex('entities_contents_value_fulltext')) {
+                $table->dropIndex('entities_contents_value_fulltext');
+            }
+        });
         Schema::dropIfExists('entities_contents');
     }
 }
