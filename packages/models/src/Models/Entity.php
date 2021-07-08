@@ -629,7 +629,7 @@ class Entity extends Model
      * @return Builder
      * @throws \Exception
      */
-    public function scopeOrderByContent($query, $field, $order = 'ASC', $lang)
+    public function scopeOrderByContent($query, $field, $order = 'ASC', $lang = null)
     {
         $query->leftJoin("entities_contents as content_{$field}", function ($join) use ($field, $lang, $order) {
             $join->on("content_{$field}.entity_id", "entities.id")
