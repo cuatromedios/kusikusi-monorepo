@@ -13,6 +13,7 @@ use Kusikusi\Models\EntityContent;
 use Kusikusi\Models\EntityRoute;
 use Kusikusi\Models\EntityRelation;
 use League\Csv\Reader;
+use Kusikusi\Jobs\ImportQueue;
 
 class EntityController extends BaseController
 {
@@ -277,6 +278,12 @@ class EntityController extends BaseController
                                         "path" => $col_val
                                     ]);
                                     break;
+                                case 'media':
+                                    $body['entities'][$i]['medium'] = [
+                                        "url" => $col_val,
+                                        "tag" => $sublabels[1]
+                                    ];
+                                    break;
                                 default:
                                     if ($json_value && !is_numeric($json_value)) {
                                         $body['entities'][$i][$sublabels[0]][$sublabels[1]] =  $json_value;
@@ -301,6 +308,10 @@ class EntityController extends BaseController
                                     }
                                     if (!isset($body['entities'][$i][$label])) $body['entities'][$i][$label] = [];
                                     array_push($body['entities'][$i][$label], $relation);
+                                } else if ($label === 'media') {
+                                    $body['entities'][$i]['medium'] = [
+                                        "url" => $col_val
+                                    ];
                                 } else {
                                     $body['entities'][$i][$label] = $col_val;
                                 }
@@ -312,38 +323,12 @@ class EntityController extends BaseController
         } else {
             $body = $request->all();
         }
-        $entities = [];
-        foreach ($body['entities'] as $payload) {
-            Validator::make($payload, $this->entityPlayloadValidation());
-            // $payload = $request->only('id', 'model', 'properties', 'view', 'langs', 'parent_entity_id', 'visibility', 'published_at', 'unpublished_at');
-            // TODO: filter each entity fields.
-            $filteredPayload = $payload;
-            $modelClassName = Entity::getEntityClassName(Str::singular($payload['model'] ?? 'Entity'));
-            if (isset($filteredPayload['id']) && $entity = $modelClassName::withTrashed()->find($filteredPayload['id'])) {
-                $entity->fill($filteredPayload);
-                $entity->save();
-            } else {
-                $entity = new $modelClassName($filteredPayload);
-                $entity->save();
-            }
-            if (isset($payload['contents'])) EntityContent::createFromArray($entity->id, $payload['contents']);
-            if (isset($payload['routes'])) EntityRoute::createFromArray($entity->id, $payload['routes'], $entity->model);
-            if (isset($payload['entities_related'])) EntityRelation::createFromArray($entity->id, $payload['entities_related']);
-            if (isset($filteredPayload['id'])) {
-                $entity->touch();
-                $updatedEntity = $modelClassName::withContents()->withRoutes()->with('entities_related')->find($entity->id);
-                array_push($entities, $updatedEntity);
-            } else {
-                $createdEntity = $modelClassName::withContents()->withRoutes()->with('entities_related')->find($entity->id);
-                if ($createdEntity && isset($payload['relate_to'])) {
-                    Validator::make($payload, $this->entityRelationValidation());
-                    EntityRelation::create(array_merge($payload['relate_to'], ['called_entity_id' => $createdEntity->id]));
-                }
-                $entity->touch();
-                array_push($entities, $createdEntity);
-            }
+        $queueUUID = Str::uuid()->toString();
+        foreach ($body['entities'] as $entity) {
+            // Generate job
+            ImportQueue::dispatch($entity)->onQueue($queueUUID);
         }
-        return($entities);
+        return ["queueUUID" => $queueUUID];
     }
 
 
