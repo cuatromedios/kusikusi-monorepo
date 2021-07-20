@@ -115,8 +115,8 @@ class MediumBase extends Entity
         data_fill($presetSettings, 'height', 256); // int
         data_fill($presetSettings, 'scale', 'cover'); // contain | cover | fill
         data_fill($presetSettings, 'alignment', 'center'); // only if scale is 'cover' or 'contain' with background: top-left | top | top-right | left | center | right | bottom-left | bottom | bottom-right
-        data_fill($presetSettings, 'background', null); // only if scale is 'contain': crop | #HEXCODE
-        data_fill($presetSettings, 'crop', false); // only if scale is 'contain': true | false
+        data_fill($presetSettings, 'background', null); // only if scale is 'contain' #HEXCODE or the image has transparency
+        data_fill($presetSettings, 'crop', true); // only if scale is 'contain': true | false
         data_fill($presetSettings, 'quality', 80); // 0 - 100 for jpg | 1 - 8, (bits) for gif | 1 - 8, 24 (bits) for png
         data_fill($presetSettings, 'format', 'jpg'); // jpg | gif | png
         data_fill($presetSettings, 'effects', []); // ['colorize' => [50, 0, 0], 'greyscale' => [] ]
@@ -125,8 +125,23 @@ class MediumBase extends Entity
         // The fun
         $filedata = self::originalDisk()->get($originalFilePath);
         $image = Image::make($filedata);
+        $background = array(255, 255, 255, 255);
         if ($presetSettings['background'] !== null) {
-            $canvas = Image::canvas($image->width(), $image->height(), $presetSettings['background']);
+            $presetSettings['background'] = str_replace('#', '', $presetSettings['background']);
+            switch (strlen($presetSettings['background'])) {
+                case 3:
+                case 6:
+                    $background = $presetSettings['background'];
+                    break;
+                case 8:
+                    $background = str_split($presetSettings['background'], 2);
+                    foreach($background as &$channel) {
+                      $channel = hexdec($channel);
+                    }
+                    $background[3] = $background[3] / 255;
+                    break;
+            }
+            $canvas = Image::canvas($image->width(), $image->height(), $background);
             $image = $canvas->insert($image);
         }
         if ($presetSettings['scale'] === 'cover') {
@@ -137,8 +152,8 @@ class MediumBase extends Entity
             $image->resize($presetSettings['width'], $presetSettings['height'], function ($constraint) {
                 $constraint->aspectRatio();
             });
-            if ($presetSettings['crop']) {
-                $image->resizeCanvas($presetSettings['width'], $presetSettings['height'], $presetSettings['alignment'], false, $presetSettings['background']);
+            if ($presetSettings['crop'] === false) {
+                $image->resizeCanvas($presetSettings['width'], $presetSettings['height'], $presetSettings['alignment'], false, $background);
             }
         }
 
