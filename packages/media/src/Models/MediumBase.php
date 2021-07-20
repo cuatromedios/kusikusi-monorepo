@@ -57,8 +57,8 @@ class MediumBase extends Entity
             'mimeType' => $mimeType,
             'originalName' => $originalName,
             'size' => $size,
-            'isWebImage' => array_search(strtolower($format), Config::get('media.formats.webImages', ['jpeg', 'jpg', 'png', 'gif', 'svg'])) !== false,
-            'isImage' => array_search(strtolower($format), Config::get('media.formats.images', ['jpeg', 'jpg', 'png', 'gif', 'tif', 'tiff', 'iff', 'bmp', 'psd', 'svg'])) !== false,
+            'isWebImage' => array_search(strtolower($format), Config::get('media.formats.webImages', ['jpeg', 'jpg', 'png', 'gif', 'svg', 'webp'])) !== false,
+            'isImage' => array_search(strtolower($format), Config::get('media.formats.images', ['jpeg', 'jpg', 'png', 'gif', 'tif', 'tiff', 'iff', 'bmp', 'psd', 'svg', 'webp'])) !== false,
             'isAudio' => array_search(strtolower($format), Config::get('media.formats.audios', ['mp3', 'wav', 'aiff', 'aac', 'oga', 'pcm', 'flac'])) !== false,
             'isWebAudio' => array_search(strtolower($format), Config::get('media.formats.webAudios', ['mp3', 'oga'])) !== false,
             'isVideo' => array_search(strtolower($format), Config::get('media.formats.videos', ['mov', 'mp4', 'qt', 'avi', 'mpe', 'mpeg', 'ogg', 'm4p', 'm4v', 'flv', 'wmv'])) !== false,
@@ -96,7 +96,7 @@ class MediumBase extends Entity
             abort(404, 'File for medium ' . $originalFilePath . ' not found');
         }
 
-        if (array_search($this->properties['format'], ['jpg', 'png', 'gif']) === FALSE || $preset === 'original') {
+        if (array_search($this->properties['format'], ['jpg', 'png', 'gif', 'webp']) === FALSE || $preset === 'original') {
             $headers = [];
             if ($this->properties['format'] === 'svg') {
                 $headers = ['Content-Type' => 'image/svg+xml'];
