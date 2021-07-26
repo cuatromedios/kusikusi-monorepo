@@ -684,7 +684,8 @@ class Entity extends Model
     {
         switch (env('DB_CONNECTION')) {
             case 'mysql':
-                $fulltextSearchQuery = 'MATCH (content.text) AGAINST ("'.$textToSearch.'" IN NATURAL LANGUAGE MODE)';
+                // $fulltextSearchQuery = 'MATCH (content.text) AGAINST ("'.$textToSearch.'" IN NATURAL LANGUAGE MODE)';
+                $fulltextSearchQuery = 'MATCH (content.text) AGAINST ("'.$textToSearch.'*" IN BOOLEAN MODE)';
                 break;
         }
         $query->join("entities_contents as content", function ($join) use ($textToSearch, $fields, $lang, $fulltextSearchQuery) {
