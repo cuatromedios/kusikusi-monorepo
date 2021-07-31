@@ -31,6 +31,9 @@ class CreateEntitiesTable extends Migration
             $table->integer('version_full')->unsigned()->default(1);
             $table->timestampsTz();
             $table->softDeletesTz();
+            $table->foreign('parent_entity_id')
+                            ->references('id')->on('entities')
+                            ->onDelete('set null')->onUpdate('cascade');
             // Uncomment if you want a foreign key to users table for created_by and / or updated_by
             // $table->foreign('created_by')->references('id')->on('users')->onDelete('set null')->onUpdate('cascade');
             // $table->foreign('updated_by')->references('id')->on('users')->onDelete('set null')->onUpdate('cascade');
