@@ -33,6 +33,16 @@ class HtmlController extends Controller
         $result['images'] = $result['media']->where('properties.isWebImage'); */
         return view('html.'.$entity->view, $result);
     }
+    public function form(Request $request, Entity $entity, $lang)
+    {
+        if ($request->method() === "POST") {
+            die("Todo bien!");
+        }
+        $result = $this->common($request, $entity);
+        /* $result['docs'] = $result['media']->where('properties.isDocument');
+        $result['images'] = $result['media']->where('properties.isWebImage'); */
+        return view('html.'.$entity->view, $result);
+    }
     public function error(Request $request, $status)
     {
         $result = [ "status" => $status ];
@@ -70,13 +80,13 @@ class HtmlController extends Controller
                 /* ->appendContents(['title'], $request->lang)
                 ->appendRoute($request->lang) */
                 ->get(),
-            "mainMenu" => Entity::select('id', 'model')
+            /* "mainMenu" => Entity::select('id', 'model')
                 ->relatedBy('main-menu', 'menu')
-                /* ->appendContents(['title'], $request->lang) */
+                ->appendContents(['title'], $request->lang)
                 ->orderBy('relation.position', 'asc')
-                /* ->appendRoute($request->lang) */
+                ->appendRoute($request->lang)
                 ->isPublished()
-                ->get()
+                ->get() */
         ];
         return $result;
     }
