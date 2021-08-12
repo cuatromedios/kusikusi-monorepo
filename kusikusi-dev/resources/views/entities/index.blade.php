@@ -5,6 +5,9 @@
             <tr>
                 <th>id</th>
                 <th>model</th>
+                <th>parent</th>
+                <th>title</th>
+                <th>actions</th>
             </tr>
         </thead>
         <tbody>
@@ -14,6 +17,9 @@
                     <a href="{{ route('entities.show', $entity->id) }}">{{ $entity->id }}</a>
                 </td>
                 <td>{{ $entity->model }}</td>
+                <td>{{ $entity->parent_entity_id }}</td>
+                <td>{{ $entity->content['title'] ?? ''}}</td>
+                <td><a href="{{ route('entities.edit', ['entity' => $entity->id]) }}">Edit</a></td>
             </tr>
             @endforeach
         </tbody>

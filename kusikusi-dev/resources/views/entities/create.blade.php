@@ -8,6 +8,9 @@
         <label>Model
             <input type="text" name="model">
         </label>
+        <label>View
+            <input type="text" name="view">
+        </label>
         <label>Parent
             <select name="parent_entity_id">
                 <option value="">- None</option>

@@ -15,8 +15,9 @@ class EntityController extends Controller
      */
     public function index()
     {
-        $entities = Entity::select('id', 'properties->format', 'properties->size as properties.size', 'properties->exif->COMPUTED->IsColor')
-        ->withContent()
+        $entities = Entity::select('id', 'model', 'parent_entity_id')
+        //$entities = Entity::select('id', 'model', 'properties->format', 'properties->size as properties.size', 'properties->exif->COMPUTED->IsColor')
+        ->withContent('en', 'title')
         ->orderBy('created_at')
         ->get();
         return View::make('entities.index')
@@ -56,7 +57,7 @@ class EntityController extends Controller
      */
     public function show($id)
     {
-        $entity = Entity::select('id', 'properties->p1 as properties.p1', 'properties->p2 as properties.p2')->findOrFail($id);
+        $entity = Entity::select('id', 'model', 'properties', 'view', 'parent_entity_id', 'visibility')->findOrFail($id);
         $entityWithContents = Entity::select('id', 'model')
             ->withContents('en', 'title')
             ->findOrFail($id);
@@ -102,7 +103,11 @@ class EntityController extends Controller
      */
     public function edit($id)
     {
-        //
+      $entities = Entity::select()->orderBy('created_at')->get();
+      $entity = Entity::select('id', 'model', 'properties', 'view', 'parent_entity_id', 'visibility')->findOrFail($id);
+      return View::make('entities.edit')
+          ->with('entity', $entity)
+          ->with('entities', $entities);
     }
 
     /**
@@ -114,7 +119,11 @@ class EntityController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $fields = $request->except(['_token', '_method']);
+        $entity = Entity::find($id);
+        $entity->fill($fields);
+        $entity->save();
+        return redirect()->route('entities.show', $id);
     }
 
     /**

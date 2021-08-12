@@ -16,6 +16,13 @@
             h1 {
                 font-size: 1em;
             }
+            h3 {
+                font-weight: bold;
+                padding: 1rem 0 0 0;
+                margin: 2rem 0 1rem 0;
+                border-top: 1px solid grey;
+                color: darkgreen;
+            }
             main, header, footer {
                 box-sizing: border-box;
                 max-width: 80em;
