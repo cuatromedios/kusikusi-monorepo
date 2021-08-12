@@ -78,7 +78,7 @@ class Entity extends Model
     {
         return $date->format('Y-m-d\TH:i:sP');
     }
-    
+
 
     /**
      * RELATIONS
@@ -86,7 +86,7 @@ class Entity extends Model
 
     /**
      * Get the entities this entity is calling
-     */ 
+     */
     public function entities_related($kind = null, $modelClassPath = 'Kusikusi\Models\Entity')
     {
         return $this->belongsToMany($modelClassPath, (new EntityRelation())->getTable(), 'caller_entity_id', 'called_entity_id')
@@ -104,14 +104,14 @@ class Entity extends Model
 
     /**
      * Get the entities this entity is calling with kind medium
-     */ 
+     */
     public function media() {
         return $this->entities_related(EntityRelation::RELATION_MEDIA, 'App\Models\Medium');
     }
 
     /**
      * Get only one entity this entity is calling with kind medium
-     */ 
+     */
     public function medium($tag = null, $lang = null) {
         return $this->belongsToOne('App\Models\Medium', 'entities_relations', 'caller_entity_id', 'called_entity_id')
             ->using('Kusikusi\Models\EntityRelation')
@@ -122,7 +122,7 @@ class Entity extends Model
 
     /**
      * Get the other entities calling this entity
-     */ 
+     */
     public function entities_relating($kind = null, $modelClassPath = 'Kusikusi\Models\Entity') {
         return $this->belongsToMany($modelClassPath, (new EntityRelation())->getTable(), 'called_entity_id', 'caller_entity_id')
             ->using('Kusikusi\Models\EntityRelation')
@@ -138,26 +138,26 @@ class Entity extends Model
     }
     /**
      * Get the records in the entities_relations table this entity is using
-     */ 
+     */
     public function entity_relations() {
         return $this->hasMany(EntityRelation::class, 'caller_entity_id', 'id')
             ->where('kind', '!=', EntityRelation::RELATION_ANCESTOR);
     }
     /**
      * Get the raw contents related to this entity
-     */ 
+     */
     public function contents() {
         return $this->hasMany(EntityContent::class, 'entity_id', 'id');
     }
     /**
      * Get the contents by field name (plucked)
-     */ 
+     */
     public function content() {
         return $this->pluckedHasMany(EntityContent::class, 'entity_id', 'id', 'text', 'field');
     }
     /**
      * Get the archives of this entity
-     */ 
+     */
     public function archives() {
         return $this->hasMany(EntityArchive::class, 'entity_id', 'id');
     }
@@ -435,9 +435,9 @@ class Entity extends Model
         })
         ->addSelect('id')
         ->addSelect('relating.relation_id as relating.relation_id',
-        'relating.kind as relating.kind', 
-        'relating.position as relating.position', 
-        'relating.depth as relating.depth', 
+        'relating.kind as relating.kind',
+        'relating.position as relating.position',
+        'relating.depth as relating.depth',
         'relating.tags as relating.tags');
     }
 
@@ -758,7 +758,7 @@ class Entity extends Model
     /**
      * Version Increments
      */
-    /* private */ 
+    /* private */
     public static function incrementEntityVersion($entity_id) {
         $e = DB::table('entities')
             ->where('id', $entity_id);
@@ -778,7 +778,6 @@ class Entity extends Model
             }
         }
     }
-    /* private */ 
     public static function incrementRelationsVersion($entity_id) {
         $relating = Entity::select('id')->relating($entity_id)->get();
         if (!empty($relating)) {
@@ -797,6 +796,45 @@ class Entity extends Model
                 }
             }
         }
+    }
+    public static function recreateAncestorsRelations($entity_id_or_instance, $recursive = true) {
+      if (is_string($entity_id_or_instance)) {
+        $entity = Entity::find($entity_id_or_instance);
+      } else {
+        $entity = $entity_id_or_instance;
+      }
+      EntityRelation::where("caller_entity_id", $entity->id)->where('kind', EntityRelation::RELATION_ANCESTOR)->delete();
+      $instance = self::getInstanceFromName($entity->model);
+      if ($instance->ancestorsRelations) {
+
+        // Create the ancestors relations
+        $parentEntity = Entity::with('routes')->find($entity['parent_entity_id']);
+        if ($parentEntity && $entity['parent_entity_id'] != NULL) {
+          EntityRelation::create([
+              "caller_entity_id" => $entity->id,
+              "called_entity_id" => $parentEntity->id,
+              "kind" => EntityRelation::RELATION_ANCESTOR,
+              "depth" => 1
+          ]);
+          $depth = 2;
+          $ancestors = Entity::select('id')->ancestorsOf($parentEntity->id)->orderBy('ancestor.depth')->get();
+          foreach ($ancestors as $ancestor) {
+            EntityRelation::create([
+                "caller_entity_id" => $entity->id,
+                "called_entity_id" => $ancestor->id,
+                "kind" => EntityRelation::RELATION_ANCESTOR,
+                "depth" => $depth
+            ]);
+            $depth++;
+          }
+        }
+        if ($recursive) {
+          $children = self::select('id', 'model', 'parent_entity_id')->where('parent_entity_id', $entity->id)->get();
+          foreach ($children as $child) {
+            self::recreateAncestorsRelations($child);
+          }
+        }
+      }
     }
 
     /**
@@ -859,33 +897,14 @@ class Entity extends Model
             $entity['version_full'] = 1;
         });
         static::saved(function (Model $entity) {
-            $instance = self::getInstanceFromName($entity->model);
-            if ($instance->ancestorsRelations) {
-            // Create the ancestors relations
-            $parentEntity = Entity::with('routes')->find($entity['parent_entity_id']);
-            if ($parentEntity && isset($entity['parent_entity_id']) && $entity['parent_entity_id'] != NULL && $entity->isDirty('parent_entity_id')){
-                EntityRelation::where("caller_entity_id", $entity->id)->where('kind', EntityRelation::RELATION_ANCESTOR)->delete();
-                EntityRelation::create([
-                    "caller_entity_id" => $entity->id,
-                    "called_entity_id" => $parentEntity->id,
-                    "kind" => EntityRelation::RELATION_ANCESTOR,
-                    "depth" => 1
-                ]);
-                $depth = 2;
-                $ancestors = Entity::select('id')->ancestorsOf($parentEntity->id)->orderBy('ancestor.depth')->get();
-                foreach ($ancestors as $ancestor) {
-                    EntityRelation::create([
-                        "caller_entity_id" => $entity->id,
-                        "called_entity_id" => $ancestor->id,
-                        "kind" => EntityRelation::RELATION_ANCESTOR,
-                        "depth" => $depth
-                    ]);
-                    $depth++;
-                }
-            };
+            // Recreate ancestor relations
+            if ($entity->isDirty('parent_entity_id')) {
+              self::recreateAncestorsRelations($entity->id, true);
             }
+
             // Update versions
             self::incrementEntityVersion($entity->id);
+
             // Setting archive version
             $config = Config::get('kusikusi_models.store_versions', false);
             if(config('kusikusi_models.store_versions') === true){
