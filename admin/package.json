@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.8.2",
-    "axios": "^0.18.1",
+    "axios": "^0.21.2",
     "lodash": "^4.17.20",
     "moment": "^2.24.0",
     "quasar": "^1.12.12",
