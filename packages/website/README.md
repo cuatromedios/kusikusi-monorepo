@@ -28,19 +28,8 @@ composer require kusikusi/website:dev-master
   php artisan vendor:publish --provider="Kusikusi\WebsiteServiceProvider" --tag="controller"
   ```
 
-  Routes
-  ```shell
-  php artisan vendor:publish --provider="Kusikusi\WebsiteServiceProvider" --tag="routes"
-  ```
-
-### Include the routes
-
-Include the routes in your `RouteServiceProvider.php` file, in the boot method, as the last routes:
-
-```php
-Route::middleware('web')
-    ->group(base_path('routes/kusikusi_website.php'));
-```
+### Routes
+The required routes are automatically loaded from the package
 
 
 ## Testing

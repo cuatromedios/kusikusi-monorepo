@@ -30,31 +30,8 @@ composer require kusikusi/media:dev-master
   php artisan vendor:publish --provider="Kusikusi\MediaServiceProvider" --tag="config"
   ```
 
-  Route file
-  ```shell
-  php artisan vendor:publish --provider="Kusikusi\MediaServiceProvider" --tag="routes"
-  ```
-
-  Api Route file
-  ```shell
-  php artisan vendor:publish --provider="Kusikusi\MediaServiceProvider" --tag="api_routes"
-  ```
-
-### Include the routes
-Include the needed route files in your `RouteServiceProvider.php` file, in the boot method:
-
-```php
-Route::middleware('web')
-    ->group(base_path('routes/kusikusi_media.php'));
-```
-
-```php
-Route::prefix('api')
-    ->middleware('api')
-    ->group(base_path('routes/kusikusi_media_api.php'));
-```
-
-> Don't forget to secure the routes!
+### Routes
+The required routes are automatically loaded from the package
 
 ## Testing
 Run the tests with:

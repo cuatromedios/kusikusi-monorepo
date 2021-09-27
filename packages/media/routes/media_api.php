@@ -5,11 +5,16 @@ use Illuminate\Support\Facades\Config;
 
 /*
 |--------------------------------------------------------------------------
-| Media Routes
+| Media API Routes
 |--------------------------------------------------------------------------
 |
 */
-
-// API Routes
-Route::post('/media/{entity_id}/upload', [MediumController::class, 'upload']);
-Route::delete('/media/{entity_id}/static/{preset?}', [MediumController::class, 'clearStatic']);
+Route::prefix('api')
+    ->middleware('api')
+    ->group( function () {
+      // Authenticated
+      Route::middleware('auth:sanctum')->group(function () {
+        Route::post('/media/{entity_id}/upload', [MediumController::class, 'upload']);
+        Route::delete('/media/{entity_id}/static/{preset?}', [MediumController::class, 'clearStatic']);
+      });
+    });

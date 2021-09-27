@@ -40,7 +40,7 @@ class GenerateAdmin extends Command
     {
         $email = $this->ask('Introduce an email');
         $password = $this->ask('Introduce a password');
-        if ($this->confirm('Is the informatio correct?')) {
+        if ($this->confirm('Is the information correct?')) {
             $user = new User([
                 "name" => "Administrator",
                 "email" => $email,

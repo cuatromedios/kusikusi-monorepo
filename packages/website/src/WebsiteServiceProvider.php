@@ -23,6 +23,7 @@ class WebsiteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $this->loadRoutesFrom(__DIR__.'/../routes/website.php');
         if ($this->app->runningInConsole()) {
             // Publish the config
             $this->publishes([
@@ -34,15 +35,6 @@ class WebsiteServiceProvider extends ServiceProvider
             __DIR__.'/../src/Http/Controllers/HtmlController.php' => app_path('Http/Controllers/HtmlController.php'),
             ], 'controller');
 
-            // Publish Laravel route
-            $this->publishes([
-            __DIR__.'/../routes/website.php' => base_path('routes/kusikusi_website.php'),
-            ], 'routes');
-            
-            // Publish Lumen route
-            /* $this->publishes([
-            __DIR__.'/../routes/website-lumen.php' => base_path('routes/website.php'),
-            ], 'route-lumen'); */
         }
     }
 }

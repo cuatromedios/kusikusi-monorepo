@@ -4,13 +4,15 @@ use Kusikusi\Http\Controllers\WebsiteController;
 
 /*
 |--------------------------------------------------------------------------
-| Application Routes
+| Kusikusi Website Routes
 |--------------------------------------------------------------------------
 |
-| Here is where you can register all of the routes for an application.
-| It is a breeze. Simply tell Lumen the URIs it should respond to
-| and give it the Closure to call when that URI is requested.
+| The web route that catches all routes.
 |
 */
 
-Route::get('/{path}', [WebsiteController::class, 'any'])->where('path', '.*');
+Route::middleware('web')
+    ->group( function () {
+      Route::get('/{path}', [WebsiteController::class, 'any'])->where('path', '.*');
+      Route::post('/{path}', [WebsiteController::class, 'any'])->where('path', '.*');
+    });

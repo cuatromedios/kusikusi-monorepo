@@ -18,34 +18,9 @@ composer require kusikusi/models:dev-master
   ```shell
   php artisan vendor:publish --provider="Kusikusi\ModelsServiceProvider"
   ```
-- ##### Or publish individual assets
 
-  Config
-  ```shell
-  php artisan vendor:publish --provider="Kusikusi\ModelsServiceProvider" --tag="config"
-  ```
-  
-  Migrations
-  ```shell
-  php artisan vendor:publish --provider="Kusikusi\ModelsServiceProvider" --tag="migrations"
-  ```
-  > Please note the migrations have commented lines you could use to define foreing keys to user tables
-
-  Api routes
-  ```shell
-  php artisan vendor:publish --provider="Kusikusi\ModelsServiceProvider" --tag="api_routes"
-  ```
-
-### Include the routes
-
-If you need them, include the api routes in your `RouteServiceProvider.php` file, in the boot method:
-> Don't forget to secure the routes!
-
-```php
-Route::prefix('api')
-    ->middleware('api')
-    ->group(base_path('routes/kusikusi_models_api.php'));
-```
+### Routes
+The required routes are automatically loaded from the package
 
 ##### Run the migrations
 ```shell
