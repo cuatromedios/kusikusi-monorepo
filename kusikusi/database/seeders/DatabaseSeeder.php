@@ -14,7 +14,8 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->command->error('Please use specific seeds depending on your needs:');
-        $this->command->info('- Empty Webstite: php artisan db:seed --class=EmptyWebsiteSeeder');
-        $this->command->info('- Blog: php artisan db:seed --class=BlogeSeeder');
+        $this->command->info('- Empty Website: php artisan db:seed --class=EmptyWebsiteSeeder');
+        $this->command->info('- Blog: php artisan db:seed --class=BlogSeeder');
+        $this->command->info('- Administrator: php artisan db:seed --class=AdminSeeder');
     }
 }

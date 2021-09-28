@@ -35,6 +35,13 @@ class WebsiteServiceProvider extends ServiceProvider
             __DIR__.'/../src/Http/Controllers/HtmlController.php' => app_path('Http/Controllers/HtmlController.php'),
             ], 'controller');
 
+            // Publish seeders
+            $this->publishes([
+                __DIR__.'/../database/seeders/AdminSeeder.php' => database_path('seeders/AdminSeeder.php'),
+                __DIR__.'/../database/seeders/BlogSeeder.php' => database_path('seeders/BlogSeeder.php'),
+                __DIR__.'/../database/seeders/EmptyWebsiteSeeder.php' => database_path('seeders/EmptyWebsiteSeeder.php'),
+            ], 'seeder');
+
         }
     }
 }

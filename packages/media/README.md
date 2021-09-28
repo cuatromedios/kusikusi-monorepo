@@ -6,6 +6,9 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/kusikusi/media.svg?style=flat-square)](https://packagist.org/packages/kusikusi/media)
 
 ## Install
+
+This package complements kusikusi/models package, that should be required first.
+
 ```
 composer require kusikusi/media:dev-master
 ```

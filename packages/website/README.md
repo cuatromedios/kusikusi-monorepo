@@ -6,6 +6,9 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/kusikusi/website.svg?style=flat-square)](https://packagist.org/packages/kusikusi/website)
 
 ## Install
+
+This package complements kusikusi/models package, that should be required first.
+
 ```
 composer require kusikusi/website:dev-master
 ```
@@ -27,6 +30,26 @@ composer require kusikusi/website:dev-master
   ```shell
   php artisan vendor:publish --provider="Kusikusi\WebsiteServiceProvider" --tag="controller"
   ```
+
+### Migrations
+```shell
+php artisan migrate
+```
+
+### Seeds
+
+#### An administrator user
+```shell
+php artisan db:seed --class=AdminSeeder
+```
+
+#### One of the website templates
+```shell
+php artisan db:seed --class=EmptyWebsiteSeeder
+```
+```shell
+php artisan db:seed --class=BlogSeeder
+```
 
 ### Routes
 This Kusikusi Website Package, has a "catch-all" route. As this route may interfere with other application routes, this should **not** be automatically loaded. So, you will need to:
