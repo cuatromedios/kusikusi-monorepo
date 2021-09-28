@@ -53,7 +53,7 @@
     },
     "extra": {
         "laravel": {
-            "dont-discover": []
+            "dont-discover": ["kusikusi/website"]
         }
     },
     "config": {

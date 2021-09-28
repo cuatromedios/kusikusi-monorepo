@@ -29,7 +29,22 @@ composer require kusikusi/website:dev-master
   ```
 
 ### Routes
-The required routes are automatically loaded from the package
+This Kusikusi Website Package, has a "catch-all" route. As this route may interfere with other application routes, this should **not** be automatically loaded. So, you will need to:
+
+In your `composer.json` file, define it as not-discover:
+```json
+"extra": {
+  "laravel": {
+    "dont-discover": ["kusikusi/website"]
+  }
+}
+```
+
+In your application `config/app.php` configuration file, add the provider **at the end** of the providers array
+
+```php
+Kusikusi\WebsiteServiceProvider::class
+```
 
 
 ## Testing
