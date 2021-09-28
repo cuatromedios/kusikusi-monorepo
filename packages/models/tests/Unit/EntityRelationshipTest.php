@@ -9,7 +9,7 @@ use Kusikusi\Models\EntityRelation;
 
 class EntityRelationshipTest extends TestCase
 {
-  use RefreshDatabase;
+  // use RefreshDatabase;
 
   /** @test */
   function a_entity_relationship_can_be_created()

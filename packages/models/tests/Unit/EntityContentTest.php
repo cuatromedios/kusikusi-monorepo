@@ -9,7 +9,7 @@ use Kusikusi\Models\EntityContent;
 
 class EntityContentTest extends TestCase
 {
-  use RefreshDatabase;
+  // use RefreshDatabase;
 
   /** @test */
   function a_entity_content_can_be_created()

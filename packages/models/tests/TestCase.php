@@ -34,11 +34,11 @@ class TestCase extends Orchestra
      */
     protected function getEnvironmentSetUp($app)
     {
-        include_once __DIR__ . '/../database/migrations/create_entities_table.php.stub';
-        include_once __DIR__ . '/../database/migrations/create_entities_contents_table.php.stub';
-        include_once __DIR__ . '/../database/migrations/create_entities_relations_table.php.stub';
-        include_once __DIR__ . '/../database/migrations/create_entities_archives_table.php.stub';
-        include_once __DIR__ . '/../database/migrations/create_entities_routes_table.php.stub';
+        include_once __DIR__ . '/../database/migrations/2021_09_28_090000_create_entities_table.php';
+        include_once __DIR__ . '/../database/migrations/2021_09_28_090001_create_entities_relations_table.php';
+        include_once __DIR__ . '/../database/migrations/2021_09_28_090002_create_entities_contents_table.php';
+        include_once __DIR__ . '/../database/migrations/2021_09_28_090003_create_entities_archives_table.php';
+        include_once __DIR__ . '/../database/migrations/2021_09_28_090004_create_entities_routes_table.php';
         (new \CreateEntitiesTable)->up();
         (new \CreateEntitiesContentsTable)->up();
         (new \CreateEntitiesRelationsTable)->up();

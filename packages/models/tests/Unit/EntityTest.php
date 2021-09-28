@@ -12,7 +12,7 @@ use Illuminate\Support\Carbon;
 
 class EntityTest extends TestCase
 {
-  use RefreshDatabase;
+  // use RefreshDatabase;
 
   /** @test */
   function an_entity_can_be_created()
@@ -126,7 +126,7 @@ function scope_with_medium_can_be_used()
       $this->assertEquals($model, $entity->model);
     }
   }
-  
+
   /** @test */
   function scope_is_published_can_be_used()
   {
@@ -167,7 +167,7 @@ function scope_with_medium_can_be_used()
     $this->assertEquals($relationEntity->kind, 'ancestor');
     $this->assertEquals($relationEntity->depth, 1);
   }
-  
+
   /** @test */
   function scope_ancestors_of_can_be_used()
   {
@@ -216,7 +216,7 @@ function scope_with_medium_can_be_used()
     $this->assertEquals($descendantofEntity[3]->depth, 3);
     $this->assertEquals($descendantofEntity[3]->kind, $kind);
   }
-  
+
   /** @test */
   function scope_siblings_of_can_be_used()
   {
@@ -234,7 +234,7 @@ function scope_with_medium_can_be_used()
     $this->assertEquals($siblingsofEntity[1]->depth, 1);
     $this->assertEquals($siblingsofEntity[1]->kind, 'ancestor');
   }
-  
+
   /** @test */
   function scope_related_by_can_be_used()
   {
@@ -258,7 +258,7 @@ function scope_with_medium_can_be_used()
     $this->assertEquals($relatedByEntity[2]->depth, 3);
     $this->assertEquals($relatedByEntity[2]->kind, 'relation');
   }
-  
+
   /** @test */
   function scope_relating_can_be_used()
   {

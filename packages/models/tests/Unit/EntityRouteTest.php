@@ -12,7 +12,7 @@ use Kusikusi\Models\EntityRoute;
 
 class EntityRouteTest extends TestCase
 {
-  use RefreshDatabase;
+  // use RefreshDatabase;
 
   /** @test */
   function a_route_can_be_created()
@@ -20,24 +20,24 @@ class EntityRouteTest extends TestCase
     $id = 'EntityOne';      $lang = 'en';
     $slug = 'title';
     Entity::create(['id' => $id]);
-    EntityContent::create(['entity_id' => $id, 'lang' => $lang, 'field' => 'slug', 'text' => $slug]);        
-    $routes = EntityRoute::select()->where('entity_id', $id)->first();    
+    EntityContent::create(['entity_id' => $id, 'lang' => $lang, 'field' => 'slug', 'text' => $slug]);
+    $routes = EntityRoute::select()->where('entity_id', $id)->first();
     $this->assertEquals($routes->path, "/$slug");
     $this->assertEquals($routes->lang, $lang);
     $this->assertEquals($routes->kind, 'main');
   }
-  
+
   /** @test */
   function a_route_can_be_multilanguage()
   {
-    $id = 'EntityOne';      
+    $id = 'EntityOne';
     $lang1 = 'en';         $lang2 = 'es';
-    $slug1 = 'title';      $slug2 = 'título'; 
-    $kind = 'main'; 
+    $slug1 = 'title';      $slug2 = 'título';
+    $kind = 'main';
     Entity::create(['id' => $id]);
-    EntityContent::create(['entity_id' => $id, 'lang' => $lang1, 'field' => 'slug', 'text' => $slug1]);        
-    EntityContent::create(['entity_id' => $id, 'lang' => $lang2, 'field' => 'slug', 'text' => $slug2]);        
-    $routes = EntityRoute::select()->where('entity_id', $id)->get();    
+    EntityContent::create(['entity_id' => $id, 'lang' => $lang1, 'field' => 'slug', 'text' => $slug1]);
+    EntityContent::create(['entity_id' => $id, 'lang' => $lang2, 'field' => 'slug', 'text' => $slug2]);
+    $routes = EntityRoute::select()->where('entity_id', $id)->get();
     $this->assertEquals($routes[0]->path, "/$slug1");
     $this->assertEquals($routes[1]->path, "/$slug2");
     $this->assertEquals($routes[0]->lang, $lang1);
@@ -49,14 +49,14 @@ class EntityRouteTest extends TestCase
   /** @test */
   function a_redirect_route_can_be_created()
   {
-    $id = 'EntityOne';      
+    $id = 'EntityOne';
     $lang = 'en';
     $slug = 'title';
-    $newSlug = 'new-title';     
+    $newSlug = 'new-title';
     Entity::create(['id' => $id]);
-    EntityContent::create(['entity_id' => $id, 'lang' => $lang, 'field' => 'slug', 'text' => $slug]);        
-    EntityContent::create(['entity_id' => $id, 'lang' => $lang, 'field' => 'slug', 'text' => $newSlug]);        
-    $routes = EntityRoute::select()->where('entity_id', $id)->orderBy('route_id')->get();   
+    EntityContent::create(['entity_id' => $id, 'lang' => $lang, 'field' => 'slug', 'text' => $slug]);
+    EntityContent::create(['entity_id' => $id, 'lang' => $lang, 'field' => 'slug', 'text' => $newSlug]);
+    $routes = EntityRoute::select()->where('entity_id', $id)->orderBy('route_id')->get();
     $this->assertEquals($routes[0]->path, "/$slug");
     $this->assertEquals($routes[1]->path, "/$newSlug");
     $this->assertEquals($routes[0]->lang, $lang);
@@ -64,7 +64,7 @@ class EntityRouteTest extends TestCase
     $this->assertEquals($routes[0]->kind, 'permanent_redirect');
     $this->assertEquals($routes[1]->kind, 'main');
   }
-  
+
   /** @test */
   function a_route_without_config_cant_be_created()
   {
@@ -72,11 +72,11 @@ class EntityRouteTest extends TestCase
     $id = 'EntityOne';      $lang = 'en';
     $slug = 'title';
     Entity::create(['id' => $id]);
-    EntityContent::create(['entity_id' => $id, 'lang' => $lang, 'field' => 'slug', 'text' => $slug]);        
-    $routes = EntityRoute::select()->where('entity_id', $id)->first();    
+    EntityContent::create(['entity_id' => $id, 'lang' => $lang, 'field' => 'slug', 'text' => $slug]);
+    $routes = EntityRoute::select()->where('entity_id', $id)->first();
     $this->assertEmpty($routes);
   }
-  
+
   /** @test */
   function a_permanent_route_without_config_cant_be_created()
   {
@@ -85,8 +85,8 @@ class EntityRouteTest extends TestCase
     $slug = 'title';
     Entity::create(['id' => $id]);
     EntityContent::create(['entity_id' => $id, 'lang' => $lang, 'field' => 'slug', 'text' => $slug]);
-    EntityContent::create(['entity_id' => $id, 'lang' => $lang, 'field' => 'slug', 'text' => $slug]);         
-    $routes = EntityRoute::select()->where('entity_id', $id)->get();  
+    EntityContent::create(['entity_id' => $id, 'lang' => $lang, 'field' => 'slug', 'text' => $slug]);
+    $routes = EntityRoute::select()->where('entity_id', $id)->get();
     $this->assertEquals(count($routes), 1);
   }
 }
