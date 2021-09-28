@@ -1761,12 +1761,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/cuatromedios/kusikusi-website.git",
-                "reference": "6ba529dd588eaefabbf288e0dfcc11182bf91338"
+                "reference": "92a413a4eaa3c365ee01d10f0660df0571202d48"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cuatromedios/kusikusi-website/zipball/6ba529dd588eaefabbf288e0dfcc11182bf91338",
-                "reference": "6ba529dd588eaefabbf288e0dfcc11182bf91338",
+                "url": "https://api.github.com/repos/cuatromedios/kusikusi-website/zipball/92a413a4eaa3c365ee01d10f0660df0571202d48",
+                "reference": "92a413a4eaa3c365ee01d10f0660df0571202d48",
                 "shasum": ""
             },
             "require": {
@@ -1810,7 +1810,7 @@
                 "issues": "https://github.com/cuatromedios/kusikusi-website/issues",
                 "source": "https://github.com/cuatromedios/kusikusi-website/tree/master"
             },
-            "time": "2021-09-27T20:04:33+00:00"
+            "time": "2021-09-28T12:35:05+00:00"
         },
         {
             "name": "laravel/fortify",
