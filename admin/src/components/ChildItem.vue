@@ -11,11 +11,15 @@
     <q-item-section>
       <q-item-label>
         <h3>
-          <span v-if="reorderMode">{{ child.title ||  child.properties.title || $t($store.getters.nameOf(child.model)) }}</span>
-          <router-link v-if="!reorderMode" :to="{ name: 'content', params: { entity_id:child.id } }" :class=" { 'text-strike': !child.is_active }">{{ child.title || child.properties.title || $t($store.getters.nameOf(child.model))}}</router-link>
+          <span v-if="reorderMode">{{ child.content.title ||  child.properties.title || $t($store.getters.nameOf(child.model)) }}</span>
+          <router-link v-if="!reorderMode" :to="{ name: 'content', params: { entity_id:child.id } }" >{{ child.content.title || child.properties.title || $t($store.getters.nameOf(child.model))}}</router-link>
         </h3>
       </q-item-label>
-      <q-item-label caption lines="1">{{ $t($store.getters.nameOf(child.model)) }} | <span :class=" { 'text-warning': !isBefore(child.published_at) } ">{{ child.published_at | moment('dddd DD MMMM YYYY, h:mm a') }}</span></q-item-label>
+      <q-item-label caption lines="1">
+        {{ $t($store.getters.nameOf(child.model)) }} |
+        <span :class=" { 'text-warning': !isBefore(child.published_at) } ">{{ child.published_at | moment('dddd DD MMMM YYYY, h:mm a') }}</span> |
+        <span :class=" { 'text-warning': child.visibility !== 'public', 'text-positive': child.visibility === 'public' } ">{{ child.visibility }}</span>
+      </q-item-label>
     </q-item-section>
     <q-item-section side v-if="tags && tags.length > 0">
       <div class="row items-center tag-select">

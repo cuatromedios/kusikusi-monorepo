@@ -108,8 +108,12 @@ export default {
       this.getChildren()
     },
     async getChildren () {
+      if (this.entity.id === 'new') {
+        this.loading = false
+        return
+      }
       this.loading = true
-      const childrenResult = await this.$api.get(`/entities?children-of=${this.entity.id}&select=contents.title,properties,published_at,unpublished_at,model,id&only-published=false&order-by=${this.orderBy}&page=${this.currentPage}`)
+      const childrenResult = await this.$api.get(`/entities?children-of=${this.entity.id}&select=content.title,properties,published_at,unpublished_at,model,id,visibility&only-published=false&order-by=${this.orderBy}&page=${this.currentPage}`)
       this.loading = false
       if (childrenResult.success) {
         this.children = childrenResult.data.data
