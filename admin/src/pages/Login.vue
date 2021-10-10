@@ -55,7 +55,6 @@ export default {
       const loginResult = await this.$api.post('/auth/login', this.form)
       if (loginResult.success) {
         const user = await this.$api.get('/user', this.form)
-        // await this.$store.commit('setAuthtoken', loginResult.data.token)
         this.$store.commit('setUser', user.data)
         this.$router.push({ name: 'content', params: { entity_id: 'home' } })
       } else {
