@@ -18,7 +18,7 @@ use Kusikusi\Jobs\ImportQueue;
 class EntityController extends BaseController
 {
 
-    const ID_RULE = 'string|min:1|max:32|regex:/^[A-Za-z0-9_-]{1,32}$/';
+    const ID_RULE = 'nullable|string|min:1|max:32|regex:/^[A-Za-z0-9_-]{1,32}$/';
     const ID_RULE_WITH_FILTER = 'string|min:1|max:64|regex:/^[A-Za-z0-9_-]+:?[a-z0-9]*$/';
     const ENTITY_EXISTS = 'string|min:1|max:32|regex:/^[A-Za-z0-9_-]{1,32}$/|exists:entities,id';
     const MODEL_RULE = 'string|min:1|max:32|regex:/^[A-Z][A-Za-z0-9]+$/';
@@ -67,7 +67,7 @@ class EntityController extends BaseController
         $lang = $request->get('lang') ?? Config::get('kusikusi_website.langs')[0] ?? '';
         $receivedLang = $request->get('lang') ?? null;
         $modelClassName = Entity::getEntityClassName($request->get('of-model') ?? 'Entity');
-        
+
         $entities = $modelClassName::query();
         $entities = $this->addSelects($entities, $request, $lang, $modelClassName);
         $entities = $this->addScopes($entities, $request, $lang, $modelClassName);
@@ -82,7 +82,7 @@ class EntityController extends BaseController
             ->paginate($request->get('per-page') ? intval($request->get('per-page')) : Config::get('kusikusi_api.page_size', 100))
             ->withQueryString();
         }
-        
+
         return $entities;
     }
 /**
@@ -238,7 +238,7 @@ class EntityController extends BaseController
      * @group Entity
      * @authenticated
      * @bodyParam entities array Optional. See update or store.
-     * @bodyParam entities file Optional. 
+     * @bodyParam entities file Optional.
      * @responseFile responses/entities.create.json
      * @return \Illuminate\Http\JsonResponse
      */
@@ -380,7 +380,7 @@ class EntityController extends BaseController
             'is_active' => 'boolean',
             'contents.*.lang' => 'required_with:contents|string',
             'contents.*.field' => 'required_with:contents|string',
-            'contents.*.text' => 'required_with:contents|string',
+            'contents.*.text' => '',
             'routes.*.path' => 'required_with:routes|string',
             'routes.*.lang' => 'required_with:routes|string',
             'routes.*.kind' => 'required_with:routes|string',
