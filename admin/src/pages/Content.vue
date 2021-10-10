@@ -202,7 +202,8 @@ export default {
           this.loading = false
         })
       }
-      this.fieldsets = _.get(this.$store.state, `ui.config.models.${this.entity.model}.form`, [])
+      this.fieldsets = _.get(this.$store.state, `ui.config.models.${String(this.entity.model).toLowerCase()}.form`, [])
+      console.log(this.entity.model)
     },
     async clearCache () {
       this.clearing = true
