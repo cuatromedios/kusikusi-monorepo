@@ -5,7 +5,7 @@
         <q-breadcrumbs>
           <q-breadcrumbs-el v-for="ancestor in ancestors"
                             :key="ancestor.id"
-                            :label="ancestor.title || (ancestor.properties ? ancestor.properties.title : null) || '-'"
+                            :label="ancestor.content.title || (ancestor.properties ? ancestor.properties.title : null) || '-'"
                             :to="{ name: 'content', params: { entity_id: ancestor.id } }"
           />
           <q-breadcrumbs-el />
@@ -176,8 +176,7 @@ export default {
         this.loading = false
         if (contentResult.success) {
           this.entity = contentResult.data
-          const ancestorsResult = await this.$api.get(`/entities?ancestor-of=${this.entity.id}&descendant-of=website&select=id,contents.title,properties`)
-          // const ancestorsResult = await this.$api.get(`/entities?ancestor-of=${this.entity.id}&descendant-of=website&select=id,contents.title,properties&order-by=ancestor_relation_depth:desc`)
+          const ancestorsResult = await this.$api.get(`/entities?ancestors-of=${this.entity.id}&descendant-of=website&select=id,content.title,properties&order-by=ancestor.depth:DESC`)
           if (ancestorsResult.success) {
             this.ancestors = ancestorsResult.data.data
           } else {
