@@ -20,7 +20,7 @@ class EmptyWebsiteSeeder extends Seeder
         ]);
         $home = Entity::create(['id' => 'home', 'model' => 'Home', 'view' => 'home']);
         EntityContent::createFor('home', [
-            'title', 'Kusikusi',
+            'title' => 'Kusikusi',
             'slug' =>'',
             'welcome' => 'A brand new Kusikusi Website'
         ]);

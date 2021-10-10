@@ -20,7 +20,7 @@ class BlogSeeder extends Seeder
         ]);
         $blog = Entity::create(['id' => 'blog', 'model' => 'Blog', 'view' => 'blog', 'parent_entity_id' => 'home']);
         EntityContent::createFor('blog', [
-            'title', 'Blog',
+            'title' => 'Blog',
             'slug' =>'blog',
             'summary' => 'The blog summary'
         ]);
