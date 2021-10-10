@@ -37,7 +37,7 @@ class HtmlController extends Controller
     {
         $result = [ "status" => $status ];
         $result['lang'] = $request->lang;
-        return view('html.error', $result);
+        return response()->view('html.error', $result)->setStatusCode($status);
     }
 
     /**
