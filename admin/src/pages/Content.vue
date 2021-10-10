@@ -28,11 +28,7 @@
         <q-card>
           <q-card-section v-if="!loading">
             <div class="row q-col-gutter-sm">
-              <nq-field dense class="col-12" :readonly="!editing" v-if="editing" >
-                <q-checkbox v-model="entity.is_active" :label="$t('contents.active')" left-label color="dark" />
-              </nq-field>
-              <div class="text-center col-12 text-positive" v-if="!editing && entity.is_active">{{ $t('contents.active') }}</div>
-              <div class="text-center col-12 text-warning" v-if="!editing && !entity.is_active">{{ $t('contents.notActive') }}</div>
+              <nq-select dense v-model="entity.visibility" label="Status" class="col-12" :readonly="!editing" :options="['public', 'draft', 'private']"/>
               <nq-select dense v-model="entity.view" :label="$t('contents.view')" class="col-12" :readonly="!editing" :options="views"/>
               <nq-date-time dense v-model="entity.published_at" display-format="dddd DD MMMM YYYY, h:mm a" :label="$t('contents.publishedAt')" class="col-12" :readonly="!editing" v-if="editing"></nq-date-time>
               <nq-field :label="$t('contents.publishedAt')" class="col-12" readonly stack-label v-if="!editing">
