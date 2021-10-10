@@ -52,11 +52,7 @@ export default {
   },
   methods: {
     handleLogin: async function () {
-      // const sessionResult = await this.$axios.get('http://local.kusikusi.com/sanctum/csrf-cookie')
       const loginResult = await this.$api.post('/auth/login', this.form)
-      const xsrfToken = loginResult.config.headers['X-XSRF-TOKEN']
-      this.$api.axiosInstance.defaults.withCredentials = true
-      this.$api.axiosInstance.defaults.headers.common['X-XSRF-TOKEN'] = xsrfToken
       if (loginResult.success) {
         const user = await this.$api.get('/user', this.form)
         // await this.$store.commit('setAuthtoken', loginResult.data.token)

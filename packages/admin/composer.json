@@ -1,0 +1,46 @@
+{
+    "name": "kusikusi/admin",
+    "description": "Admin interface for Kusikusi",
+    "type": "package",
+    "license": "MIT",
+    "keywords": [
+        "laravel", "kusikusi", "ui"
+    ],
+    "authors": [
+        {
+            "name": "Cuatromedios",
+            "email": "dev@cuatromedios.com"
+        }
+    ],
+    "require": {
+        "illuminate/support": "^7.0|^8.0"
+    },
+    "suggest": {
+        "kusikusi/models": "This package make sense when installed in a Laravel project with kusikusi/models package",
+        "kusikusi/media": "This package make sense when installed in a Laravel project with kusikusi/models package",
+        "kusikusi/website": "This package make sense when installed in a Laravel project with kusikusi/models package"
+    },
+    "autoload": {
+        "psr-4": {
+            "Kusikusi\\": "./src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Kusikusi\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Kusikusi\\AdminServiceProvider"
+            ]
+        }
+    },
+    "require-dev": {
+        "orchestra/testbench": "^6.0"
+    }
+}

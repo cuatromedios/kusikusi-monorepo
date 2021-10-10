@@ -15,9 +15,10 @@
         "kusikusi/media": "*",
         "kusikusi/models": "*",
         "kusikusi/website": "*",
+        "kusikusi/admin": "*",
         "laravel/fortify": "^1.7",
-        "laravel/framework": "^8.12",
-        "laravel/sanctum": "^2.10",
+        "laravel/framework": "^8.54",
+        "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
         "scrivo/highlight.php": "v9.18.1.6"
     },
@@ -28,7 +29,8 @@
         "mockery/mockery": "^1.4.2",
         "naoray/laravel-package-maker": "^4.0",
         "nunomaduro/collision": "^5.0",
-        "phpunit/phpunit": "^9.3.3"
+        "phpunit/phpunit": "^9.3.3",
+        "wulfheart/pretty_routes": "^0.3.0"
     },
     "config": {
         "optimize-autoloader": true,
@@ -81,6 +83,10 @@
         "media": {
             "type": "path",
             "url": "../packages/media"
+        },
+        "admin": {
+            "type": "path",
+            "url": "../packages/admin"
         }
     }
 }

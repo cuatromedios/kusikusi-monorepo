@@ -7,4 +7,5 @@
         <li>Website</li>
         <li>API Controller</li>
     </ul>
+    <p>Sanctum @dump(config('sanctum.stateful'))</p>
 </x-layout>

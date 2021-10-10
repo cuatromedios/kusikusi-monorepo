@@ -17,9 +17,7 @@ module.exports = configure(function (ctx) {
     // --> boot files are part of "main.js"
     // https://quasar.dev/quasar-cli/cli-documentation/boot-files
     boot: [
-
-      'i18n',
-      'axios'
+      'i18n'
     ],
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
@@ -124,8 +122,8 @@ module.exports = configure(function (ctx) {
     // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-build
     build: {
       vueRouterMode: 'history', // available values: 'hash', 'history'
-      publicPath: 'cms',
-      distDir: '../kusikusi/public/cms',
+      publicPath: 'admin',
+      distDir: '../packages/admin/dist',
       env: {
         VERSION: `"V${package.version}"`,
         API_URL: JSON.stringify(process.env.API_URL ? process.env.API_URL : ctx.dev ? 'http://127.0.0.1:8000/api' : '/api'),
@@ -160,7 +158,7 @@ module.exports = configure(function (ctx) {
     // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-devServer
     devServer: {
       https: false,
-      port: 8001,
+      port: 8000,
       open: false // opens browser window automatically
     },
 

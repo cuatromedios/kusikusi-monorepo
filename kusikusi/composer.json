@@ -14,8 +14,8 @@
         "kusikusi/models": "dev-master",
         "kusikusi/website": "dev-master",
         "laravel/fortify": "^1.7",
-        "laravel/framework": "^8.12",
-        "laravel/sanctum": "^2.9",
+        "laravel/framework": "^8.54",
+        "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
         "league/csv": "^9.7"
     },

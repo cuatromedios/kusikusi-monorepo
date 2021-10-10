@@ -17,7 +17,10 @@ export default {
     }
   },
   async created () {
+    this.$api.axiosInstance.defaults.withCredentials = true
+    this.$api.axiosInstance.defaults.headers.common['Access-Control-Allow-Credentials'] = true
     this.$api.baseURL = process.env.API_URL
+    await this.$api.get('/csrf-cookie')
     const config = await this.$api.get('/cms/config')
     if (config.success) {
       this.$store.commit('setConfig', config.data)
