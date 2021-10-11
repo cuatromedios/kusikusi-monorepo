@@ -169,7 +169,7 @@ export default {
     async getMedia () {
       this.loading = true
       if (this.entity.id !== 'new') {
-        const mediaResult = await this.$api.get(`/entities?media-of=${this.entity.id}&select=contents.title,properties,model,id,relation_media.relation_id&only-published=false&order-by=relation_media.position&per-page=100`)
+        const mediaResult = await this.$api.get(`/entities?media-of=${this.entity.id}&select=content.title,properties,model,id&only-published=false&order-by=relation_media.position&per-page=100`)
         // const mediaResult = await this.$api.get(`/entities?media-of=${this.entity.id}&select=contents.title,properties,is_active,model,id,relation_media.relation_id&only-published=false&order-by=relation_media.position&per-page=100`)
         this.loading = false
         if (mediaResult.success) {
@@ -343,6 +343,8 @@ export default {
       return this.uploadProgress.length > 0
     },
     acceptedFiles () {
+      return '*'
+      /*
       if (!this.allowed || this.allowed[0] === '*' || this.allowed[0] === '' || this.allowed === '' || this.allowed === '*') {
         return ''
       }
@@ -350,7 +352,8 @@ export default {
       _.each(this.allowed, (f) => {
         formatList = [...formatList, ..._.get(this.$store.state.ui.config, `formats.${f}`, [f])]
       })
-      return '.' + formatList.join(', .')
+      return '.' + acceptedFiles.join(', .')
+      */
     }
   }
 }
