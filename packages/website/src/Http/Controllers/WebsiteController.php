@@ -33,7 +33,7 @@ class WebsiteController extends Controller
      * @param $request \Illuminate\Http\Request
      * @return \Illuminate\Http\Response
      */
-    public function any(Request $request, $path)
+    public function any(Request $request, $path = "")
     {
         $format = strtolower(pathinfo($path, PATHINFO_EXTENSION));
         $originalFormat = $format;
@@ -53,7 +53,6 @@ class WebsiteController extends Controller
             $headers = ['Content-Type' => $mimeType];
             return Storage::disk($staticStorage)->response($staticPath, null, $headers);
         }
-
         // Search for the entity is being called by its url, ignore inactive and soft deleted.
         $searchRouteResult = EntityRoute::where('path', $path)->first();
         if (!$searchRouteResult) {
@@ -71,7 +70,7 @@ class WebsiteController extends Controller
                     ->where('lang', $searchRouteResult->lang)
                     ->where('kind', 'main')
                     ->first();
-                    return redirect($redirect->path . ($originalFormat !== '' ? '.'.$originalFormat : ''), $status || 301);
+                return redirect($redirect->path . ($originalFormat !== '' ? '.'.$originalFormat : ''), $status || 301);
                 break;
             case 'alias':
             case 'main':
