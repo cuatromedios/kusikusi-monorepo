@@ -11,8 +11,8 @@
     <q-item-section>
       <q-item-label>
         <h3>
-          <span v-if="reorderMode">{{ relation.title || $t($store.getters.nameOf(relation.model)) }}</span>
-          {{ relation.title || $t($store.getters.nameOf(relation.model))}}
+          <span v-if="reorderMode">{{ relation.content.title || $t($store.getters.nameOf(relation.model)) }}</span>
+          {{ relation.content.title || $t($store.getters.nameOf(relation.model))}}
         </h3>
       </q-item-label>
     </q-item-section>
@@ -65,8 +65,8 @@ export default {
     }
   },
   mounted () {
-    this.editingTags = _.clone(this.relation.relation_tags)
-    this.storedTags = _.clone(this.relation.relation_tags)
+    this.editingTags = _.clone(this.relation.related_by.tags)
+    this.storedTags = _.clone(this.relation.related_by.tags)
   },
   methods: {
     onInput () {
@@ -77,12 +77,10 @@ export default {
       this.$refs.tagSelector.hidePopup()
       this.saving = true
       this.storedTags = _.clone(this.editingTags)
-      await this.$api.post(`/entity/${this.entity_id}/relation`, {
-        called_entity_id: this.relation.id,
-        kind: this.relation.relation_kind,
+      await this.$api.post(`/entities/${this.entity_id}/relations/${this.relation.id}/${this.relation.related_by.kind}`, {
         tags: this.storedTags,
-        position: this.relation.relation_position,
-        depth: 1
+        position: this.relation.related_by.position,
+        depth: 0
       })
       this.saving = false
       this.editing = false

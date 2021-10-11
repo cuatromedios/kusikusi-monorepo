@@ -48,7 +48,7 @@
               <q-item-section>
                 <q-item-label>
                   <h3>
-                    {{ relationable.title || $t($store.getters.nameOf(relationable.model))}}
+                    {{ relationable.content.title || $t($store.getters.nameOf(relationable.model))}}
                   </h3>
                 </q-item-label>
               </q-item-section>
@@ -131,8 +131,13 @@ export default {
   },
   methods: {
     async getRelations () {
+      if (this.entity.id === 'new') {
+        this.relations = []
+        this.loading = false
+        return
+      }
       this.loading = true
-      const relationsResult = await this.$api.get(`/entities?related-by=${this.entity.id}:${this.kind}&select=id,model,contents.title&only-published=false&order-by=relation.position&per-page=100`)
+      const relationsResult = await this.$api.get(`/entities?related-by=${this.entity.id}:${this.kind}&select=id,model,content.title&only-published=false&order-by=relation.position&per-page=100`)
       this.loading = false
       if (relationsResult.success) {
         this.relations = relationsResult.data.data
@@ -161,8 +166,8 @@ export default {
     },
     async reorder () {
       this.reordering = true
-      const relation_ids = _.flatMap(this.relations, (c) => c.relation_id)
-      const reorderResult = await this.$api.patch('/entities/relations/reorder', { relation_ids })
+      const relation_ids = _.flatMap(this.relations, (c) => c.related_by.relation_id)
+      const reorderResult = await this.$api.patch(`/entities/${this.entity.id}/relations/reorder`, { relation_ids })
       this.reordering = false
       if (reorderResult.success) {
         this.reorderMode = false
@@ -181,11 +186,11 @@ export default {
       this.loadingRelationables = true
       let childrenOrDescendants
       if (this.list === 'descendants') {
-        childrenOrDescendants = 'descendant-of'
+        childrenOrDescendants = 'descendants-of'
       } else {
-        childrenOrDescendants = 'child-of'
+        childrenOrDescendants = 'children-of'
       }
-      const relationsResult = await this.$api.get(`/entities?${childrenOrDescendants}=${this.from_entity_id}&select=id,parent_entity_id,model,contents.title&only-published=false&order-by=depth,position&per-page=100`)
+      const relationsResult = await this.$api.get(`/entities?${childrenOrDescendants}=${this.from_entity_id}&select=id,parent_entity_id,model,content.title&only-published=false&order-by=descendant.depth,descendant.position&per-page=100`)
       if (relationsResult.success) {
         if (this.list === 'descendants') {
           const hashArr = {}
@@ -204,7 +209,7 @@ export default {
     treeSort (hashArr, key, result) {
       // Thank you https://stackoverflow.com/questions/35329658/sort-array-of-objects-with-hierarchy-by-hierarchy-and-name
       if (hashArr[key] === undefined) return
-      const arr = hashArr[key].sort((a, b) => { return a.descendant_relation_position > b.descendant_relation_position })
+      const arr = hashArr[key].sort((a, b) => { console.log(a.descendant); return a.descendant.position > b.descendant.position })
       for (let i = 0; i < arr.length; i++) {
         result.push(arr[i])
         this.treeSort(hashArr, arr[i].id, result)
@@ -221,10 +226,8 @@ export default {
         if (!this.relationsIds[this.relationables[i].id] && this.relationables[i].isSelected) {
           bulk.push({
             method: 'POST',
-            url: `/entity/${this.entity.id}/relation`,
+            url: `/entities/${this.entity.id}/relations/${this.relationables[i].id}/${this.kind}`,
             data: {
-              called_entity_id: this.relationables[i].id,
-              kind: this.kind,
               tags: [],
               position: this.relations.length + 1 + i,
               depth: 1
@@ -233,7 +236,7 @@ export default {
         } else if (this.relationsIds[this.relationables[i].id] && !this.relationables[i].isSelected) {
           bulk.push({
             method: 'DELETE',
-            url: `/entity/${this.entity.id}/relation/${this.relationables[i].id}/${this.kind}`
+            url: `/entities/${this.entity.id}/relations/${this.relationables[i].id}/${this.kind}`
           })
         }
       }

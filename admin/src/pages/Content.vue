@@ -197,7 +197,7 @@ export default {
           this.loading = false
         })
       }
-      this.fieldsets = _.get(this.$store.state, `ui.config.models.${String(this.entity.model).toLowerCase()}.form`, [])
+      this.fieldsets = _.get(this.$store.state, `ui.config.models.${String(_.kebabCase(this.entity.model)).toLowerCase()}.form`, [])
     },
     async clearCache () {
       this.clearing = true
@@ -275,7 +275,7 @@ export default {
       const payload = _.clone(this.entity)
       delete payload.entities_related
       if (this.isNew) {
-        if (this.entity.id === 'new') delete this.entity.id
+        if (this.entity.id === 'new') delete payload.id
         saveResult = await this.$api.post('/entities', payload)
       } else {
         saveResult = await this.$api.patch(`/entities/${this.entity.id}`, payload)
@@ -333,10 +333,10 @@ export default {
       return this.$route.params.entity_id === 'new'
     },
     isEditable () {
-      return _.get(this.$store.state, `ui.config.models.${this.entity.model}.editable`, true)
+      return _.get(this.$store.state, `ui.config.models.${_.kebabCase(this.entity.model)}.editable`, true)
     },
     views () {
-      return _.get(this.$store.state, `ui.config.models.${this.entity.model}.views`, [this.entity.model])
+      return _.get(this.$store.state, `ui.config.models.${_.kebabCase(this.entity.model)}.views`, [_.kebabCase(this.entity.model)])
     },
     contentLang: {
       set (lang) {
