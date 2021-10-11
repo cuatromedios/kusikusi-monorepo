@@ -272,11 +272,13 @@ export default {
     async save () {
       this.saving = true
       let saveResult
+      let payload = _.clone(this.entity)
+      delete payload.entities_related
       if (this.isNew) {
         if (this.entity.id === 'new') delete this.entity.id
-        saveResult = await this.$api.post('/entities', this.entity)
+        saveResult = await this.$api.post('/entities', payload)
       } else {
-        saveResult = await this.$api.patch(`/entities/${this.entity.id}`, this.entity)
+        saveResult = await this.$api.patch(`/entities/${this.entity.id}`, payload)
       }
       this.saving = false
       if (saveResult.success) {
