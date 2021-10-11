@@ -52,12 +52,16 @@ export default {
   },
   methods: {
     handleLogin: async function () {
-      const loginResult = await this.$api.post('/auth/login', this.form)
+      let loginResult = await this.$api.post('/auth/login', this.form)
       if (loginResult.success) {
-        const user = await this.$api.get('/user', this.form)
-        this.$store.commit('setUser', user.data)
-        this.$router.push({ name: 'content', params: { entity_id: 'home' } })
-      } else {
+        const userResult = await this.$api.get('/user', this.form)
+        if (userResult.success) {
+          this.$store.commit('setUser', userResult.data)
+          this.$router.push({ name: 'content', params: { entity_id: 'home' } })
+          return
+        } else {
+          loginResult = userResult
+        }
         if (loginResult.status === 401) {
           this.$q.notify({
             position: 'top',

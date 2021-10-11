@@ -25,6 +25,15 @@ export default {
     if (config.success) {
       this.$store.commit('setConfig', config.data)
     }
+    const userResult = await this.$api.get('/user', this.form)
+    this.prepared = true
+    if (!userResult.success) {
+      if (this.$route.name !== 'login') {
+        this.$router.push({ name: 'login' })
+      }
+    }
+    this.$store.commit('setUser', userResult.data)
+    /*
     await this.$store.dispatch('getLocalSession')
     if (this.$store.getters.hasAuthtoken) {
       const meResult = await this.$api.get('/user/me')
@@ -41,6 +50,7 @@ export default {
         this.$router.push({ name: 'login' })
       }
     }
+    */
   }
 }
 </script>
