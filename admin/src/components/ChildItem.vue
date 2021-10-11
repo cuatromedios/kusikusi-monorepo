@@ -56,7 +56,6 @@ export default {
   mounted () {
     this.editingTags = _.clone(this.child.child.tags)
     this.storedTags = _.clone(this.child.child.tags)
-
   },
   methods: {
     onInput () {
