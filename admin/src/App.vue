@@ -4,7 +4,7 @@
       <q-spinner size="xl" />
     </div>
     <router-view v-if="prepared" />
-    <div id="version">V 8.0.0</div>
+    <div id="version">V 8.0.6</div>
   </div>
 </template>
 
