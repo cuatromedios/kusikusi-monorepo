@@ -18,7 +18,29 @@ class EmptyWebsiteSeeder extends Seeder
         $this->call([
             AdminSeeder::class,
         ]);
-        $home = Entity::create(['id' => 'home', 'model' => 'Home', 'view' => 'home']);
+        $website = Entity::create([
+            'id' => 'website',
+            'model' => 'Website',
+            'view' => 'website',
+            'properties' => [
+                "theme_color" => "#000000",
+                "background_color" => "#ffffff"
+            ]
+        ]);
+        EntityContent::createFor('website', [
+            'title' => 'Website'
+        ]);
+        $website->touch();
+        $menusContainer = Entity::create([
+            'id' => 'menus-container',
+            'model' => 'MenusContainer',
+            'view' => 'menus-container'
+        ]);
+        $home = Entity::create([
+            'id' => 'home',
+            'model' => 'Home',
+            'view' => 'home'
+        ]);
         EntityContent::createFor('home', [
             'title' => 'Kusikusi',
             'slug' =>'',
