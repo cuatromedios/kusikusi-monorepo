@@ -16,7 +16,6 @@
 return [
     "langs" => ["en"], // The first lang will be the default each time the entity is loaded
     "app_url" => env('APP_URL', 'http://127.0.0.1:8000'), // Very important to change this in your .env file or here. This will be used for canonical urls and social share assets
-    "static_generation" => "lazy", // (TBD) lazy | eager | none Lazy: The entities wait to be called to get processed. Eager: Entities views get processed on save. None: No cache.
     "page_size" => 25, // Default page size if not defined in the call
     "token_expiration_in_seconds" => 0, // Seconds to the token to be expired or 0
     "short_id_length" => 10, // Change if you database is going to be veeeery big. Maximum 16.

@@ -14,5 +14,4 @@ use Kusikusi\Http\Controllers\WebsiteController;
 Route::middleware('web')
     ->group( function () {
       Route::get('/{path}', [WebsiteController::class, 'any'])->where('path', '.*');
-      Route::post('/{path}', [WebsiteController::class, 'any'])->where('path', '.*');
     });

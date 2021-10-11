@@ -12,7 +12,7 @@ use Illuminate\Support\Str;
 use Kusikusi\Models\Website;
 use Kusikusi\Models\Entity;
 use Illuminate\Support\Facades\Validator;
-use Mimey\MimeTypes;
+use Illuminate\Http\Testing\MimeType;
 
 class WebsiteController extends Controller
 {
@@ -33,36 +33,32 @@ class WebsiteController extends Controller
      * @param $request \Illuminate\Http\Request
      * @return \Illuminate\Http\Response
      */
-    public function any(Request $request)
+    public function any(Request $request, $path)
     {
-        $path = $request->path() == '/' ? '/' : '/' . $request->path();
-        $originalExtension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
         $format = strtolower(pathinfo($path, PATHINFO_EXTENSION));
-
-        if ($format === '') {
-            $format = 'html';
-            $static_path = Str::finish($path, '/').'index.html';
-        } else {
-            $path = substr($path, 0, strrpos($path, "."));
-            $static_path = $path.'.'.$format;
+        $originalFormat = $format;
+        if ($format === '') $format = 'html';
+        if (!in_array($format, Config::get('kusikusi_website.formats', ['html']))) {
+            $controller = new HtmlController();
+            return ($controller->error($request, 404));
         }
-        $path = preg_replace('/\/index$/', '', $path);
-        if ($path === '') $path = '/';
-        $filename = strtolower(pathinfo($path, PATHINFO_FILENAME));
+        $path = "/".Str::beforeLast($path, '.');
+        $filename = Str::afterLast($path, '/');
+        $staticPath = "$path.$format";
 
         // Send the file stored in the static folder if it exist
-        /* if ($exists = Storage::disk('views_processed')->exists($static_path)  && (!env('APP_DEBUG', false) || $format !== 'html')) {
-            $mimes = new MimeTypes;
-            $mimeType =  $mimes->getMimeType($format);
+        $staticStorage = Config::get('kusikusi_website.static_storage.drive');
+        if (!env('APP_DEBUG', false) && Storage::disk($staticStorage)->exists($staticPath)) {
+            $mimeType =  MimeType::from($staticPath);
             $headers = ['Content-Type' => $mimeType];
-            return Storage::disk('views_processed')->response($static_path, null, $headers);
-        } */
+            return Storage::disk($staticStorage)->response($staticPath, null, $headers);
+        }
 
         // Search for the entity is being called by its url, ignore inactive and soft deleted.
-        $defaultLang = config('cms.langs', [''])[0];
-        App::setLocale($defaultLang);
         $searchRouteResult = EntityRoute::where('path', $path)->first();
         if (!$searchRouteResult) {
+            $defaultLang = config('kusikusi_website.langs', [''])[0];
+            App::setLocale($defaultLang);
             $request->lang = $defaultLang;
             $controller = new HtmlController();
             return ($controller->error($request, 404));
@@ -75,7 +71,7 @@ class WebsiteController extends Controller
                     ->where('lang', $searchRouteResult->lang)
                     ->where('kind', 'main')
                     ->first();
-                    return redirect($redirect->path . ($originalExtension !== '' ? '.'.$originalExtension : ''), $status || 301);
+                    return redirect($redirect->path . ($originalFormat !== '' ? '.'.$originalFormat : ''), $status || 301);
                 break;
             case 'alias':
             case 'main':
@@ -87,7 +83,7 @@ class WebsiteController extends Controller
 
         // Get the model class name from App or Kusikusi
         $modelClassName = Entity::getEntityClassName($searchRouteResult->entity_model);
-    
+
         $entity = $modelClassName::select("*")
             ->where("id", $searchRouteResult->entity_id)
             ->isPublished()
@@ -107,26 +103,20 @@ class WebsiteController extends Controller
         $controllerClassName = "App\\Http\\Controllers\\" . ucfirst($format) . 'Controller';
         if(!class_exists($controllerClassName)) {
             $controller = new HtmlController;
-            return ($controller->error($request, 404));
+            return ($controller->error($request, 501));
         }
         $controller = new $controllerClassName;
         if (method_exists($controller, $model_name)) {
             $view = $controller->$model_name($request, $entity, $lang);
-            /* if (Config::get('cms.static_generation', 'lazy') === 'lazy') {
-                $modelInstance = new $modelClassName;
-                if ($modelInstance->getCacheViewsAs()) {
-                    $render = $view->render();
-                    if ($modelInstance->getCacheViewsAs() === 'directory' || $path === '/'  || $path === '') {
-                        $cachePath = "$path/index.$format";
-                        if ($path !== '/'  && $path !== '') {
-                            Storage::disk('views_processed')->put($path.'.'.$format, $render);
-                        }
-                    } else {
-                        $cachePath = "$path.$format";
-                    }
-                    Storage::disk('views_processed')->put($cachePath, $render);
+            if (Config::get('kusikusi_website.static_generation', 'none') === 'lazy') {
+                $render = $view->render();
+                if ($path !== '/' || $path === '') {
+                    Storage::disk($staticStorage)->put($staticPath, $render);
                 }
-            } */
+                if ($format === 'html') {
+                    Storage::disk($staticStorage)->put("$path/index.$format", $render);
+                }
+            }
             return $view;
         } else {
             return ($controller->error($request, 501));
