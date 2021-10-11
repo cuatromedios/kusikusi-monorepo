@@ -23,7 +23,7 @@ Route::prefix('api')
         return $cms;
       });
       // Authenticated
-      //Route::middleware('auth:sanctum')->group(function () {
+      Route::middleware('auth:sanctum')->group(function () {
         Route::get('/user', function (Request $request) {
           return $request->user();
         });
@@ -39,5 +39,5 @@ Route::prefix('api')
         Route::delete('/entities/{entity_id}/relations/{called_entity_id}/{kind}', [EntityRelationController::class, 'destroy']);
         Route::delete('/entities/{entity_id}/relations/{relation_id}', [EntityRelationController::class, 'destroy']);
         Route::patch('/entities/{entity_id}/relations/reorder', [EntityRelationController::class, 'reorder']);
-      //});
+      });
     });
