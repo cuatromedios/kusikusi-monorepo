@@ -200,8 +200,9 @@ export default {
     },
     async reorder () {
       this.reordering = true
-      const relation_ids = _.flatMap(this.media, (c) => c.relation_id)
-      const reorderResult = await this.$api.patch('/entities/relations/reorder', { relation_ids })
+      console.log(this.media)
+      const relation_ids = _.flatMap(this.media, (c) => c.medium.relation_id)
+      const reorderResult = await this.$api.patch(`/entities/${this.entity.id}/relations/reorder`, { relation_ids })
       this.reordering = false
       if (reorderResult.success) {
         this.reorderMode = false

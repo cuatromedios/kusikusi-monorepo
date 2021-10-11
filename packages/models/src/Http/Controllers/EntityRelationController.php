@@ -40,7 +40,7 @@ class EntityRelationController extends BaseController
         $entityController = new EntityController();
         return $entityController->index($request);
     }
-    
+
     /**
      * Stores a new entity relation, or replace it if already exist.
      *
@@ -93,7 +93,7 @@ class EntityRelationController extends BaseController
             ->where('kind', $kind)
             ->delete();
         }
-        
+
         return ([ "deletes" => $deletion]);
     }
 
@@ -113,9 +113,12 @@ class EntityRelationController extends BaseController
             'relation_ids' => 'required',
             'relation_ids.*' => (new EntityRelation)->getKeyType()
         ]);
-        $relations = EntityRelation::select('relation_id', 'position')->where('caller_entity_id', $entity_id)->find($request['relation_ids']);
+        $relations = EntityRelation::select('relation_id', 'position')
+            ->where('caller_entity_id', $entity_id)
+            ->orWhere('called_entity_id', $entity_id)
+            ->find($request['relation_ids']);
         for ($r = 0; $r < $relations->count(); $r++) {
-            
+
             $relations[$r]->position = array_search($relations[$r]->relation_id, $request['relation_ids']) ?? 0;
             $relations[$r]->save();
         }
