@@ -6,3 +6,6 @@ git branch -f media $sha && git push media media:master
 
 sha=$(./splitsh-lite --prefix=packages/website/)
 git branch -f website $sha && git push website website:master
+
+sha=$(./splitsh-lite --prefix=packages/admin/)
+git branch -f admin $sha && git push admin admin:master
