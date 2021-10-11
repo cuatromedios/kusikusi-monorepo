@@ -169,7 +169,7 @@ export default {
     async getMedia () {
       this.loading = true
       if (this.entity.id !== 'new') {
-        const mediaResult = await this.$api.get(`/entities?media-of=${this.entity.id}&select=content.title,properties,model,id&only-published=false&order-by=relation_media.position&per-page=100`)
+        const mediaResult = await this.$api.get(`/entities?of-model=Medium&media-of=${this.entity.id}&select=content.title,properties,model,id&only-published=false&order-by=relation_media.position&per-page=100`)
         // const mediaResult = await this.$api.get(`/entities?media-of=${this.entity.id}&select=contents.title,properties,is_active,model,id,relation_media.relation_id&only-published=false&order-by=relation_media.position&per-page=100`)
         this.loading = false
         if (mediaResult.success) {

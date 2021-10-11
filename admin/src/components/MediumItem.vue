@@ -2,11 +2,11 @@
   <q-card
     class="medium-item"
     :class="{ 'cursor-drag': reorderMode }">
-    <q-img :src="`${$store.getters.media_url}${medium.thumb}?${Math.random()}`"
+    <q-img :src="`${medium.thumb}?${Math.random()}`"
            :ratio="1" contain
            v-if="(medium.properties && medium.properties.isWebImage && medium.properties.format !== 'svg') && !uploading"
            class="checkered-bg" />
-    <q-img :src="`${$store.getters.media_url}${medium.original}?${Math.random()}`"
+    <q-img :src="`${medium.original}?${Math.random()}`"
            :ratio="1" contain
            v-if="(medium.properties && medium.properties.isWebImage && medium.properties.format === 'svg') && !uploading"
            class="checkered-bg" />
