@@ -54,8 +54,9 @@ export default {
     }
   },
   mounted () {
-    this.editingTags = _.clone(this.child.child_relation_tags)
-    this.storedTags = _.clone(this.child.child_relation_tags)
+    this.editingTags = _.clone(this.child.child.tags)
+    this.storedTags = _.clone(this.child.child.tags)
+
   },
   methods: {
     onInput () {
