@@ -272,7 +272,7 @@ export default {
     async save () {
       this.saving = true
       let saveResult
-      let payload = _.clone(this.entity)
+      const payload = _.clone(this.entity)
       delete payload.entities_related
       if (this.isNew) {
         if (this.entity.id === 'new') delete this.entity.id

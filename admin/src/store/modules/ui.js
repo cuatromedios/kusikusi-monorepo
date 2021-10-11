@@ -78,7 +78,7 @@ const getters = {
   menu: (state, getters, rootState) => {
     let menu = _.clone(_.get(state, `config.menu.${rootState.session.user.profile ? rootState.session.user.profile : 'admin'}`))
     if (!menu) {
-        menu = [state.menuItems.content, state.menuItems.menus, state.menuItems.website, state.menuItems.media]
+      menu = [state.menuItems.content, state.menuItems.menus, state.menuItems.website, state.menuItems.media]
     }
     menu.push(state.menuItems.logout)
     return menu
