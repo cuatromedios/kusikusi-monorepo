@@ -62,6 +62,7 @@ class WebsiteController extends Controller
             $controller = new HtmlController();
             return ($controller->error($request, 404));
         }
+        $status = null;
         switch ($searchRouteResult->kind) {
             case 'temporal_redirect':
                 $status = 307;
