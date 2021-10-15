@@ -8,7 +8,12 @@
     </div>
     <q-banner class="bg-grey-2 text-center" v-if="!readonly">{{ $t('general.saveBefore')}}</q-banner>
     <div v-if="!loading && readonly">
-      <div class="q-mb-md flex justify-end">
+      <div class="q-mb-md flex justify-between">
+        <nq-input v-model="filter" class="q-mr-lg flex" style="flex: 1" >
+          <template v-slot:append>
+            <q-btn round dense flat icon="search" />
+          </template>
+        </nq-input>
         <q-btn-dropdown class="" outline color="positive"  icon="add_circle"  :label="$t('general.add')" v-if="models && models.length > 1">
           <q-list>
             <q-item clickable v-close-popup
@@ -29,8 +34,8 @@
       </div>
       <q-banner class="bg-grey-2 text-center" v-if="!children || (children && children.length === 0)">{{ $t('general.noItems')}}</q-banner>
       <q-list bordered>
-        <draggable v-model="children" v-bind="getDragOptions()" :disabled="!reorderMode">
-          <child-item v-for="child in children"
+        <draggable v-model="filteredChildren" v-bind="getDragOptions()" :disabled="!reorderMode">
+          <child-item v-for="child in filteredChildren"
                       :key="child.id"
                       :child="child"
                       :entity_id="entity.id"
@@ -82,17 +87,22 @@ export default {
     orderBy: {
       type: String,
       default: 'relation_children.position'
+    },
+    perPage: {
+      type: Number,
+      default: 100
     }
   },
   data () {
     return {
+      filter: '',
       loading: true,
       children: [],
       storedChildren: [],
       reorderMode: false,
       reordering: false,
       currentPage: 1,
-      perPage: 1,
+      perPageReceived: 1,
       lastPage: 1,
       total: 1,
       to: 1,
@@ -113,12 +123,12 @@ export default {
         return
       }
       this.loading = true
-      const childrenResult = await this.$api.get(`/entities?children-of=${this.entity.id}&select=content.title,properties,published_at,unpublished_at,model,id,visibility&only-published=false&order-by=${this.orderBy}&page=${this.currentPage}`)
+      const childrenResult = await this.$api.get(`/entities?children-of=${this.entity.id}&select=content.title,properties,published_at,unpublished_at,model,id,visibility&only-published=false&order-by=${this.orderBy}&per-page=${this.perPage}&page=${this.currentPage}`)
       this.loading = false
       if (childrenResult.success) {
         this.children = childrenResult.data.data
         this.currentPage = childrenResult.data.current_page
-        this.perPage = childrenResult.data.per_page
+        this.perPageReceived = childrenResult.data.per_page
         this.lastPage = childrenResult.data.last_page
         this.total = childrenResult.data.total
         this.to = childrenResult.data.to
@@ -166,6 +176,10 @@ export default {
   computed: {
     canReorder () {
       return this.orderBy === 'relation_children.position'
+    },
+    filteredChildren () {
+      if (this.filter.length === 0) return this.children
+      return this.children.filter((child) => { return child.content && child.content.title && child.content.title.toLowerCase().indexOf(this.filter.toLowerCase()) > -1 })
     }
   }
 }

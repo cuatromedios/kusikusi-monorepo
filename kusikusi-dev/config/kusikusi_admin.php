@@ -39,7 +39,7 @@ return [
                 [
                     "label" => "contents.children",
                     "components" => [
-                        ["component" => "children", "props" => ["models" => ["section", "page"], "order_by" => "contents.title", "tags" => ["menu", "footer"]]]
+                        ["component" => "children", "props" => ["models" => ["section", "page"], "order_by" => "contents.title", "tags" => ["menu", "footer"], "per-page" => 1000]]
                     ],
                 ],
                 [
