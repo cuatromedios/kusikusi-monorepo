@@ -37,6 +37,7 @@ php artisan migrate
 * Include a hidden field with the `entity_id` of the current page
 * The entity referenced should have a property `form` with specific params
   * `fields` the list of fields accepted by the form (other field will be discarded)
+  * `mail_to` an email address if you want to send the entry to an email address. You should have mail values configured in your Laravel project.
 
 ```html
 <form action="/form" method="post">
@@ -51,6 +52,7 @@ php artisan migrate
 ```json
 {
   "form": {
+    "mail_to": "contact@example.com",
     "fields": {
       "name":{},
       "email":{}

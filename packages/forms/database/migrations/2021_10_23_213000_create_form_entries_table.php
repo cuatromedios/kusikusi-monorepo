@@ -15,7 +15,7 @@ class CreateFormEntriesTable extends Migration
     {
         Schema::create('form_entries', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->json('entry')->nullable();
+            $table->json('payload')->nullable();
             $table->string('entity_id', 32)->index();
             $table->string('status', 32)->nullable('unread')->index();
             $table->timestampsTz();

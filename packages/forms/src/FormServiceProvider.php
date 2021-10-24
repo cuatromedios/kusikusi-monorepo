@@ -25,6 +25,7 @@ class FormServiceProvider extends ServiceProvider
     {
         $this->loadRoutesFrom(__DIR__.'/../routes/forms.php');
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'kusikusi_forms');
         if ($this->app->runningInConsole()) {
             // Publish the config
             $this->publishes([
