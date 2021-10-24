@@ -1,0 +1,45 @@
+{
+    "name": "kusikusi/forms",
+    "description": "Form management form Kusikusi.",
+    "type": "package",
+    "license": "MIT",
+    "keywords": [
+        "laravel"
+    ],
+    "authors": [
+        {
+            "name": "Cuatromedios",
+            "email": "dev@cuatromedios.com"
+        }
+    ],
+    "require": {
+        "illuminate/support": "^7.0|^8.0"
+    },
+    "suggest": {
+        "kusikusi/models": "Please be sure to install kusikusi/models in this project also",
+        "kusikusi/website": "Please be sure to install kusikusi/website in this project also"
+    },
+    "autoload": {
+        "psr-4": {
+            "Kusikusi\\": "./src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Kusikusi\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+              "Kusikusi\\FormServiceProvider"
+            ]
+        }
+    },
+    "require-dev": {
+        "orchestra/testbench": "^6.0"
+    }
+}

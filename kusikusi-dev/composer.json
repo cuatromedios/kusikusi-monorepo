@@ -17,6 +17,7 @@
         "kusikusi/media": "*",
         "kusikusi/models": "*",
         "kusikusi/website": "*",
+        "kusikusi/forms": "*",
         "laravel/fortify": "^1.7",
         "laravel/framework": "^8.54",
         "laravel/sanctum": "^2.11",
@@ -88,6 +89,10 @@
         "admin": {
             "type": "path",
             "url": "../packages/admin"
+        },
+        "forms": {
+            "type": "path",
+            "url": "../packages/forms"
         }
     }
 }
