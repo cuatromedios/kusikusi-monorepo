@@ -56,9 +56,13 @@ This Kusikusi Website Package, has a "catch-all" route. As this route may interf
 
 In your `composer.json` file, define it as not-discover:
 ```json
-"extra": {
-  "laravel": {
-    "dont-discover": ["kusikusi/website"]
+{
+  "extra": {
+    "laravel": {
+      "dont-discover": [
+        "kusikusi/website"
+      ]
+    }
   }
 }
 ```
@@ -66,7 +70,9 @@ In your `composer.json` file, define it as not-discover:
 In your application `config/app.php` configuration file, add the provider **at the end** of the providers array
 
 ```php
-Kusikusi\WebsiteServiceProvider::class
+[
+Kusikusi\WebsiteServiceProvider::class,
+];
 ```
 
 
