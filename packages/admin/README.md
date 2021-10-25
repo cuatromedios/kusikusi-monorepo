@@ -1,5 +1,7 @@
 # Kusikusi Admin Interface
-> This is a read-only repository, splitted from the monorepo at github.com/cuatromedios/kusikusi
+> This is a read-only repository, splitted from the monorepo at [github.com/cuatromedios/kusikusi-monorepo](https://github.com/cuatromedios/kusikusi-monorepo)
+
+> For the Laravel starter kit visit [github.com/cuatromedios/kusikusi](https://github.com/cuatromedios/kusikusi)
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
 [![Travis](https://img.shields.io/travis/kusikusi/media.svg?style=flat-square)]()
