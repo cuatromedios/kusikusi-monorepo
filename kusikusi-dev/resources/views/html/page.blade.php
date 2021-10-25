@@ -7,3 +7,9 @@
     <input type="hidden" name="entity_id" value="{{ $entity->id }}" />
     <button type="submit">Enviar</button>
 </form>
+<script>
+    url = new URL(window.location.href);
+    if (url.searchParams.get('success') === 'true') {
+        window.alert("Thank you!")
+    }
+</script>

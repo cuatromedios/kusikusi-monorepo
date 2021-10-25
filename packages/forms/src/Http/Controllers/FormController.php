@@ -22,7 +22,7 @@ class FormController extends Controller
     }
 
     public function receive(Request $request) {
-        $entity = Entity::withContent()->findOrFail($request['entity_id']);
+        $entity = Entity::withContent()->withRoute()->findOrFail($request['entity_id']);
         $allowedFields =array_keys($entity->properties['form']['fields']);
         $toEmail = $entity->properties['form']['mail_to'] ?? Config::get('mail.from.address');
         $payload = $request->only($allowedFields);
@@ -41,7 +41,6 @@ class FormController extends Controller
             Mail::to($toEmail)
                 ->send(new FormEntryReceived($entry, $entity));
         }
-
-        return "Form received! ".json_encode($payload);
+        return redirect("{$entity->route->path}?success=true");
     }
 }
