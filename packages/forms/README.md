@@ -12,7 +12,7 @@
 This package complements kusikusi/models and kusikusi/website packages, that should be required first.
 
 ```
-composer require kusikusi/website:dev-master
+composer require kusikusi/forms
 ```
 
 ## Usage
@@ -35,33 +35,31 @@ php artisan migrate
 
 ### Receiving forms
 * Any form you want to be processed by Kusikusi Forms, set the action to `/form` and method to `post`
-* Include the Laravel  CSRF token
-* Include a hidden field with the `entity_id` of the current page
-* The entity referenced should have a property `form` with specific params
-  * `fields` the list of fields accepted by the form (other field will be discarded)
+* Include the Laravel  [CSRF token](https://laravel.com/docs/csrf)
+* Include a hidden field named `entity_id` with the entity id value of the current page
+  ```html
+  <form action="/form" method="post">
+      <input name="name" />
+      <input name="email" type="email" />
+      <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+      <input type="hidden" name="entity_id" value="{{ $entity->id }}" />
+      <button type="submit">Enviar</button>
+  </form>
+  ```
+* The entity referenced should have in the `properties` field, a property named `form` with specific params:
+  * `fields` an object with the keys as the field names and values as the [validation string](https://laravel.com/docs/validation) for that field, if a field is not described here will be ignored.
   * `mail_to` an email address if you want to send the entry to an email address. You should have mail values configured in your Laravel project.
-
-```html
-<form action="/form" method="post">
-    <input name="name" />
-    <input name="email" type="email" />
-    <input type="hidden" name="_token" value="{{ csrf_token() }}" />
-    <input type="hidden" name="entity_id" value="{{ $entity->id }}" />
-    <button type="submit">Enviar</button>
-</form>
-```
-
-```json
-{
-  "form": {
-    "mail_to": "contact@example.com",
-    "fields": {
-      "name":{},
-      "email":{}
+  ```json
+  {
+    "form": {
+      "mail_to": "contact@example.com",
+      "fields": {
+        "name": "required|max:50",
+        "email": "required|email"
+      }
     }
   }
-}
-```
+  ```
 
 ### Routes
 This Kusikusi Forms Package, has a routes specific for form entries management
