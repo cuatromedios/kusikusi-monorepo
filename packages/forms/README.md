@@ -54,8 +54,12 @@ php artisan migrate
     "form": {
       "mail_to": "contact@example.com",
       "fields": {
-        "name": "required|max:50",
-        "email": "required|email"
+        "name": {
+          "validation": "required|max:50"
+        },
+        "email": {
+          "validation": "required|email"
+        }
       }
     }
   }

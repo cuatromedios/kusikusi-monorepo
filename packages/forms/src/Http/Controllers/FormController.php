@@ -24,9 +24,10 @@ class FormController extends Controller
     public function receive(Request $request) {
         $entity = Entity::withContent()->withRoute()->findOrFail($request['entity_id']);
         $allowedFields =array_keys($entity->properties['form']['fields']);
-        $toEmail = $entity->properties['form']['mail_to'] ?? Config::get('mail.from.address');
         $payload = $request->only($allowedFields);
-
+        $request->session()->flash('validated', false);
+        $request->validate($entity->properties['form']['fields']);
+        $request->session()->flash('validated', true);
         // Save the entry
         $entry = new FormEntry([
             'payload' => $payload,
@@ -41,6 +42,6 @@ class FormController extends Controller
             Mail::to($toEmail)
                 ->send(new FormEntryReceived($entry, $entity));
         }
-        return redirect("{$entity->route->path}?success=true");
+        return redirect($entity->route->path);
     }
 }
