@@ -66,16 +66,24 @@ class WebsiteController extends Controller
         switch ($searchRouteResult->kind) {
             case 'temporal_redirect':
                 $status = 307;
+                break;
             case 'permanent_redirect':
-                $redirect = EntityRoute::where('entity_id', $searchRouteResult->entity_id)
-                    ->where('lang', $searchRouteResult->lang)
-                    ->where('kind', 'main')
-                    ->first();
-                return redirect($redirect->path . ($originalFormat !== '' ? '.'.$originalFormat : ''), $status || 301);
+                $status = 301;
                 break;
             case 'alias':
             case 'main':
+            case 'canonical':
                 break;
+        }
+        if ($status !== null) {
+            $redirect = EntityRoute::where('entity_id', $searchRouteResult->entity_id)
+                ->where('lang', $searchRouteResult->lang)
+                ->where(function($query) {
+                    $query->where('kind', 'main')
+                        ->orWhere('kind', 'canonical');
+                })
+                ->first();
+            return redirect($redirect->path . ($originalFormat !== '' ? '.'.$originalFormat : ''), $status);
         }
         // Select an entity with its properties
         $lang = $searchRouteResult->lang;
